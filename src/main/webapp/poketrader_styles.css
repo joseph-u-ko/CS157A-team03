@@ -1,0 +1,48 @@
+body {
+	background-color: lightblue;
+}
+
+h1 {
+	height: 6%;
+	width: 50%;
+	background-color: white;
+	margin: auto;
+	
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	
+	border: 2px solid #333;
+	border-radius: 10px;
+	
+	text-align: center;
+	font-family: "Fira Sans", sans-serif;
+	
+	min-width: 800px; /* prevents changes in size for the container of the website's title when window size gets smaller*/
+	min-height: 50px;
+}
+
+div.center { /* for the pikachu image on the home page */
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-top: 50px;
+}
+
+
+.parent-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 50%;
+}
+
+.child-box {
+	width: 35%;
+	height: 50%;
+	padding: 20px;
+	background-color: white;
+	border: 2px solid black;
+	
+	justify-content: center;
+}
