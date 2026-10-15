@@ -17,7 +17,7 @@ Step 1.) Setup a Dynamic Web Project in Eclipse.<br>
 Step 2.) Download MysqlCon.java, 3-Tier-poketrader.jsp, poketrader_styles.css<br>
 Step 3.) Place the following files into the specified project directories<br>
 - MysqlCon.java into /java directory
-- 3-Tier-poketrader.jsp into /webapp
+- login_and_signup.jsp into /webapp
 - poketrader_styles.css into /webapp
 <br>
 
@@ -25,4 +25,4 @@ Step 4.) Create a new server (select Tomcat v10.1)<br>
 
 Step 5.) Start server<br>
 
-Step 6.) Run 3-Tier-poketrader.jsp and select "Run on Server"
+Step 6.) Run login_and_signup.jsp and select "Run on Server"
