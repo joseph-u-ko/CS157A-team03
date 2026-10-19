@@ -34,7 +34,7 @@ public class SignupServlet extends HttpServlet {
         if (username == null || password == null ||
             username.isBlank() || password.isBlank()) {
 
-            request.setAttribute("error", "All fields are required.");
+            request.setAttribute("signupError", "All fields are required.");
             request.getRequestDispatcher("login_and_signup.jsp")
                    .forward(request, response);
             return;
@@ -70,10 +70,16 @@ public class SignupServlet extends HttpServlet {
                 // a new user has 0 tickets
                 statement.setInt(5, 0);
                 
-                
-
                 int rowsInserted = statement.executeUpdate();
                 System.out.println("Rows inserted: " + rowsInserted);
+                
+                // outputs 'success' message right under Sign-Up button
+                request.setAttribute(
+		            "signupSuccess",
+		            "Sign-up is a success! Welcome to PokeTrader!"
+		        );
+		        request.getRequestDispatcher("login_and_signup.jsp")
+		               .forward(request, response);
 
                 response.sendRedirect("login_and_signup.jsp");
 
@@ -81,7 +87,7 @@ public class SignupServlet extends HttpServlet {
 		        e.printStackTrace();
 		
 		        request.setAttribute(
-		            "error",
+		            "signupError",
 		            "Database error: " + e.getMessage()
 		        );
 		
