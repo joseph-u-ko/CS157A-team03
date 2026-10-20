@@ -33,67 +33,58 @@ public class LoginServlet extends HttpServlet {
         String username = request.getParameter("username");
         String enteredPassword = request.getParameter("password");
 
-        String sql = """
+        // Set up SQL statements (getting the hashed password; updating loggedIn for the logged-in user)
+        String SQL_getPassword = """
             SELECT passwordHashed
             FROM users
             WHERE username = ?
-            """;
+            """; 
+        String SQL_updateLoggedIn = """
+        	UPDATE users
+            SET loggedIn = true
+            WHERE username = ?
+        	""";
 
-        try (
-            Connection connection = DriverManager.getConnection(
-                DB_URL, DB_USER, DB_PASSWORD
-            );
+        try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+             PreparedStatement statement_getPassword = connection.prepareStatement(SQL_getPassword);
+        	 PreparedStatement statement_updateLoggedIn = connection.prepareStatement(SQL_updateLoggedIn)) {
+        	statement_getPassword.setString(1, username);
+            statement_updateLoggedIn.setString(1, username);
 
-            PreparedStatement statement =
-                connection.prepareStatement(sql)
-        ) {
-            statement.setString(1, username);
-
-            try (ResultSet result = statement.executeQuery()) {
-
+            try (ResultSet result = statement_getPassword.executeQuery()) {
                 if (result.next()) {
                     String storedHash =
                         result.getString("passwordHashed");
 
+                    // Checks if entered password equals to the stored hashed password (according to the hashing system)
                     boolean passwordCorrect =
                         BCrypt.checkpw(enteredPassword, storedHash);
-
+                    
+                    // If the user successfully logins, the current session's user will be set to the logged-in user.
+                    // Afterwards, the user will be redirected to the main page.
                     if (passwordCorrect) {
                         HttpSession session = request.getSession();
-                        session.setAttribute("username", username);
+                        session.setAttribute("currentUser", username);
                         System.out.println("Login successful! Welcome back, " + username);
-                        // outputs 'success' message right under Login button
-                        request.setAttribute(
-        		            "loginSuccess",
-        		            "Login is a success! Welcome back, " + username + "!"
-        		        );
-        		        request.getRequestDispatcher("login_and_signup.jsp")
-        		               .forward(request, response);
-        		        
-                        response.sendRedirect("login_and_signup.jsp");
-                    } else {
-                        showError(request, response,
-                            "Incorrect username or password.");
+                        statement_updateLoggedIn.executeUpdate(); // changes loggedIn to true
+                        response.sendRedirect("home.jsp");
+                    }
+                    else {
+                        request.setAttribute("loginError", "Incorrect username or password.");
+                        request.getRequestDispatcher("login_and_signup.jsp")
+                               .forward(request, response);
                     }
                 }
             }
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-
-            showError(request, response,
-                "A database error occurred.");
+        } 
+        // General catch-all exception for login error
+        catch (SQLException e) {
+        	e.printStackTrace();
+        	
+            request.setAttribute("loginError", "A database error occurred.");
+            request.getRequestDispatcher("login_and_signup.jsp")
+                   .forward(request, response);
         }
-    }
-
-    private void showError(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            String message)
-            throws ServletException, IOException {
-
-        request.setAttribute("loginError", message);
-        request.getRequestDispatcher("login_and_signup.jsp")
-               .forward(request, response);
     }
 }
