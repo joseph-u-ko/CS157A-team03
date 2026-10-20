@@ -7,9 +7,10 @@
 	    <meta charset="UTF-8">
 	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	    <title>PokeTrader Login</title>
-	    <link rel="stylesheet" href="poketrader_styles.css">
+	    <link rel="stylesheet" href="login_and_signup.css">
 	</head>
 	<body>
+		<%-- Database connection --%>
 		<%
 		 String db = "poketrader";
 		    String user; // assumes database name is the same as username
@@ -27,6 +28,7 @@
 		    } 
 		%>
 		
+		<%-- Title bar --%>
 		<h1>
 			<img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Pok%C3%A9_Ball_icon.svg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original"
 				alt="A red-and-white pokeball icon at the top of the webpage"
@@ -39,6 +41,7 @@
 				class="inline-title-img">
 		</h1>
 		
+		<%-- The pikachu in the signup/login page (Will replace with an original illustration later) --%>
 		<div class=center>
 			<a href="https://www.freeiconspng.com/img/32576" title="Image from freeiconspng.com">
 				<img src="https://www.freeiconspng.com/uploads/pikachu-transparent-hd-1.png"
@@ -47,7 +50,9 @@
 			</a>
 		</div>
 		
+		<%-- Flex container for Sign-up Box and Login Box --%>
 		<div class="parent-container">
+			<%-- Sign-up Box --%>
 			<div class="child-box">
 				<form action="signup" method="post">
 					<label>Username:</label>
@@ -58,9 +63,13 @@
 					<input type="password" name="password" required>
 					<br><br>
 					
+					<label>Reconfirm Password:</label>
+					<input type="password" name="reconfirmed_password" required>
+					<br><br>
+					
 					<button type="submit">Sign Up</button>
 				</form>
-				<%-- This error message will show up if an error occurs in the signup box --%>
+				<%-- An error message will appear below sign-up button if something goes wrong with sign-up. --%>
 				<%
 			        String signupError = (String) request.getAttribute("signupError");
 			        if (signupError != null) {
@@ -69,17 +78,9 @@
 			    <%
 			        }
 			    %>
-			    
-			    <%-- This message will show up if signup is successful --%>
-			    <%
-			    	String signupSuccessMsg = (String) request.getAttribute("signupSuccess");
-			    if (signupSuccessMsg != null) {
-			    %>
-			    	<p style="color:black;"><%= signupSuccessMsg %></p>
-			    <%
-			    	}
-			    %>
 			</div>
+			
+			<%-- Login Box --%>
 			<div class="child-box">
 				<form action="login" method="post">
 					<label>Username:</label>
@@ -92,6 +93,7 @@
 					
 					<button type="submit">Login</button>
 				</form>
+				<%-- An error message will appear below login button if something goes wrong with login. --%>
 				<%
 			        String loginError = (String) request.getAttribute("loginError");
 			        if (loginError != null) {
@@ -99,15 +101,6 @@
 			        <p style="color:red;"><%= loginError %></p>
 			    <%
 			        }
-			    %>
-			    <%-- This message will show up if login is successful --%>
-			    <%
-			    	String loginSuccessMsg = (String) request.getAttribute("loginSuccess");
-			    if (loginSuccessMsg != null) {
-			    %>
-			    	<p style="color:black;"><%= loginSuccessMsg %></p>
-			    <%
-			    	}
 			    %>
 			</div>
 		</div>
