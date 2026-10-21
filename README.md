@@ -24,6 +24,7 @@ Step 3.) Place all downloaded files into corresponding project directories
 <br>
 
 Step 4.) Right-click on project --> Build Path --> Configure Build Path --> Click Classpath --> Add External Jar --> Add the jbcrypt-0.4.jar
+- Note: If jbcrypt-0.4.jar is not in src/main/webapp/WEB-INF/lib, add the WEB-INF/lib folders manually to the project explorer directory and add the jar file inside of lib. 
 
 Step 5.) Create a new server (select Tomcat v10.1)<br>
 
