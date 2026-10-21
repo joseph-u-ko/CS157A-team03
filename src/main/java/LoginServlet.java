@@ -19,8 +19,7 @@ public class LoginServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
-    private static final String DB_URL =
-        "jdbc:mysql://localhost:3306/poketrader?useSSL=false";
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/poketrader?useSSL=false";
     private static final String DB_USER = "root";
     private static final String DB_PASSWORD = "o{%}*pEhL@uIRUW]ZbmJ5V[2";
 
@@ -39,6 +38,12 @@ public class LoginServlet extends HttpServlet {
             FROM users
             WHERE username = ?
             """; 
+        String SQL_getLoggedIn = """
+        	SELECT loggedIn
+        	FROM users
+        	WHERE username = ?	
+        	""";
+        
         String SQL_updateLoggedIn = """
         	UPDATE users
             SET loggedIn = true
@@ -47,18 +52,33 @@ public class LoginServlet extends HttpServlet {
 
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
              PreparedStatement statement_getPassword = connection.prepareStatement(SQL_getPassword);
+        	 PreparedStatement statement_getLoggedIn = connection.prepareStatement(SQL_getLoggedIn);
         	 PreparedStatement statement_updateLoggedIn = connection.prepareStatement(SQL_updateLoggedIn)) {
+        	// Set ?s in statements to corresponding parameters
         	statement_getPassword.setString(1, username);
+        	statement_getLoggedIn.setString(1, username);
             statement_updateLoggedIn.setString(1, username);
+            
+            // Checks if someone else is using the account.
+            // If someone else is using the account (i.e. loggedIn = true), then reject the login.
+            try (ResultSet result = statement_getLoggedIn.executeQuery()) {
+	            if (result.next()) {
+	            	boolean isLoggedIn = result.getBoolean("loggedIn");
+	            	if (isLoggedIn) {
+	            		request.setAttribute("loginError", "Sorry, someone has logged onto your account. Please try again later.");
+	            		request.getRequestDispatcher("login_and_signup.jsp")
+	            			   .forward(request, response);
+	            		return;
+	            	}
+	            }
+            }
 
             try (ResultSet result = statement_getPassword.executeQuery()) {
                 if (result.next()) {
-                    String storedHash =
-                        result.getString("passwordHashed");
+                    String storedHash = result.getString("passwordHashed");
 
                     // Checks if entered password equals to the stored hashed password (according to the hashing system)
-                    boolean passwordCorrect =
-                        BCrypt.checkpw(enteredPassword, storedHash);
+                    boolean passwordCorrect = BCrypt.checkpw(enteredPassword, storedHash);
                     
                     // If the user successfully logins, the current session's user will be set to the logged-in user.
                     // Afterwards, the user will be redirected to the main page.
