@@ -6,7 +6,7 @@ The primary goal of PokéTrader is to provide an accessible, free experience to 
 
 The major stakeholders are primarily Pokémon fans, who will be the main target audience of this website application.
 
-Our specific innovation is to provide more variety to enjoy the Pokémon Trading Card Game experience. Pokémon already has their Pokémon Trading Card Game Pocket, which is only available on mobile devices. We are providing a web-based application which can reach computer users who want to take part in Pokémon.
+Our specific innovation is to provide more variety to enjoy the Pokémon Trading Card Game pack-opening and trading experience. Pokémon already has their Pokémon Trading Card Game Pocket, which is only available on mobile devices. We are providing a web-based application which can reach computer users who want to take part in Pokémon (if they enjoy opening packs and trading cards).
 
 ## Project Download Instructions -
 Requirements:
@@ -15,12 +15,11 @@ Requirements:
 External Libraries
 - jbcrypt-0.4.jar (find this in external_libaries/)
 
-Step 1.) Setup a Dynamic Web Project in Eclipse.<br>
-Step 2.) Download MysqlCon.java, 3-Tier-poketrader.jsp, poketrader_styles.css, and jbcrypt-0.4.jar<br>
-Step 3.) Place the following files into the specified project directories<br>
-- MysqlCon.java into /java directory
-- login_and_signup.jsp into /webapp
-- poketrader_styles.css into /webapp
+Step 1.) Create a Dynamic Web Project in Eclipse.<br>
+Step 2.) Download all .jsp, .css, and .java files in webapp and java folders, and also download the external jar, jbcrypt-0.4.jar, found in external_libraries folder<br>
+Step 3.) Place all downloaded files into corresponding project directories
+- .jsp and .css files go in webapp folder
+- .java files go in java folder
 - Note: For jbcrypt-0.4.jar, you can leave the jar file anywhere, but it is recommended to keep it close to the project directory (e.g. If your project directory looks like CS157A/semester_project/poketrader, put the jar file in CS157A/semester_project).
 <br>
 
