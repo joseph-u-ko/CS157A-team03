@@ -1,0 +1,124 @@
+/* =============================
+   Theme colors and shared values
+   ============================= */
+:root {
+    --ink: #f6f7fb;
+    --muted: #aeb7ce;
+    --panel: #151b31;
+    --line: #2d385a;
+    --accent: #8c7cff;
+}
+
+/* Make sizing more predictable across the page. */
+* { box-sizing: border-box; }
+
+/* Overall page background and default typography. */
+body {
+    margin: 0;
+    min-height: 100vh;
+    color: var(--ink);
+    background: #090d1b;
+    font-family: Arial, sans-serif;
+}
+
+/* Centers the main content and controls its maximum width. */
+.page {
+    width: min(1100px, 92%);
+    margin: 0 auto;
+    padding: 22px 0 48px;
+}
+
+/* Top navigation row containing Back and +1 Ticket. */
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+}
+
+/* Shared appearance for buttons and dropdown menus. */
+button, select {
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    padding: 11px 14px;
+    color: var(--ink);
+    background: #1d2644;
+    font-size: .95rem;
+}
+
+/* Button interaction states. */
+button { cursor: pointer; }
+button:hover { border-color: var(--accent); background: #263157; }
+
+/* Special styling for the developer ticket button. */
+.dev { background: #30255a; border-color: #735de4; }
+
+/* Header artwork and page title area. */
+.hero {
+    text-align: center;
+    margin: 18px 0 30px;
+}
+
+/* Controls the artwork size, cropping, border, and rounded corners. */
+.hero img {
+    display: block;
+    width: min(850px, 100%);
+    max-height: 285px;
+    object-fit: cover;
+    margin: 0 auto 18px;
+    border-radius: 16px;
+    border: 1px solid var(--line);
+}
+
+/* Main heading and supporting instruction text. */
+h1 { margin: 0; font-size: clamp(1.7rem, 4vw, 2.5rem); }
+.subtitle { color: var(--muted); margin: 8px 0 0; }
+
+/* Shared card-like container for the pack selection area. */
+.panel {
+    padding: 24px;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: var(--panel);
+}
+
+/* Panel heading. */
+.panel h2 { margin: 0 0 18px; font-size: 1.2rem; }
+
+/* Grid used by the individual Set-Pack button version. */
+.pack-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 12px;
+}
+
+/* Individual Set-Pack buttons and their secondary description. */
+.pack-button { min-height: 72px; text-align: left; }
+.pack-button span { display: block; color: var(--muted); font-size: .8rem; margin-top: 5px; }
+
+/* Three-column layout used by the Set and Pack dropdown version. */
+.controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 16px;
+    align-items: end;
+}
+
+/* Dropdown labels and sizing. */
+label { display: block; margin-bottom: 7px; color: var(--muted); font-size: .88rem; }
+select { width: 100%; }
+select:disabled { opacity: .48; cursor: not-allowed; }
+
+/* Disabled controls, including the future Open button. */
+button:disabled {
+    opacity: .48;
+    cursor: not-allowed;
+}
+
+/* Small explanatory placeholder text below each selection interface. */
+.placeholder { color: var(--muted); text-align: center; margin: 22px 0 0; font-size: .85rem; }
+
+/* Stack dropdown controls vertically on narrow screens. */
+@media (max-width: 700px) {
+    .controls { grid-template-columns: 1fr; }
+}
