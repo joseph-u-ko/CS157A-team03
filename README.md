@@ -12,17 +12,22 @@ Our specific innovation is to provide more variety to enjoy the Pokémon Trading
 Requirements:
 - Eclipse IDE
 - Tomcat v10.1
+External Libraries
+- jbcrypt-0.4.jar (find this in external_libaries/)
 
 Step 1.) Setup a Dynamic Web Project in Eclipse.<br>
-Step 2.) Download MysqlCon.java, 3-Tier-poketrader.jsp, poketrader_styles.css<br>
+Step 2.) Download MysqlCon.java, 3-Tier-poketrader.jsp, poketrader_styles.css, and jbcrypt-0.4.jar<br>
 Step 3.) Place the following files into the specified project directories<br>
 - MysqlCon.java into /java directory
 - login_and_signup.jsp into /webapp
 - poketrader_styles.css into /webapp
+- Note: For jbcrypt-0.4.jar, you can leave the jar file anywhere, but it is recommended to keep it close to the project directory (e.g. If your project directory looks like CS157A/semester_project/poketrader, put the jar file in CS157A/semester_project).
 <br>
 
-Step 4.) Create a new server (select Tomcat v10.1)<br>
+Step 4.) Right-click on project --> Build Path --> Configure Build Path --> Click Classpath --> Add External Jar --> Add the jbcrypt-0.4.jar
 
-Step 5.) Start server<br>
+Step 5.) Create a new server (select Tomcat v10.1)<br>
 
-Step 6.) Run login_and_signup.jsp and select "Run on Server"
+Step 6.) Start server<br>
+
+Step 7.) Run login_and_signup.jsp and select "Run on Server"
