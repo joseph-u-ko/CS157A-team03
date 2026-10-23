@@ -24,7 +24,7 @@ SET @@SESSION.SQL_LOG_BIN= 0;
 --
 
 SET @@GLOBAL.GTID_PURGED=/*!80000 '+'*/ '72d3b320-a296-11f1-8118-14ac60eadace:1-246,
-886cc565-a65f-11f1-921a-00155d460e24:1-77';
+886cc565-a65f-11f1-921a-00155d460e24:1-102';
 
 --
 -- Table structure for table `cards`
@@ -35,15 +35,15 @@ DROP TABLE IF EXISTS `cards`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `cards` (
   `cardID` int NOT NULL,
-  `cardName` varchar(255) DEFAULT NULL,
-  `cardType` varchar(255) DEFAULT NULL,
-  `subType` varchar(255) DEFAULT NULL,
-  `rarity` varchar(255) DEFAULT NULL,
+  `cardName` varchar(255) NOT NULL,
+  `cardType` varchar(255) NOT NULL,
+  `subType` varchar(255) NOT NULL,
+  `rarity` varchar(255) NOT NULL,
   `imageLink` tinytext,
-  `setName` varchar(255) DEFAULT NULL,
+  `setCode` int NOT NULL,
   PRIMARY KEY (`cardID`),
-  KEY `FK_Card_From_Set` (`setName`),
-  CONSTRAINT `FK_Card_From_Set` FOREIGN KEY (`setName`) REFERENCES `sets` (`setCode`)
+  KEY `FK_Card_From_Set` (`setCode`),
+  CONSTRAINT `FK_Card_From_Set` FOREIGN KEY (`setCode`) REFERENCES `sets` (`setCode`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -91,15 +91,15 @@ DROP TABLE IF EXISTS `involves`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `involves` (
   `tradeID` int NOT NULL,
-  `requester` varchar(255) NOT NULL,
+  `username` varchar(255) NOT NULL,
   `cardID` int NOT NULL,
-  `quantity` int DEFAULT NULL,
-  PRIMARY KEY (`tradeID`,`requester`,`cardID`),
-  KEY `FK_User_Request` (`requester`),
+  `quantity` int NOT NULL DEFAULT '0',
+  PRIMARY KEY (`tradeID`,`username`,`cardID`),
+  KEY `FK_User_Request` (`username`),
   KEY `FK_Card_Requested` (`cardID`),
   CONSTRAINT `FK_Card_Requested` FOREIGN KEY (`cardID`) REFERENCES `cards` (`cardID`),
   CONSTRAINT `FK_Trade_Involved` FOREIGN KEY (`tradeID`) REFERENCES `trades` (`tradeID`),
-  CONSTRAINT `FK_User_Request` FOREIGN KEY (`requester`) REFERENCES `users` (`username`)
+  CONSTRAINT `FK_User_Request` FOREIGN KEY (`username`) REFERENCES `users` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -122,8 +122,8 @@ DROP TABLE IF EXISTS `owns`;
 CREATE TABLE `owns` (
   `username` varchar(255) NOT NULL,
   `cardID` int NOT NULL,
-  `quantity` int DEFAULT NULL,
-  `numberOffered` int DEFAULT NULL,
+  `quantity` int NOT NULL DEFAULT '0',
+  `numberOffered` int NOT NULL,
   PRIMARY KEY (`username`,`cardID`),
   KEY `FK_Card_To_User` (`cardID`),
   CONSTRAINT `FK_Card_To_User` FOREIGN KEY (`cardID`) REFERENCES `cards` (`cardID`),
@@ -148,13 +148,13 @@ DROP TABLE IF EXISTS `packs`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `packs` (
-  `packName` varchar(255) DEFAULT NULL,
+  `packName` varchar(255) NOT NULL,
   `packID` int NOT NULL,
-  `available` tinyint(1) DEFAULT NULL,
-  `setName` varchar(255) DEFAULT NULL,
+  `available` tinyint(1) NOT NULL DEFAULT '0',
+  `setCode` int NOT NULL,
   PRIMARY KEY (`packID`),
-  KEY `FK_Pack_From_Set` (`setName`),
-  CONSTRAINT `FK_Pack_From_Set` FOREIGN KEY (`setName`) REFERENCES `sets` (`setCode`)
+  KEY `FK_Pack_From_Set` (`setCode`),
+  CONSTRAINT `FK_Pack_From_Set` FOREIGN KEY (`setCode`) REFERENCES `sets` (`setCode`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -201,10 +201,9 @@ DROP TABLE IF EXISTS `sets`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sets` (
-  `setCode` varchar(45) NOT NULL,
-  `setName` varchar(45) NOT NULL,
-  PRIMARY KEY (`setCode`),
-  UNIQUE KEY `setName_UNIQUE` (`setCode`)
+  `setName` varchar(255) NOT NULL,
+  `setCode` int NOT NULL,
+  PRIMARY KEY (`setCode`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -229,11 +228,11 @@ CREATE TABLE `trademessages` (
   `timestamp` datetime DEFAULT NULL,
   `message` text,
   `tradeID` int NOT NULL,
-  `writer` varchar(255) DEFAULT NULL,
+  `username` varchar(255) NOT NULL,
   PRIMARY KEY (`tradeID`,`messageNum`),
-  KEY `FK_Writer` (`writer`),
+  KEY `FK_Writer` (`username`),
   CONSTRAINT `FK_Trade_Ref` FOREIGN KEY (`tradeID`) REFERENCES `trades` (`tradeID`),
-  CONSTRAINT `FK_Writer` FOREIGN KEY (`writer`) REFERENCES `users` (`username`)
+  CONSTRAINT `FK_Writer` FOREIGN KEY (`username`) REFERENCES `users` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -254,7 +253,7 @@ DROP TABLE IF EXISTS `trades`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `trades` (
-  `status` varchar(255) DEFAULT NULL,
+  `status` varchar(255) NOT NULL DEFAULT 'PENDING',
   `tradeID` int NOT NULL,
   PRIMARY KEY (`tradeID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -279,11 +278,11 @@ DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `username` varchar(255) NOT NULL,
   `passwordHashed` varchar(255) NOT NULL,
-  `loggedIn` tinyint DEFAULT NULL,
-  `nextTicketTime` datetime DEFAULT NULL,
-  `tickets` int DEFAULT NULL,
+  `loggedIn` tinyint(1) NOT NULL DEFAULT '0',
+  `tickets` int NOT NULL DEFAULT '0',
+  `nextTicketTime` time NOT NULL DEFAULT '00:00:00',
   PRIMARY KEY (`username`),
-  UNIQUE KEY `username_UNIQUE` (`username`)
+  UNIQUE KEY `passwordHashed` (`passwordHashed`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -293,7 +292,6 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES ('abcde','$2a$10$lLodaZUpgOZEwX6tevcUOuGeJiLlA11BqE0obqpwaIIwc00vjw.1a',0,NULL,1),('jennypsychic','$2a$10$Fb0IBlfAPBJL7l3fvJX60OUv.U8aZpNCI8Oa6aNfvpLUWioQp.kd6',0,NULL,0),('josephK','$2a$10$RbOp8g3abMRe5QkHkgsf8.WbWvq0gW3wSnJV6fPRH5i8cdxmnwbZu',0,NULL,0);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 SET @@SESSION.SQL_LOG_BIN = @MYSQLDUMP_TEMP_LOG_BIN;
@@ -307,4 +305,4 @@ SET @@SESSION.SQL_LOG_BIN = @MYSQLDUMP_TEMP_LOG_BIN;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-10-22 22:56:03
+-- Dump completed on 2026-10-22 23:26:19

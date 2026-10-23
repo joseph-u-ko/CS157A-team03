@@ -1,7 +1,8 @@
 USE poketrader;
+
 CREATE TABLE contains(
-packID INT,
-cardID INT,
+packID INT NOT NULL,
+cardID INT NOT NULL,
 
 CONSTRAINT FK_Pack_To_Card
 FOREIGN KEY(packID) REFERENCES packs,
@@ -11,10 +12,10 @@ PRIMARY KEY (packID, cardID)
 );
 
 CREATE TABLE owns(
-username VARCHAR(255),
-cardID INT,
-quantity INT,
-numberOffered INT,
+username VARCHAR(255) NOT NULL,
+cardID INT NOT NULL,
+quantity INT NOT NULL DEFAULT 0,
+numberOffered INT NOT NULL,
 
 CONSTRAINT FK_User_To_Card
 FOREIGN KEY(username) REFERENCES users,
@@ -24,8 +25,8 @@ PRIMARY KEY (username, cardID)
 );
 
 CREATE TABLE performs(
-username VARCHAR(255),
-tradeID INT,
+username VARCHAR(255) NOT NULL,
+tradeID INT NOT NULL,
 
 CONSTRAINT FK_User_To_Trade
 FOREIGN KEY(username) REFERENCES users,
@@ -35,16 +36,16 @@ PRIMARY KEY (username, tradeID)
 );
 
 CREATE TABLE involves(
-tradeID INT,
-requester VARCHAR(255),
-cardID INT,
-quantity INT,
+tradeID INT NOT NULL,
+username VARCHAR(255) NOT NULL,
+cardID INT NOT NULL,
+quantity INT NOT NULL DEFAULT 0,
 
 CONSTRAINT FK_Trade_Involved
 FOREIGN KEY(tradeID) REFERENCES trades,
 CONSTRAINT FK_User_Request
-FOREIGN KEY(requester) REFERENCES users,
+FOREIGN KEY(username) REFERENCES users,
 CONSTRAINT FK_Card_Requested
 FOREIGN KEY(cardID) REFERENCES cards,
-PRIMARY KEY (tradeID, requester, cardID)
+PRIMARY KEY (tradeID, username, cardID)
 );
