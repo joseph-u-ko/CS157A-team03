@@ -1,0 +1,61 @@
+USE poketrader;
+
+CREATE TABLE users(
+username VARCHAR(255) NOT NULL,
+passwordHashed VARCHAR(255) UNIQUE NOT NULL,
+loggedIn TINYINT(1) NOT NULL DEFAULT 0,
+tickets INT NOT NULL DEFAULT 0,
+nextTicketTime TIME NOT NULL DEFAULT '00:00:00',
+PRIMARY KEY (username)
+);
+
+CREATE TABLE sets(
+setName VARCHAR(255) NOT NULL,
+setCode INT NOT NULL,
+PRIMARY KEY (setCode)
+);
+
+CREATE TABLE packs(
+packName VARCHAR(255) NOT NULL,
+packID INT NOT NULL,
+available TINYINT(1) NOT NULL DEFAULT 0,
+setCode INT NOT NULL,
+
+CONSTRAINT FK_Pack_From_Set
+FOREIGN KEY(setCode) REFERENCES sets,
+PRIMARY KEY (packID)
+);
+
+CREATE TABLE cards(
+cardID INT NOT NULL,
+cardName VARCHAR(255) NOT NULL,
+cardType VARCHAR(255) NOT NULL,
+subType VARCHAR(255) NOT NULL,
+rarity VARCHAR(255) NOT NULL,
+imageLink TINYTEXT,
+setCode INT NOT NULL,
+
+CONSTRAINT FK_Card_From_Set
+FOREIGN KEY(setCode) REFERENCES sets,
+PRIMARY KEY (cardID)
+);
+
+CREATE TABLE trades(
+status VARCHAR(255) NOT NULL DEFAULT 'PENDING',
+tradeID INT NOT NULL,
+PRIMARY KEY (tradeID)
+);
+
+CREATE TABLE tradeMessages(
+messageNum INT NOT NULL,
+timestamp DATETIME,
+message TEXT,
+tradeID INT NOT NULL,
+username VARCHAR(255) NOT NULL,
+
+CONSTRAINT FK_Trade_Ref
+FOREIGN KEY(tradeID) REFERENCES trades,
+CONSTRAINT FK_Writer
+FOREIGN KEY(username) REFERENCES users,
+PRIMARY KEY (tradeID, messageNum)
+);
