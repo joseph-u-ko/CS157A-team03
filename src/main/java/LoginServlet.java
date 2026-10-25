@@ -21,7 +21,7 @@ public class LoginServlet extends HttpServlet {
 
     private static final String DB_URL = "jdbc:mysql://localhost:3306/poketrader?useSSL=false";
     private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "o{%}*pEhL@uIRUW]ZbmJ5V[2";
+    private static final String DB_PASSWORD = "$apphire9Warrior";
 
     @Override
     protected void doPost(
@@ -29,6 +29,8 @@ public class LoginServlet extends HttpServlet {
             HttpServletResponse response)
             throws ServletException, IOException {
 
+    	String loginPage = "login-and-signup.jsp";
+    	String homePage = "home.jsp";
         String username = request.getParameter("username");
         String enteredPassword = request.getParameter("password");
 
@@ -66,10 +68,16 @@ public class LoginServlet extends HttpServlet {
 	            	boolean isLoggedIn = result.getBoolean("loggedIn");
 	            	if (isLoggedIn) {
 	            		request.setAttribute("loginError", "Sorry, someone has logged onto your account. Please try again later.");
-	            		request.getRequestDispatcher("login_and_signup.jsp")
+	            		request.getRequestDispatcher(loginPage)
 	            			   .forward(request, response);
 	            		return;
 	            	}
+	            }
+	            else {
+	            	request.setAttribute("loginError",  "An account of this username does not exist. Please sign up!");
+	            	request.getRequestDispatcher(loginPage)
+	            		   .forward(request, response);
+	            	return;
 	            }
             }
 
@@ -87,11 +95,11 @@ public class LoginServlet extends HttpServlet {
                         session.setAttribute("currentUser", username);
                         System.out.println("Login successful! Welcome back, " + username);
                         statement_updateLoggedIn.executeUpdate(); // changes loggedIn to true
-                        response.sendRedirect("home.jsp");
+                        response.sendRedirect(homePage);
                     }
                     else {
                         request.setAttribute("loginError", "Incorrect username or password.");
-                        request.getRequestDispatcher("login_and_signup.jsp")
+                        request.getRequestDispatcher(loginPage)
                                .forward(request, response);
                     }
                 }
@@ -103,7 +111,7 @@ public class LoginServlet extends HttpServlet {
         	e.printStackTrace();
         	
             request.setAttribute("loginError", "A database error occurred.");
-            request.getRequestDispatcher("login_and_signup.jsp")
+            request.getRequestDispatcher(loginPage)
                    .forward(request, response);
         }
     }

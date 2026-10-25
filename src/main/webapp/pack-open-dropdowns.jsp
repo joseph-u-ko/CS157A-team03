@@ -5,13 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Placeholder Pack Opener</title>
-    <link rel="stylesheet" href="pack-opening.css">
+    <link rel="stylesheet" href="pack-open-menu.css">
 </head>
 <body>
 <main class="page">
     <div class="topbar">
-        <button type="button" aria-label="Back">Back</button>
-        <button type="button" class="dev" aria-label="Add one ticket">+1 Ticket</button>
+        <button type="button" onclick="window.location.href='home.jsp';">Back</button>
+        <form action="${pageContext.request.contextPath}/addTicket" method="post">
+        	<button type="submit" class="dev" aria-label="Add one ticket">+1 Ticket</button>
+        </form>
     </div>
 
     <section class="hero">
