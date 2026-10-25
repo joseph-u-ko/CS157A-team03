@@ -1,5 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%
+    // Check if session exists and if the specific attribute is null
+    if (session == null || session.getAttribute("currentUser") == null) {
+        response.sendRedirect("login-and-signup.jsp");
+        return; // Stop further execution of the JSP
+    }
+%>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -48,7 +55,7 @@
 				</div>
 				<div style="width: 100px; height: 75px; border-radius: 5px; border: 2px solid #333; margin: auto; margin-top: 10px;">
 					<form>
-						<button type="button" style="width: 100px; height: 75px;">Shop</button>
+						<button type="button" style="width: 100px; height: 75px;" onclick="window.location.href='pack-open-dropdowns.jsp';">Shop</button>
 					</form>	
 				</div>
 				<div style="width: 100px; height: 75px; border-radius: 5px; border: 2px solid #333; margin: auto; margin-top: 10px;">
