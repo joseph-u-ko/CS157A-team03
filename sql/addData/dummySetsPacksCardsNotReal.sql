@@ -5,12 +5,12 @@ INSERT INTO sets(setCode, setName) VALUES
 (2, 'B');
 
 INSERT INTO packs(packID, packName, available, setCode) VALUES
-(1, 'Aaa', 0, 1),
-(2, 'Abb', 1, 1),
-(3, 'Acc', 1, 1),
-(4, 'Baa', 1, 2),
-(5, 'Bbb', 0, 2),
-(6, 'Bcc', 1, 2);
+('1', 'Aaa', 0, 1),
+('2', 'Abb', 1, 1),
+('3', 'Acc', 1, 1),
+('4', 'Baa', 1, 2),
+('5', 'Bbb', 0, 2),
+('6', 'Bcc', 1, 2);
 
 INSERT INTO cards(cardID, cardName, setCode, imageLink) VALUES
 (10, 'Bulb', 1, "https://assets.pokemon.com/static-assets/content-assets/cms2/img/cards/web/PGO/PGO_EN_1.png"),

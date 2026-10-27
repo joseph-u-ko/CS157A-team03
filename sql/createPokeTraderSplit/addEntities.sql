@@ -11,18 +11,18 @@ PRIMARY KEY (username)
 
 CREATE TABLE sets(
 setCode INT NOT NULL,
-setName VARCHAR(255) NOT NULL DEFAULT 'UNDEFINED',
+setName VARCHAR(255) UNIQUE NOT NULL DEFAULT 'UNDEFINED',
 PRIMARY KEY (setCode)
 );
 
 CREATE TABLE packs(
-packID INT NOT NULL,
+packID VARCHAR(255) NOT NULL,
 packName VARCHAR(255) NOT NULL DEFAULT 'UNDEFINED',
 available TINYINT(1) NOT NULL DEFAULT 0,
 setCode INT NOT NULL,
 
 CONSTRAINT FK_Pack_From_Set
-FOREIGN KEY(setCode) REFERENCES sets,
+FOREIGN KEY(setCode) REFERENCES sets(setCode),
 PRIMARY KEY (packID),
 UNIQUE(packID, setCode)
 );
@@ -37,7 +37,7 @@ imageLink TINYTEXT,
 setCode INT NOT NULL,
 
 CONSTRAINT FK_Card_From_Set
-FOREIGN KEY(setCode) REFERENCES sets,
+FOREIGN KEY(setCode) REFERENCES sets(setCode),
 PRIMARY KEY (cardID),
 UNIQUE(cardID, setCode)
 );
@@ -53,11 +53,11 @@ tradeID INT NOT NULL,
 messageNum INT NOT NULL,
 timestamp DATETIME,
 message TEXT,
-username VARCHAR(255) NOT NULL,
+sender VARCHAR(255) NOT NULL,
 
 CONSTRAINT FK_Trade_Ref
-FOREIGN KEY(tradeID) REFERENCES trades,
-CONSTRAINT FK_Writer
-FOREIGN KEY(username) REFERENCES users,
+FOREIGN KEY(tradeID) REFERENCES trades(tradeID),
+CONSTRAINT FK_Sender
+FOREIGN KEY(sender) REFERENCES users(username),
 PRIMARY KEY (tradeID, messageNum)
 );

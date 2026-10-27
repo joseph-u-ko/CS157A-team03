@@ -56,8 +56,8 @@ public class BinderServlet extends HttpServlet {
         
         // Prepare the SQL statement that gets all the Cards a user owns
         String SQL_cards = """
-        		SELECT cards.*, owns.quantity
-        		FROM cards NATURAL JOIN owns
+        		SELECT cards.*, owns.quantity, sets.setName
+        		FROM (cards NATURAL JOIN owns) NATURAL JOIN sets
         		WHERE owns.username = ?
                 """;
         String filter = " AND cardName LIKE ?";
