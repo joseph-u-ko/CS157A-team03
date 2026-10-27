@@ -7,9 +7,9 @@ setCode INT NOT NULL,
 
 
 PRIMARY KEY (packID, cardID),
-CONSTRAINT FK_Pack_To_Card
+CONSTRAINT FK_Pack_To_Set
 FOREIGN KEY(packID, setCode) REFERENCES packs(packID, setCode),
-CONSTRAINT FK_Card_To_Pack
+CONSTRAINT FK_Card_To_Set
 FOREIGN KEY(cardID, setCode) REFERENCES cards(cardID, setCode)
 );
 
