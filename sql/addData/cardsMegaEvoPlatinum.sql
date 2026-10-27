@@ -1,3 +1,4 @@
+USE poketrader;
 -- Expansion-series names and requested set codes.
 -- Note: 30CC is four characters, so setCode should be CHAR(4) or VARCHAR(4).
 INSERT INTO sets (setName, setCode)
