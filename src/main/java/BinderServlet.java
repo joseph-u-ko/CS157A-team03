@@ -22,7 +22,7 @@ public class BinderServlet extends HttpServlet {
     
     private static final String DB_URL = "jdbc:mysql://localhost:3306/poketrader?useSSL=false";
     private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "Chingloo1234$$";
+    private static final String DB_PASSWORD = "$apphire9Warrior";
     
     @Override
     protected void doPost(
@@ -33,7 +33,7 @@ public class BinderServlet extends HttpServlet {
     	// Get the current session and current user's name
         HttpSession session = request.getSession(false);
         String binderPage = "binder.jsp";
-        String loginPage = "login_and_signup.jsp";
+        String loginPage = "login-and-signup.jsp";
         String username = (String) session.getAttribute("currentUser");
         String card = request.getParameter("cardName");
         

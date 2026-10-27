@@ -90,10 +90,10 @@ public class SignupServlet extends HttpServlet {
 		    } 
         	// This exception will be caught if the user tries to sign-up with a username that already exists in the PokéTrader database.
         	catch (SQLIntegrityConstraintViolationException e) {
-        		// Username already exists
+        		// Username or password already exists
         		e.printStackTrace();
         		request.setAttribute("signupError", 
-        				"Sorry, it appears that this username is already taken. Try a different username.");
+        				"Sorry, it appears that this username or password is already taken. Try a different one.");
         		
         		request.getRequestDispatcher(loginPage)
         			   .forward(request, response);;
