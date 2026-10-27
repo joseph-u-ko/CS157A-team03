@@ -33,11 +33,16 @@ public class LogoutServlet extends HttpServlet {
         
         if (session == null ||
                 session.getAttribute("currentUser") == null) {
-                // User is not authenticated
-            	request.setAttribute("sessionError", "Session Error: you have been logged out.");
-            	response.sendRedirect(loginPage);
-            	return;
-            }
+            // User is not authenticated
+        	HttpSession errorSession = request.getSession(true);
+        	
+            errorSession.setAttribute(
+                "sessionError",
+                "Session Error: you have been logged out."
+            );
+            response.sendRedirect(loginPage);
+           	return;
+        }
         
         // Prepare the SQL statement that logs the user out (changes loggedIn to false for that user)
         String sql = """

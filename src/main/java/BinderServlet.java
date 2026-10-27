@@ -34,30 +34,45 @@ public class BinderServlet extends HttpServlet {
         HttpSession session = request.getSession(false);
         String binderPage = "binder.jsp";
         String loginPage = "login-and-signup.jsp";
-        String username = (String) session.getAttribute("currentUser");
-        String card = request.getParameter("cardName");
         
         ArrayList<Card> cardsEntries = new ArrayList<Card>();
         
         // Taken from Isaiah's code (session error) 
         if (session == null ||
                 session.getAttribute("currentUser") == null) {
-                // User is not authenticated
-            	request.setAttribute("sessionError", "Session Error: you have been logged out.");
-            	response.sendRedirect(loginPage);
-            	return;
-            	}
-        // Prepare the SQL statement that gets all the Cards a user owns
-        String sql = """
-        		SELECT cards.cardID, cardName, cardType, subType, rarity, imageLink, owns.quantity, setName
-        		FROM cards, owns, sets
-        		WHERE cards.cardID = owns.cardID AND owns.username = ? AND cards.setCode = sets.setCode AND cardName ILIKE ?
-                """;
+            // User is not authenticated
+        	HttpSession errorSession = request.getSession(true);
+        	
+            errorSession.setAttribute(
+                "sessionError",
+                "Session Error: you have been logged out."
+            );
+            response.sendRedirect(loginPage);
+           	return;
+        }
+        String username = (String) session.getAttribute("currentUser");
+        String card = request.getParameter("cardName");
         
+        // Prepare the SQL statement that gets all the Cards a user owns
+        // Filter to only cards that the user owns
+        String SQL_cards = """
+        		SELECT *
+        		FROM cards NATURAL JOIN owns
+        		WHERE owns.username = ?
+                """;
+        String filter = "AND cardName LIKE ?";
+        if (card != null) {
+        	//Filter is needed by cardName only for now
+        	SQL_cards = SQL_cards + filter;
+        }
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-                PreparedStatement statement = connection.prepareStatement(sql)) {
+                PreparedStatement statement = connection.prepareStatement(SQL_cards)) {
                    statement.setString(1, username);
-                   statement.setString(2, card);
+                   if (card != null) {
+                	   String cardREGEX = "%" + card + "%";
+                	   System.out.println(cardREGEX);
+                	   statement.setString(2, cardREGEX);
+                   }
                    ResultSet rs = statement.executeQuery();
                    while (rs.next()) {
                 	   int cardID = rs.getInt(1);
@@ -86,12 +101,5 @@ public class BinderServlet extends HttpServlet {
         	request.getRequestDispatcher(binderPage)
         		.forward(request, response);
         }
-
-
-  
-    	
-    }
-    
-    
-	
+    }	
 }

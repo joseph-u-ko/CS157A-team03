@@ -33,13 +33,8 @@
 		        out.println("SQLException caught: " + e.getMessage());
 		    } 
 		%>
-<main class="page">
-    <div class="topbar">
-        <button type="button" onclick="window.location.href='home.jsp';">Back</button>
-        <form action="${pageContext.request.contextPath}/addTicket" method="post">
-        	<button type="submit" class="dev" aria-label="Add one ticket">+1 Ticket</button>
-        </form>
-        <!-- Added ticket display -->
+		
+		<!-- Ticket count -->
         <%
         	String SQL_numTickets = """
 				SELECT tickets
@@ -62,10 +57,47 @@
         		}
         	}
         %>
+<main class="page">
+    <div class="topbar">
+        <button type="button" onclick="window.location.href='home.jsp';">Back</button>
+        <form action="${pageContext.request.contextPath}/addTicket" method="post">
+        	<button type="submit" class="dev" aria-label="Add one ticket">+1 Ticket</button>
+        </form>
+        
         <span class="ticket-count">
             Tickets: <%= numTickets %>
         </span>
     </div>
+    
+    <%
+	    String ticketError =
+	        (String) request.getAttribute("ticketError");
+	
+	    if (ticketError != null) {
+	%>
+	
+	<div class="error-message">
+	    <%= ticketError %>
+	</div>
+	
+	<%
+	    }
+	%>
+	
+	<%
+	    String updateError =
+	        (String) request.getAttribute("updateError");
+	
+	    if (updateError != null) {
+	%>
+	
+	<div class="error-message">
+	    <%= updateError %>
+	</div>
+	
+	<%
+	    }
+	%>
 
     <section class="hero">
         <!-- Replace the image path when you choose a different header image. -->

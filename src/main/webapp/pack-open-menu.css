@@ -36,6 +36,15 @@ body {
     gap: 16px;
 }
 
+/* Error message */
+.error-message {
+    color: #e53935;
+    text-align: right;
+    font-weight: bold;
+    margin-top: 8px;
+    margin-bottom: 16px;
+}
+
 /* Shared appearance for buttons and dropdown menus. */
 button, select {
     border: 1px solid var(--line);

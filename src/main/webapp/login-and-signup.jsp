@@ -80,7 +80,7 @@
 			    %>
 			    <%-- An error message will appear below sign-up button if user has been logged out from different page. --%>
 			    <%
-    				String sessionError = (String) request.getAttribute("sessionError");
+    				String sessionError = (String) session.getAttribute("sessionError");
     				if (sessionError != null) {
 				%>
     				<p style="color:red;"><%= sessionError %></p>
