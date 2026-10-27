@@ -56,11 +56,14 @@ public class BinderServlet extends HttpServlet {
         
         // Prepare the SQL statement that gets all the Cards a user owns
         String SQL_cards = """
-        		SELECT cards.*, owns.quantity, sets.setName
-        		FROM (cards NATURAL JOIN owns) NATURAL JOIN sets
-        		WHERE owns.username = ?
+        		SELECT c.cardID, c.cardName, c.cardType, c.subType,
+        			   c.rarity, c.imageLink, o.quantity, s.setName
+        		FROM cards AS c
+        		JOIN owns AS o ON c.cardID = o.cardID
+        		JOIN sets AS s ON c.setCode = s.setCode
+        		WHERE o.username = ?
                 """;
-        String filter = " AND cardName LIKE ?";
+        String filter = " AND c.cardName LIKE ?";
         //
         boolean conditionForFilter = ((card!=null) && (!(card.equals(""))));
         if (conditionForFilter) {
@@ -106,6 +109,7 @@ public class BinderServlet extends HttpServlet {
                    statement.close();
                    connection.close();
                    response.sendRedirect(binderPage);
+                   return;
                    
         }
         // catch-all exception
