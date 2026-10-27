@@ -33,7 +33,11 @@ public class BinderServlet extends HttpServlet {
     	// Get the current session and current user's name
         HttpSession session = request.getSession(false);
         String binderPage = "binder.jsp";
+<<<<<<< Updated upstream
         String loginPage = "login_and_signup.jsp";
+=======
+        String loginPage = "login-and-signup.jsp";
+>>>>>>> Stashed changes
         String username = (String) session.getAttribute("currentUser");
         String card = request.getParameter("cardName");
         
@@ -48,18 +52,43 @@ public class BinderServlet extends HttpServlet {
             	return;
             	}
         // Prepare the SQL statement that gets all the Cards a user owns
+<<<<<<< Updated upstream
         String sql = """
         		SELECT cards.cardID, cardName, cardType, subType, rarity, imageLink, owns.quantity, setName
         		FROM cards, owns, sets
         		WHERE cards.cardID = owns.cardID AND owns.username = ? AND cards.setCode = sets.setCode AND cardName ILIKE ?
                 """;
         
+=======
+        String SQL_cards = """
+        		SELECT cards.*, owns.quantity
+        		FROM cards NATURAL JOIN owns
+        		WHERE owns.username = ?
+                """;
+        String filter = " AND cardName LIKE ?";
+        //
+        boolean conditionForFilter = ((card!=null) && (!(card.equals(""))));
+        if (conditionForFilter) {
+        	SQL_cards = SQL_cards + filter;
+        	
+           }        
+>>>>>>> Stashed changes
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
                 PreparedStatement statement = connection.prepareStatement(sql)) {
                    statement.setString(1, username);
+<<<<<<< Updated upstream
                    statement.setString(2, card);
+=======
+                   if (conditionForFilter) {
+                	   String cardREGEX = "%" + card + "%";
+                	   System.out.println(cardREGEX);
+                	   statement.setString(2, cardREGEX);
+                   }
+>>>>>>> Stashed changes
                    ResultSet rs = statement.executeQuery();
+                   boolean cardsFound = false;
                    while (rs.next()) {
+                	   cardsFound = true;
                 	   int cardID = rs.getInt(1);
                 	   String cardName = rs.getString(2);
                 	   String cardType = rs.getString(3);
@@ -71,12 +100,21 @@ public class BinderServlet extends HttpServlet {
                 	   cardsEntries.add(new Card(cardID, cardName, cardType, subType, rarity, imageLink, quantity, setName));
                    }
                    
-                   session.setAttribute("cards", cardsEntries);
-                   System.out.println("Successfully retrived the cards that " + username + " owns.");
+                   if (cardsFound) {
+                	   session.setAttribute("cards", cardsEntries);
+                       System.out.println("Successfully retrived the cards that " + username + " owns.");
+                       session.setAttribute("cardsFound", cardsFound);
+                	   
+                   }
+                   else {
+                	   session.setAttribute("cardsFound", cardsFound);
+                   }
+               
                    rs.close();
                    statement.close();
                    connection.close();
                    response.sendRedirect(binderPage);
+                   
         }
         // catch-all exception
         // check in meeting if this should be more specific
