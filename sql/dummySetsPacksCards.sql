@@ -4,8 +4,6 @@ INSERT INTO sets(setCode, setName) VALUES
 (1, 'A'),
 (2, 'B');
 
-
-
 INSERT INTO packs(packID, packName, available, setCode) VALUES
 (1, 'Aaa', 0, 1),
 (2, 'Abb', 1, 1),

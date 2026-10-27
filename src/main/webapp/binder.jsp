@@ -33,9 +33,7 @@
 <<<<<<< Updated upstream
 <body>
 		<div style="position: fixed; bottom: 20px; right: 20px; width: 100px; height: 50px; border-radius: 5px; border: 2px solid #333;">
-			<form action="home.jsp" method="get">
-				<button type="submit" style="width: 100px; height: 50px;">Home</button>
-			</form>	
+			<button type="button" onclick="window.location.href='home.jsp';">Back</button>
 		</div>
 =======
 <body style="background-color: lightblue;">

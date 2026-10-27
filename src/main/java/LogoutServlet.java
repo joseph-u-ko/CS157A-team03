@@ -17,7 +17,7 @@ public class LogoutServlet extends HttpServlet {
 	
     private static final String DB_URL = "jdbc:mysql://localhost:3306/poketrader?useSSL=false";
     private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "o{%}*pEhL@uIRUW]ZbmJ5V[2";
+    private static final String DB_PASSWORD = "$apphire9Warrior";
 
     @Override
     protected void doPost(
@@ -27,7 +27,22 @@ public class LogoutServlet extends HttpServlet {
     	
     	// Get the current session and current user's name
         HttpSession session = request.getSession(false);
+        String loginPage = "login-and-signup.jsp";
+        String homePage = "home.jsp";
         String username = (String) session.getAttribute("currentUser");
+        
+        if (session == null ||
+                session.getAttribute("currentUser") == null) {
+            // User is not authenticated
+        	HttpSession errorSession = request.getSession(true);
+        	
+            errorSession.setAttribute(
+                "sessionError",
+                "Session Error: you have been logged out."
+            );
+            response.sendRedirect(loginPage);
+           	return;
+        }
         
         // Prepare the SQL statement that logs the user out (changes loggedIn to false for that user)
         String sql = """
@@ -41,7 +56,7 @@ public class LogoutServlet extends HttpServlet {
         	statement.setString(1, username);
         	statement.executeUpdate();
         	System.out.println("User " + username + " logged out."); // Message to console for logout confirmation (for testing purposes)
-        	response.sendRedirect("login_and_signup.jsp");
+        	response.sendRedirect(loginPage);
         	if (session != null) {
                 session.invalidate(); // Ends the current session
             }
@@ -50,7 +65,7 @@ public class LogoutServlet extends HttpServlet {
         catch (SQLException e) {
         	e.printStackTrace();
         	request.setAttribute("logoutError", "Logout Error: " + e.getMessage());
-        	request.getRequestDispatcher("home.jsp")
+        	request.getRequestDispatcher(homePage)
         		.forward(request, response);
         }
     }

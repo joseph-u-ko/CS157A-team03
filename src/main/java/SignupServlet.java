@@ -7,6 +7,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -22,7 +24,7 @@ public class SignupServlet extends HttpServlet {
 	
     private static final String DB_URL = "jdbc:mysql://localhost:3306/poketrader?autoReconnect=true&useSSL=false";
     private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "o{%}*pEhL@uIRUW]ZbmJ5V[2";
+    private static final String DB_PASSWORD = "$apphire9Warrior";
 	
     @Override
     protected void doPost(
@@ -30,6 +32,8 @@ public class SignupServlet extends HttpServlet {
             HttpServletResponse response)
             throws ServletException, IOException {
 
+    	String loginPage = "login-and-signup.jsp";
+    	String homePage = "home.jsp";
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         String reconfirmed_password = request.getParameter("reconfirmed_password");
@@ -38,7 +42,7 @@ public class SignupServlet extends HttpServlet {
             username.isBlank() || password.isBlank() || reconfirmed_password.isBlank()) {
 
             request.setAttribute("signupError", "All fields are required.");
-            request.getRequestDispatcher("login_and_signup.jsp")
+            request.getRequestDispatcher(loginPage)
                    .forward(request, response);
             return;
         }
@@ -47,7 +51,7 @@ public class SignupServlet extends HttpServlet {
         // If they don't match, then output a message for the user and then reject the sign-up.
         if (!password.equals(reconfirmed_password)) {
         	request.setAttribute("signupError", "Passwords need to match.");
-        	request.getRequestDispatcher("login_and_signup.jsp")
+        	request.getRequestDispatcher(loginPage)
         		   .forward(request, response);
         	return;
         }
@@ -68,8 +72,13 @@ public class SignupServlet extends HttpServlet {
                 );
                 statement.setString(2, passwordHashed);
                 statement.setBoolean(3, true); // loggedIn is defaulted to true (user will automatically be logged-in after successfully signing-up)
-                statement.setTimestamp(4, null); // nextTicketTime is null (this will change once ticket functionality is implemented)
-                statement.setInt(5, 0); // a new user has 0 tickets
+                
+                LocalTime now = LocalTime.now();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+                String time = now.format(formatter);
+                statement.setString(4, time); //current timestamp for now
+                
+                statement.setInt(5, 1); // a new user has 1 ticket
                 int rowsInserted = statement.executeUpdate(); // Inserts new user data into 'users' table (throws error if username already exists)
                 System.out.println("Rows inserted: " + rowsInserted);
   
@@ -77,15 +86,16 @@ public class SignupServlet extends HttpServlet {
                 // Afterwards, the user will be redirected to the main page.
                 HttpSession session = request.getSession();
                 session.setAttribute("currentUser", username);
-                response.sendRedirect("home.jsp");
+                response.sendRedirect(homePage);
 		    } 
         	// This exception will be caught if the user tries to sign-up with a username that already exists in the PokéTrader database.
         	catch (SQLIntegrityConstraintViolationException e) {
-        		// Username already exists
+        		// Username or password already exists
+        		e.printStackTrace();
         		request.setAttribute("signupError", 
-        				"Sorry, it appears that this username is already taken. Try a different username.");
+        				"Sorry, it appears that this username or password is already taken. Try a different one.");
         		
-        		request.getRequestDispatcher("login_and_signup.jsp")
+        		request.getRequestDispatcher(loginPage)
         			   .forward(request, response);;
         	}
         	// General catch-all exception with sign-up error
@@ -97,7 +107,7 @@ public class SignupServlet extends HttpServlet {
 		            "Database error: " + e.getMessage()
 		        );
 		
-		        request.getRequestDispatcher("login_and_signup.jsp")
+		        request.getRequestDispatcher(loginPage)
 		               .forward(request, response);
 		    }
     }

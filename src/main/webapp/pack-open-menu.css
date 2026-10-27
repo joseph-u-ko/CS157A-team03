@@ -36,6 +36,15 @@ body {
     gap: 16px;
 }
 
+/* Error message */
+.error-message {
+    color: #e53935;
+    text-align: right;
+    font-weight: bold;
+    margin-top: 8px;
+    margin-bottom: 16px;
+}
+
 /* Shared appearance for buttons and dropdown menus. */
 button, select {
     border: 1px solid var(--line);
@@ -63,7 +72,7 @@ button:hover { border-color: var(--accent); background: #263157; }
 .hero img {
     display: block;
     width: min(850px, 100%);
-    max-height: 285px;
+    max-height: 400px;
     object-fit: cover;
     margin: 0 auto 18px;
     border-radius: 16px;

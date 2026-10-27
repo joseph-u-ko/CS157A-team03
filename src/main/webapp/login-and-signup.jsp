@@ -7,15 +7,15 @@
 	    <meta charset="UTF-8">
 	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	    <title>PokeTrader Login</title>
-	    <link rel="stylesheet" href="login_and_signup.css">
+	    <link rel="stylesheet" href="login-and-signup.css">
 	</head>
 	<body>
 		<%-- Database connection --%>
 		<%
-		 String db = "poketrader";
+		 	String db = "poketrader";
 		    String user; // assumes database name is the same as username
 		      user = "root";
-		    String password = "o{%}*pEhL@uIRUW]ZbmJ5V[2";
+		    String password = "$apphire9Warrior";
 		    
 		    try {
 		        java.sql.Connection con;
@@ -54,7 +54,7 @@
 		<div class="parent-container">
 			<%-- Sign-up Box --%>
 			<div class="child-box">
-				<form action="signup" method="post">
+				<form action="${pageContext.request.contextPath}/signup" method="post">
 					<label>Username:</label>
 					<input type="text" name="username" required>
 					<br><br>
@@ -68,7 +68,7 @@
 					<br><br>
 					
 					<button type="submit">Sign Up</button>
-				</form>
+				</form>		
 				<%-- An error message will appear below sign-up button if something goes wrong with sign-up. --%>
 				<%
 			        String signupError = (String) request.getAttribute("signupError");
@@ -78,6 +78,15 @@
 			    <%
 			        }
 			    %>
+			    <%-- An error message will appear below sign-up button if user has been logged out from different page. --%>
+			    <%
+    				String sessionError = (String) session.getAttribute("sessionError");
+    				if (sessionError != null) {
+				%>
+    				<p style="color:red;"><%= sessionError %></p>
+				<%
+    				}
+				%>
 			</div>
 			
 			<%-- Login Box --%>

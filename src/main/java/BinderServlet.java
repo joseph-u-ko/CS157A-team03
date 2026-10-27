@@ -22,7 +22,7 @@ public class BinderServlet extends HttpServlet {
     
     private static final String DB_URL = "jdbc:mysql://localhost:3306/poketrader?useSSL=false";
     private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "Chingloo1234$$";
+    private static final String DB_PASSWORD = "$apphire9Warrior";
     
     @Override
     protected void doPost(
@@ -33,33 +33,30 @@ public class BinderServlet extends HttpServlet {
     	// Get the current session and current user's name
         HttpSession session = request.getSession(false);
         String binderPage = "binder.jsp";
-<<<<<<< Updated upstream
-        String loginPage = "login_and_signup.jsp";
-=======
         String loginPage = "login-and-signup.jsp";
->>>>>>> Stashed changes
         String username = (String) session.getAttribute("currentUser");
         String card = request.getParameter("cardName");
+
         
         ArrayList<Card> cardsEntries = new ArrayList<Card>();
         
         // Taken from Isaiah's code (session error) 
         if (session == null ||
                 session.getAttribute("currentUser") == null) {
-                // User is not authenticated
-            	request.setAttribute("sessionError", "Session Error: you have been logged out.");
-            	response.sendRedirect(loginPage);
-            	return;
-            	}
-        // Prepare the SQL statement that gets all the Cards a user owns
-<<<<<<< Updated upstream
-        String sql = """
-        		SELECT cards.cardID, cardName, cardType, subType, rarity, imageLink, owns.quantity, setName
-        		FROM cards, owns, sets
-        		WHERE cards.cardID = owns.cardID AND owns.username = ? AND cards.setCode = sets.setCode AND cardName ILIKE ?
-                """;
+            // User is not authenticated
+        	HttpSession errorSession = request.getSession(true);
+        	
+            errorSession.setAttribute(
+                "sessionError",
+                "Session Error: you have been logged out."
+            );
+            response.sendRedirect(loginPage);
+           	return;
+        }
+        String username = (String) session.getAttribute("currentUser");
+        String card = request.getParameter("cardName");
         
-=======
+        // Prepare the SQL statement that gets all the Cards a user owns
         String SQL_cards = """
         		SELECT cards.*, owns.quantity
         		FROM cards NATURAL JOIN owns
@@ -72,19 +69,16 @@ public class BinderServlet extends HttpServlet {
         	SQL_cards = SQL_cards + filter;
         	
            }        
->>>>>>> Stashed changes
+
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-                PreparedStatement statement = connection.prepareStatement(sql)) {
+                PreparedStatement statement = connection.prepareStatement(SQL_cards)) {
                    statement.setString(1, username);
-<<<<<<< Updated upstream
-                   statement.setString(2, card);
-=======
                    if (conditionForFilter) {
+                   if (card != null) {
                 	   String cardREGEX = "%" + card + "%";
                 	   System.out.println(cardREGEX);
                 	   statement.setString(2, cardREGEX);
-                   }
->>>>>>> Stashed changes
+
                    ResultSet rs = statement.executeQuery();
                    boolean cardsFound = false;
                    while (rs.next()) {
@@ -124,12 +118,5 @@ public class BinderServlet extends HttpServlet {
         	request.getRequestDispatcher(binderPage)
         		.forward(request, response);
         }
-
-
-  
-    	
-    }
-    
-    
-	
+    }	
 }
