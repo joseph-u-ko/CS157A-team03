@@ -35,7 +35,12 @@ public class AddTicketServlet extends HttpServlet {
         if (session == null ||
             session.getAttribute("currentUser") == null) {
             // User is not authenticated
-        	request.setAttribute("sessionError", "Session Error: you have been logged out.");
+        	HttpSession errorSession = request.getSession(true);
+        	
+            errorSession.setAttribute(
+                "sessionError",
+                "Session Error: you have been logged out."
+            );
         	response.sendRedirect(loginPage);
         	return;
         }

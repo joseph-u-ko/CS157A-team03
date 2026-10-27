@@ -33,18 +33,23 @@ public class PackOpenServlet extends HttpServlet {
         HttpSession session = request.getSession(false);
         String packShop = "pack-open-dropdowns.jsp";
         String loginPage = "login-and-signup.jsp";
-        String username = (String) session.getAttribute("currentUser");
         
         if (session == null ||
                 session.getAttribute("currentUser") == null) {
                 // User is not authenticated
-            	request.setAttribute("sessionError", "Session Error: you have been logged out.");
+	        	HttpSession errorSession = request.getSession(true);
+	
+	            errorSession.setAttribute(
+	                "sessionError",
+	                "Session Error: you have been logged out."
+	            );
             	response.sendRedirect(loginPage);
             	return;
             }
-        
+
+        String username = (String) session.getAttribute("currentUser");
         String packID = request.getParameter("packID");
-        String setCode = request.getParameter("setCode");
+//        String setCode = request.getParameter("setCode");
         
         // Prepare the SQL statement that opens a pack
         String SQL_getCards = """
@@ -137,6 +142,7 @@ public class PackOpenServlet extends HttpServlet {
         	request.setAttribute("updateError", "Update Error: " + e.getMessage());
         	request.getRequestDispatcher(packShop)
         		.forward(request, response);
+        	return;
         }
     }
 }
