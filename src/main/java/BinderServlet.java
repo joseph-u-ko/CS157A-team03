@@ -34,6 +34,9 @@ public class BinderServlet extends HttpServlet {
         HttpSession session = request.getSession(false);
         String binderPage = "binder.jsp";
         String loginPage = "login-and-signup.jsp";
+        String username = (String) session.getAttribute("currentUser");
+        String card = request.getParameter("cardName");
+
         
         ArrayList<Card> cardsEntries = new ArrayList<Card>();
         
@@ -54,27 +57,32 @@ public class BinderServlet extends HttpServlet {
         String card = request.getParameter("cardName");
         
         // Prepare the SQL statement that gets all the Cards a user owns
-        // Filter to only cards that the user owns
         String SQL_cards = """
-        		SELECT *
+        		SELECT cards.*, owns.quantity
         		FROM cards NATURAL JOIN owns
         		WHERE owns.username = ?
                 """;
-        String filter = "AND cardName LIKE ?";
-        if (card != null) {
-        	//Filter is needed by cardName only for now
+        String filter = " AND cardName LIKE ?";
+        //
+        boolean conditionForFilter = ((card!=null) && (!(card.equals(""))));
+        if (conditionForFilter) {
         	SQL_cards = SQL_cards + filter;
-        }
+        	
+           }        
+
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
                 PreparedStatement statement = connection.prepareStatement(SQL_cards)) {
                    statement.setString(1, username);
+                   if (conditionForFilter) {
                    if (card != null) {
                 	   String cardREGEX = "%" + card + "%";
                 	   System.out.println(cardREGEX);
                 	   statement.setString(2, cardREGEX);
-                   }
+
                    ResultSet rs = statement.executeQuery();
+                   boolean cardsFound = false;
                    while (rs.next()) {
+                	   cardsFound = true;
                 	   int cardID = rs.getInt(1);
                 	   String cardName = rs.getString(2);
                 	   String cardType = rs.getString(3);
@@ -86,12 +94,21 @@ public class BinderServlet extends HttpServlet {
                 	   cardsEntries.add(new Card(cardID, cardName, cardType, subType, rarity, imageLink, quantity, setName));
                    }
                    
-                   session.setAttribute("cards", cardsEntries);
-                   System.out.println("Successfully retrived the cards that " + username + " owns.");
+                   if (cardsFound) {
+                	   session.setAttribute("cards", cardsEntries);
+                       System.out.println("Successfully retrived the cards that " + username + " owns.");
+                       session.setAttribute("cardsFound", cardsFound);
+                	   
+                   }
+                   else {
+                	   session.setAttribute("cardsFound", cardsFound);
+                   }
+               
                    rs.close();
                    statement.close();
                    connection.close();
                    response.sendRedirect(binderPage);
+                   
         }
         // catch-all exception
         // check in meeting if this should be more specific
