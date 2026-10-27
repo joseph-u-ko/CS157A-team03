@@ -34,8 +34,6 @@ public class BinderServlet extends HttpServlet {
         HttpSession session = request.getSession(false);
         String binderPage = "binder.jsp";
         String loginPage = "login-and-signup.jsp";
-        String username = (String) session.getAttribute("currentUser");
-        String card = request.getParameter("cardName");
 
         
         ArrayList<Card> cardsEntries = new ArrayList<Card>();
@@ -74,10 +72,10 @@ public class BinderServlet extends HttpServlet {
                 PreparedStatement statement = connection.prepareStatement(SQL_cards)) {
                    statement.setString(1, username);
                    if (conditionForFilter) {
-                   if (card != null) {
                 	   String cardREGEX = "%" + card + "%";
                 	   System.out.println(cardREGEX);
                 	   statement.setString(2, cardREGEX);
+                   }
 
                    ResultSet rs = statement.executeQuery();
                    boolean cardsFound = false;
