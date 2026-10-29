@@ -10,7 +10,9 @@ PRIMARY KEY (packID, cardID),
 CONSTRAINT FK_Pack_To_Set
 FOREIGN KEY(packID, setCode) REFERENCES packs(packID, setCode),
 CONSTRAINT FK_Card_To_Set
-FOREIGN KEY(cardID, setCode) REFERENCES cards(cardID, setCode)
+FOREIGN KEY(cardID, setCode) REFERENCES cards(cardID, setCode),
+CONSTRAINT FK_From_Set
+FOREIGN KEY(setCode) REFERENCES sets(setCode)
 );
 
 CREATE TABLE owns(
