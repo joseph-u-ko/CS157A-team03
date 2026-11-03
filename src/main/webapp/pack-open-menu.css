@@ -17,8 +17,8 @@ body {
     margin: 0;
     min-height: 100vh;
     color: var(--ink);
-    background: #090d1b;
-    font-family: Arial, sans-serif;
+    background-color: lightblue;
+    font-family: serif;
 }
 
 /* Centers the main content and controls its maximum width. */
@@ -38,7 +38,7 @@ body {
 
 /* Error message */
 .error-message {
-    color: #e53935;
+    color: #d00000;
     text-align: right;
     font-weight: bold;
     margin-top: 8px;
@@ -47,20 +47,26 @@ body {
 
 /* Shared appearance for buttons and dropdown menus. */
 button, select {
-    border: 1px solid var(--line);
-    border-radius: 9px;
+    border: 2px solid #333;
+    border-radius: 5px;
     padding: 11px 14px;
-    color: var(--ink);
-    background: #1d2644;
-    font-size: .95rem;
+    color: #222;
+    background-color: white;
+    font-size: 0.95rem;
 }
 
 /* Button interaction states. */
 button { cursor: pointer; }
-button:hover { border-color: var(--accent); background: #263157; }
+button:hover {
+    background-color: #e8f7fc;
+    border-color: #333;
+}
 
 /* Special styling for the developer ticket button. */
-.dev { background: #30255a; border-color: #735de4; }
+.dev {
+    background-color: white;
+    border-color: #333;
+}
 
 /* Header artwork and page title area. */
 .hero {
@@ -71,24 +77,37 @@ button:hover { border-color: var(--accent); background: #263157; }
 /* Controls the artwork size, cropping, border, and rounded corners. */
 .hero img {
     display: block;
-    width: min(850px, 100%);
-    max-height: 400px;
+    width: min(700px, 100%);
+    height: 350px;
     object-fit: cover;
+    object-position: center;
     margin: 0 auto 18px;
-    border-radius: 16px;
-    border: 1px solid var(--line);
+    border-radius: 5px;
+    border: 2px solid #333;
 }
 
 /* Main heading and supporting instruction text. */
-h1 { margin: 0; font-size: clamp(1.7rem, 4vw, 2.5rem); }
-.subtitle { color: var(--muted); margin: 8px 0 0; }
+h1 {
+    margin: 0;
+    font-size: clamp(1.7rem, 4vw, 2.5rem);
+}
+
+.subtitle {
+    color: #333;
+    margin: 8px 0 0;
+}
+
+.ticket-count {
+    color: #222;
+}
+
 
 /* Shared card-like container for the pack selection area. */
 .panel {
     padding: 24px;
-    border: 1px solid var(--line);
-    border-radius: 16px;
-    background: var(--panel);
+    border: 2px solid #333;
+    border-radius: 5px;
+    background-color: white;
 }
 
 /* Panel heading. */
@@ -114,7 +133,12 @@ h1 { margin: 0; font-size: clamp(1.7rem, 4vw, 2.5rem); }
 }
 
 /* Dropdown labels and sizing. */
-label { display: block; margin-bottom: 7px; color: var(--muted); font-size: .88rem; }
+label {
+    display: block;
+    margin-bottom: 7px;
+    color: #333;
+    font-size: .88rem;
+}
 select { width: 100%; }
 select:disabled { opacity: .48; cursor: not-allowed; }
 
@@ -125,7 +149,12 @@ button:disabled {
 }
 
 /* Small explanatory placeholder text below each selection interface. */
-.placeholder { color: var(--muted); text-align: center; margin: 22px 0 0; font-size: .85rem; }
+.placeholder {
+    color: #333;
+    text-align: center;
+    margin: 22px 0 0;
+    font-size: .85rem;
+}
 
 /* Stack dropdown controls vertically on narrow screens. */
 @media (max-width: 700px) {

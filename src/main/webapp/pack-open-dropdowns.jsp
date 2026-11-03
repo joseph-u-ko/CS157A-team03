@@ -274,7 +274,7 @@
         const selectedSetCode = this.value;
 
         packSelect.innerHTML =
-            '<option value="">Placeholder: choose a Pack</option>';
+            '<option value="">Choose a Pack!</option>';
 
         const matchingPacks = packs.filter(function (pack) {
             return pack.setCode === selectedSetCode;
