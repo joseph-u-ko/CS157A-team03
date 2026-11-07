@@ -49,6 +49,11 @@
 					</form>
 				</div>
 				<div style="width: 100px; height: 75px; border-radius: 5px; border: 2px solid #333; margin: auto; margin-top: 10px;">
+					<form action="catalog" method="post">
+						<button type="submit" style="width: 100px; height: 75px;">Catalog</button>
+					</form>	
+				</div>
+				<div style="width: 100px; height: 75px; border-radius: 5px; border: 2px solid #333; margin: auto; margin-top: 10px;">
 					<form action="binder" method="post">
 						<button type="submit" style="width: 100px; height: 75px;">Binder</button>
 					</form>	
