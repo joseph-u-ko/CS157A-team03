@@ -22,7 +22,7 @@ public class BinderServlet extends HttpServlet {
     
     private static final String DB_URL = "jdbc:mysql://localhost:3306/poketrader?useSSL=false";
     private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "$apphire9Warrior";
+    private static final String DB_PASSWORD = "Chingloo1234$$";
     
     @Override
     protected void doPost(
@@ -34,8 +34,6 @@ public class BinderServlet extends HttpServlet {
         HttpSession session = request.getSession(false);
         String binderPage = "binder.jsp";
         String loginPage = "login-and-signup.jsp";
-        String username = (String) session.getAttribute("currentUser");
-        String card = request.getParameter("cardName");
 
         
         ArrayList<Card> cardsEntries = new ArrayList<Card>();
@@ -58,11 +56,14 @@ public class BinderServlet extends HttpServlet {
         
         // Prepare the SQL statement that gets all the Cards a user owns
         String SQL_cards = """
-        		SELECT cards.*, owns.quantity
-        		FROM cards NATURAL JOIN owns
-        		WHERE owns.username = ?
+        		SELECT c.cardID, c.cardName, c.cardType, c.subType,
+        			   c.rarity, c.imageLink, o.quantity, s.setName
+        		FROM cards AS c
+        		JOIN owns AS o ON c.cardID = o.cardID
+        		JOIN sets AS s ON c.setCode = s.setCode
+        		WHERE o.username = ?
                 """;
-        String filter = " AND cardName LIKE ?";
+        String filter = " AND c.cardName LIKE ?";
         //
         boolean conditionForFilter = ((card!=null) && (!(card.equals(""))));
         if (conditionForFilter) {
@@ -74,10 +75,10 @@ public class BinderServlet extends HttpServlet {
                 PreparedStatement statement = connection.prepareStatement(SQL_cards)) {
                    statement.setString(1, username);
                    if (conditionForFilter) {
-                   if (card != null) {
                 	   String cardREGEX = "%" + card + "%";
                 	   System.out.println(cardREGEX);
                 	   statement.setString(2, cardREGEX);
+                   }
 
                    ResultSet rs = statement.executeQuery();
                    boolean cardsFound = false;
@@ -108,6 +109,7 @@ public class BinderServlet extends HttpServlet {
                    statement.close();
                    connection.close();
                    response.sendRedirect(binderPage);
+                   return;
                    
         }
         // catch-all exception
