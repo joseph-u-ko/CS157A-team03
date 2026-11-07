@@ -1,0 +1,189 @@
+/* =============================
+   Shared theme values
+   ============================= */
+:root {
+    --page-bg: lightblue;
+    --surface: white;
+    --ink: #222;
+    --muted: #333;
+    --line: #333;
+    --hover: #e8f7fc;
+    --error: #d00000;
+}
+
+/* Make sizing more predictable. */
+* {
+    box-sizing: border-box;
+}
+
+/* Overall page background and default text. */
+body {
+    margin: 0;
+    min-height: 100vh;
+    color: var(--ink);
+    background-color: var(--page-bg);
+    font-family: serif;
+}
+
+/* Centers the page content. */
+.page {
+    width: min(1200px, 94%);
+    margin: 0 auto;
+    padding: 25px 0 50px;
+}
+
+/* Top navigation buttons. */
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 25px;
+}
+
+/* Shared button styling, matching the home page. */
+button {
+    min-width: 150px;
+    min-height: 50px;
+    padding: 10px 16px;
+    color: var(--ink);
+    background-color: var(--surface);
+    border: 2px solid var(--line);
+    border-radius: 5px;
+    font: inherit;
+    cursor: pointer;
+}
+
+/* Button hover state. */
+button:hover {
+    background-color: var(--hover);
+}
+
+/* Page heading area. */
+.hero {
+    width: min(900px, 100%);
+    margin: 0 auto 25px;
+    padding: 18px;
+    text-align: center;
+    background-color: var(--surface);
+    border: 2px solid var(--line);
+    border-radius: 5px;
+}
+
+/* Main heading. */
+h1 {
+    margin: 0;
+    font-size: clamp(1.7rem, 4vw, 2.5rem);
+}
+
+/* Supporting heading text. */
+.subtitle {
+    margin: 8px 0 0;
+    color: var(--muted);
+}
+
+/* White results container. */
+.results-panel {
+    width: 100%;
+    padding: 24px;
+    background-color: var(--surface);
+    border: 2px solid var(--line);
+    border-radius: 5px;
+}
+
+/* Results heading. */
+.results-panel h2 {
+    margin: 0 0 20px;
+    text-align: center;
+}
+
+/* Five cards per row. */
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 18px;
+}
+
+/* Individual card result. */
+.card-result {
+    min-width: 0;
+    overflow: hidden;
+    background-color: var(--surface);
+    border: 2px solid var(--line);
+    border-radius: 5px;
+}
+
+/* Card artwork. */
+.card-image {
+    display: block;
+    width: 100%;
+    aspect-ratio: 5 / 7;
+    object-fit: contain;
+    background-color: #f4f4f4;
+}
+
+/* Fallback when an image URL is unavailable. */
+.image-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 5 / 7;
+    padding: 12px;
+    color: var(--muted);
+    text-align: center;
+    background-color: #f4f4f4;
+}
+
+/* Card text area. */
+.card-info {
+    padding: 10px;
+}
+
+/* Card name. */
+.card-info h3 {
+    margin: 0 0 5px;
+    font-size: 1rem;
+}
+
+/* Set name. */
+.card-set {
+    margin: 0 0 10px;
+    color: var(--muted);
+    font-size: .9rem;
+}
+
+/* Card attributes. */
+.card-detail {
+    margin: 4px 0;
+    font-size: .82rem;
+}
+
+/* Empty-result message. */
+.empty-message {
+    color: var(--error);
+    text-align: center;
+    font-weight: bold;
+}
+
+/* On smaller screens, reduce the number of columns. */
+@media (max-width: 900px) {
+    .card-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+/* On narrow screens, use two columns. */
+@media (max-width: 600px) {
+    .card-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .topbar {
+        flex-direction: column;
+    }
+
+    button {
+        width: 100%;
+    }
+}
+
