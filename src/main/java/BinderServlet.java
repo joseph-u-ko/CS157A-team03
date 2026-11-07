@@ -22,7 +22,7 @@ public class BinderServlet extends HttpServlet {
     
     private static final String DB_URL = "jdbc:mysql://localhost:3306/poketrader?useSSL=false";
     private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "$apphire9Warrior";
+    private static final String DB_PASSWORD = "Chingloo1234$$";
     
     @Override
     protected void doPost(

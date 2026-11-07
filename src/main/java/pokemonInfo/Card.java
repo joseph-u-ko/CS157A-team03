@@ -10,7 +10,7 @@ public class Card {
 	private int quantity;
 	private String setName;
 	
-	
+	// Binder
 	public Card(int cardID, String cardName, String cardType, String subType, String rarity, String imageLink, int quantity, String setName) {
 	this.setCardID(cardID);
 	this.setCardName(cardName);
@@ -19,6 +19,17 @@ public class Card {
 	this.setRarity(rarity);
 	this.setImageLink(imageLink);
 	this.setQuantity(quantity);
+	this.setSetName(setName);
+}
+	
+	// Catalog
+	public Card(int cardID, String cardName, String cardType, String subType, String rarity, String imageLink, String setName) {
+	this.setCardID(cardID);
+	this.setCardName(cardName);
+	this.setCardType(cardType);
+	this.setSubType(subType);
+	this.setRarity(rarity);
+	this.setImageLink(imageLink);
 	this.setSetName(setName);
 }
 

@@ -30,17 +30,15 @@
 			}
 		</style>
 	</head>
-<<<<<<< Updated upstream
 <body>
 		<div style="position: fixed; bottom: 20px; right: 20px; width: 100px; height: 50px; border-radius: 5px; border: 2px solid #333;">
 			<button type="button" onclick="window.location.href='home.jsp';">Back</button>
 		</div>
-=======
+
 <body style="background-color: lightblue;">
 	<div style="position: fixed; bottom: 20px; right: 20px; width: 100px; height: 50px; border-radius: 5px; border: 2px solid #333; background-color: white; overflow: hidden;">
 		<button type="button" class="nav-btn" onclick="window.location.href='home.jsp';">&#8592; Back</button>
 	</div>
->>>>>>> Stashed changes
 <%
 	ArrayList<Card> cards = (ArrayList<Card>) session.getAttribute("cards");
 	String search = (String) session.getAttribute("search");
