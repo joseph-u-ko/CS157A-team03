@@ -55,7 +55,7 @@
 				</div>
 				<div style="width: 100px; height: 75px; border-radius: 5px; border: 2px solid #333; margin: auto; margin-top: 10px;">
 					<form>
-						<button type="button" style="width: 100px; height: 75px;" onclick="window.location.href='pack-open-dropdowns.jsp';">Shop</button>
+						<button type="button" style="width: 100px; height: 75px;" onclick="window.location.href='pack-open-menu.jsp';">Shop</button>
 					</form>	
 				</div>
 				<div style="width: 100px; height: 75px; border-radius: 5px; border: 2px solid #333; margin: auto; margin-top: 10px;">

@@ -29,7 +29,7 @@ public class AddTicketServlet extends HttpServlet {
     	// Get the current session and current user's name
         HttpSession session = request.getSession(false);
         String loginPage = "login-and-signup.jsp";
-        String packOpen = "pack-open-dropdowns.jsp";
+        String packOpen = "pack-open-menu.jsp";
         String username = (String) session.getAttribute("currentUser");
         
         if (session == null ||

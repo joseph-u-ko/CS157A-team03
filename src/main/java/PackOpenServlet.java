@@ -31,8 +31,9 @@ public class PackOpenServlet extends HttpServlet {
     	
     	// Get the current session and current user's name
         HttpSession session = request.getSession(false);
-        String packShop = "pack-open-dropdowns.jsp";
+        String packShop = "pack-open-menu.jsp";
         String loginPage = "login-and-signup.jsp";
+        String packResult = "pack-open-results.jsp";
         
         if (session == null ||
                 session.getAttribute("currentUser") == null) {
@@ -53,12 +54,16 @@ public class PackOpenServlet extends HttpServlet {
         
         // Prepare the SQL statement that opens a pack
         String SQL_getCards = """
-                SELECT cardID, cardName, rarity, imageLink
+                SELECT *
                 FROM cards
                 WHERE cardID IN (SELECT cardID
                 				 FROM contains
                 				 WHERE packID = ?)
                 """;
+        String SQL_getRarities = """
+        		SELECT *
+        		FROM rarities
+        		""";
         String SQL_ownsCard = """
         		SELECT quantity
         		FROM owns
@@ -81,7 +86,8 @@ public class PackOpenServlet extends HttpServlet {
 
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
         	 PreparedStatement statement_getCards = connection.prepareStatement(SQL_getCards);
-        	 PreparedStatement statement_consumeTicket = connection.prepareStatement(SQL_consumeTicket)) {
+        	 PreparedStatement statement_consumeTicket = connection.prepareStatement(SQL_consumeTicket);
+        	 PreparedStatement statement_getRarities = connection.prepareStatement(SQL_getRarities)) {
         	if (!(Integer.parseInt(request.getParameter("numTickets")) > 0)) {
         		request.setAttribute("ticketError", "Not enough tickets!");
                	request.getRequestDispatcher(packShop)
@@ -89,22 +95,55 @@ public class PackOpenServlet extends HttpServlet {
                	return;
        		}
         	statement_getCards.setString(1, packID);
-    		ArrayList<Card> possibleCards = new ArrayList<>();
+//    		ArrayList<Card> possibleCards = new ArrayList<>();
+    		ArrayList<Card> commonCards = new ArrayList<>();
+    		ArrayList<Card> uncommonCards = new ArrayList<>();
+    		ArrayList<Card> holoRareCards = new ArrayList<>();
+    		ArrayList<Card> premiumRareCards = new ArrayList<>();
+    		ArrayList<Card> chaseRareCards = new ArrayList<>();
+    		ArrayList<Card> ultraChaseRareCards = new ArrayList<>();
     		//Getting the cards
         	try (ResultSet cards = statement_getCards.executeQuery()) {
         		while (cards.next()) {
         			int cardID = cards.getInt("cardID");
         			String cardName = cards.getString("cardName");
+        			String cardType = cards.getString("cardType");
+        			String subType = cards.getString("subType");
         			String rarity = cards.getString("rarity");
         			String imageLink = cards.getString("imageLink");
-        			possibleCards.add(new Card(cardID, cardName, null, null, rarity, imageLink, 0, null));
+        			Card c = new Card(cardID, cardName, cardType, subType, rarity, imageLink, 0, null);
+//        			possibleCards.add(c);
+        			if (rarity.equals("Common")) commonCards.add(c);
+        			else if (rarity.equals("Uncommon")) uncommonCards.add(c);
+        			else if (rarity.indexOf("Rare Holo") == 0 || rarity.indexOf("Holo Rare") == 0 || rarity.equals("Double Rare")) holoRareCards.add(c);
+        			//////////
         		}
         	}
-	       	int numCards = possibleCards.size();
+//	       	int numCards = possibleCards.size();
+        	int numCommon = commonCards.size();
+        	int numUncommon = uncommonCards.size();
+        	int numRare = holoRareCards.size();
+        	/////////////
+	       	ArrayList<Card> pulled = new ArrayList<>();
+	       	Random r = new Random();
 	      	//pull 11 cards (we won't consider guaranteed energy or pull rates yet)
-		    for (int i = 0; i < 11; i++) {
-		     	int ind = (int) (Math.random() * numCards);
-	       		Card c = possibleCards.get(ind);
+		    for (int i = 0; i < 10; i++) {
+//		    	int ind = (int) (Math.random() * numCards);
+//	       		Card c = possibleCards.get(ind);
+		     	Card c = null;
+	       		if (i < 4) c = commonCards.get(r.nextInt(numCommon));
+	       		else if (i < 7) c = uncommonCards.get(r.nextInt(numUncommon));
+	       		else if (i < 9) {
+	       			if (r.nextBoolean()) {
+	       				if (r.nextBoolean()) c = commonCards.get(r.nextInt(numCommon));
+	       				else c = uncommonCards.get(r.nextInt(numUncommon));
+	       			}
+	       			else c = holoRareCards.get(r.nextInt(numRare));
+	       		}
+	       		else {
+	       			///////////
+	       		}
+	       		pulled.add(c);
 	       		//for each card, update the table
 		      	try (PreparedStatement statement_ownsCard = connection.prepareStatement(SQL_ownsCard);
 		       		 PreparedStatement statement_addOwnedCards = connection.prepareStatement(SQL_addOwnedCards);
@@ -133,7 +172,9 @@ public class PackOpenServlet extends HttpServlet {
 		    statement_consumeTicket.setString(1,  username);
 		    statement_consumeTicket.executeUpdate();
 		    System.out.println("Ticket consumed.");
-		    response.sendRedirect(packShop);
+		    request.setAttribute("cards", pulled);
+		    request.getRequestDispatcher("/pack-open-results.jsp")
+		           .forward(request, response);
 		    return;
         } 
         // General catch-all exception for logout errors
