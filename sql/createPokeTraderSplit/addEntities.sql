@@ -38,6 +38,8 @@ setCode INT NOT NULL,
 
 CONSTRAINT FK_Card_From_Set
 FOREIGN KEY(setCode) REFERENCES sets(setCode),
+CONSTRAINT FK_Card_Rarity
+FOREIGN KEY(rarity) REFERENCES rarities(rarityName),
 PRIMARY KEY (cardID),
 UNIQUE(cardID, setCode)
 );
@@ -61,3 +63,39 @@ CONSTRAINT FK_Sender
 FOREIGN KEY(sender) REFERENCES users(username),
 PRIMARY KEY (tradeID, messageNum)
 );
+
+CREATE TABLE rarities(
+rarityName VARCHAR(255),
+rarityClass VARCHAR(255),
+
+PRIMARY KEY (rarityName)
+);
+INSERT INTO rarities VALUES
+    ('Common', 'Common'),
+    ('Uncommon', 'Uncommon'),
+
+    ('Rare', 'Holo/Rare'),
+    ('Rare Holo', 'Holo/Rare'),
+    ('Rare Holo EX', 'Holo/Rare'),
+    ('Rare Holo GX', 'Holo/Rare'),
+    ('Rare Holo LV.X', 'Holo/Rare'),
+    ('Holo Rare V', 'Holo/Rare'),
+    ('Holo Rare VMAX', 'Holo/Rare'),
+    ('Holo Rare VSTAR', 'Holo/Rare'),
+    ('Double Rare', 'Holo/Rare'),
+
+    ('Amazing Rare', 'Premium Rare'),
+    ('Futuristic Rare', 'Premium Rare'),
+    ('Illustration Rare', 'Premium Rare'),
+    ('MEGA_ATTACK_RARE', 'Premium Rare'),
+    ('Pikachu Rare', 'Premium Rare'),
+    ('Rare BREAK', 'Premium Rare'),
+    ('Rare Prime', 'Premium Rare'),
+    ('Rare Secret', 'Premium Rare'),
+    ('Rare Ultra', 'Premium Rare'),
+    ('Ultra Rare', 'Premium Rare'),
+
+    ('LEGEND', 'Chase Rare'),
+    ('Special Illustration Rare', 'Chase Rare'),
+
+    ('Mega Hyper Rare', 'Ultra-Chase Rare');
