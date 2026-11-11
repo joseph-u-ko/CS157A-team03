@@ -147,7 +147,7 @@ public class PackOpenServlet extends HttpServlet {
 	       	ArrayList<Card> pulled = new ArrayList<>();
 	       	Random r = new Random();
 	       	
-	      	//pull 11 cards (we won't consider guaranteed energy or pull rates yet)
+	      	//pull 10 cards
 		    for (int i = 0; i < 10; i++) {
 //		    	int ind = (int) (Math.random() * numCards);
 //	       		Card c = possibleCards.get(ind);
@@ -174,10 +174,12 @@ public class PackOpenServlet extends HttpServlet {
 	       			else if (val < 0.999) c = chaseRareCards.get(r.nextInt(numChase));
 	       			else c = ultraChaseRareCards.get(r.nextInt(numUltra));
 	       		}
-	       		
-	       		//DATA UPDATE
 	       		pulled.add(c);
-	       		//for each card, update the table
+		    }
+       		
+       		//SQL UPDATE
+       		//for each card, update the table
+		    for (Card c : pulled) {
 		      	try (PreparedStatement statement_ownsCard = connection.prepareStatement(SQL_ownsCard);
 		       		 PreparedStatement statement_addOwnedCards = connection.prepareStatement(SQL_addOwnedCards);
 		       		 PreparedStatement statement_addUnownedCards = connection.prepareStatement(SQL_addUnownedCards)) {

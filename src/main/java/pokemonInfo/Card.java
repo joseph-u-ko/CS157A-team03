@@ -3,7 +3,8 @@ package pokemonInfo;
 import java.util.Map;
 
 public class Card {
-	public static final Map<String, String> NAME_TO_CLASS = Map.ofEntries(
+	//Default for now
+	public static Map<String, String> NAME_TO_CLASS = Map.ofEntries(
 	        Map.entry("Common", "Common"),
 	        Map.entry("Uncommon", "Uncommon"),
 

@@ -1,10 +1,10 @@
 USE poketrader;
 -- Expansion-series names and requested set codes.
 -- Note: 30CC is four characters, so setCode should be CHAR(4) or VARCHAR(4).
-INSERT INTO sets (setName, setCode)
+INSERT INTO sets (setCode, setName, description, available, imageLink)
 VALUES
-	('Mega Evolution', 1),
-    ('Platinum', 2);
+	(1, 'Mega Evolution', "", 1, 'https://images.pokemontcg.io/me1/logo.png'),
+    (2, 'Platinum', "", 1, 'https://images.pokemontcg.io/pl1/logo.png');
 
 -- Pack records for the selected expansions.
 -- TRUE is stored as 1 by MySQL when available is TINYINT(1).
@@ -38,7 +38,7 @@ VALUES
 (100007, 'Lugia', 'Pokemon', 'Colorless', 'Rare Secret', 'https://images.scrydex.com/pokemon/me55c-149/large', 1),
 (100008, 'Delcatty', 'Pokemon', 'Colorless', 'Rare Holo', 'https://images.scrydex.com/pokemon/me55c-5/large', 1),
 (100009, 'Dark Tyranitar', 'Pokemon', 'Darkness', 'Rare', 'https://images.scrydex.com/pokemon/me55c-19/large', 1),
-(100010, 'Scizor ex', 'Pokemon', 'Metal', 'Rare Holo ex', 'https://images.scrydex.com/pokemon/me55c-108/large', 1),
+(100010, 'Scizor ex', 'Pokemon', 'Metal', 'Rare Holo EX', 'https://images.scrydex.com/pokemon/me55c-108/large', 1),
 (100011, 'Metagross', 'Pokemon', 'Lightning, Metal', 'Rare Holo', 'https://images.scrydex.com/pokemon/me55c-11/large', 1),
 (100012, 'Palkia LV.X', 'Pokemon', 'Water', 'Rare Holo LV.X', 'https://images.scrydex.com/pokemon/me55c-106p/large', 1),
 (100013, 'Uxie', 'Pokemon', 'Psychic', 'Rare', 'https://images.scrydex.com/pokemon/me55c-43/large', 1),
@@ -3416,4 +3416,41 @@ VALUES
 -- Generated from the Pokémon TCG API.
 -- cardID is an integer assigned uniquely across the selected expansions.
 -- The requested custom setCode values are preserved.
+
+INSERT INTO ruleSets
+    (ruleSetID, ruleName)
+VALUES
+    (1, 'Modern Mega Evolution'),
+    (2, 'Platinum Era'),
+    (3, '30th Celebration'),
+    (4, 'Classic Collection');
+
+INSERT INTO useRule
+    (packID, ruleSetID)
+VALUES
+    ('MEG', 1),
+    ('PFL', 1),
+    ('ASC', 1),
+    ('POR', 1),
+    ('CRI', 1),
+    ('PBL', 1),
+    ('PLT', 2),
+    ('RRL', 2),
+    ('SUV', 2),
+    ('ARC', 2),
+    ('30C', 3),
+    ('30CC', 4);
+
+INSERT INTO ruleCardsByRarity
+    (ruleSetID, rarityClass, quantity)
+VALUES
+    (1, 'Common', 4),
+    (1, 'Uncommon', 3),
+    (1, 'Holo/Rare', 3),
+    (2, 'Common', 5),
+    (2, 'Uncommon', 3),
+    (2, 'Holo/Rare', 2),
+    (3, 'Holo/Rare', 4),
+    (3, 'Premium Rare', 1),
+    (4, 'Common', 3);
 
