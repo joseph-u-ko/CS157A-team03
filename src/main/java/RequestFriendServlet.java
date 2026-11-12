@@ -48,16 +48,16 @@ public class RequestFriendServlet extends HttpServlet {
     		return;
     	}
     	
-    	// Prepare the SQL statement that checks for friend in 'users' table
+    	// Prepare the SQL statement that checks for receiver in 'users' table
     	String SQL_checkFriend = """
     			SELECT username
     			FROM users
     			WHERE username = ?
     			""";
     	
-    	// Prepare the SQL statement that checks if friend is unique in 'friend' table
+    	// Prepare the SQL statement that checks if receiver is unique in 'friend' table
     	String SQL_checkUnique = """
-    			SELECT userA, userB
+    			SELECT userA, userB, status
     			FROM friends
     			WHERE userA = ? AND userB = ?
     			""";
@@ -72,12 +72,13 @@ public class RequestFriendServlet extends HttpServlet {
     			(?, ?, ?)
     			""";
     	
-    	/* First check for the following things for the friend:
+    	/* First check for the following things for the receiver of the friend request:
     	 	1.) They exist in 'users' table.
-    	 	2.) The friend is not the current user.
-    	 	3.) The friend did not receive a friend-request (i.e. not in 'friends' table)
+    	 	2.) The receiver is not the current user.
+    	 	3.) The receiver did not receive a friend-request (i.e. not in 'friends' table)
+    	 	4.) The receiver is already a friend of the sender.
     	 	
-    	   Then, if all of these things are good, then send the friend-request both-ways (user, friend, "Request pending") and (friend, user, "Accept pending").
+    	   Then, if all of these things are good, then send the friend-request both-ways (sender, receiver, "Request pending") and (receiver, sender, "Accept pending").
     	*/
     	try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
     		 PreparedStatement checkFriend = connection.prepareStatement(SQL_checkFriend);
@@ -85,21 +86,21 @@ public class RequestFriendServlet extends HttpServlet {
     		 PreparedStatement requestFriend = connection.prepareStatement(SQL_requestFriend)) {
     			checkFriend.setString(1, user_friend);
     			
-    			// Checking condition 1.) check for friend in 'users' first
+    			// Checking condition 1.) check for receiver in 'users' first
     			try (ResultSet result = checkFriend.executeQuery()) {
-    				// This if-condition will be true if the friend is found (i.e. one row returned).
+    				// This if-condition will be true if the receiver is found (i.e. one row returned).
     				if (result.next()) {
-    					// Checking condition 2.) the returned friend is not the current user.
-    					// If that is the case, don't add as a friend.
+    					// Checking condition 2.) the returned receiver is not the current user.
+    					// If that is not the case, don't send the friend request to the receiver.
     					if (result.getString("username").equals(user)) {
-    						request.setAttribute("friendOutput", "Oops, you cannot add yourself as a friend.");
+    						request.setAttribute("requestFriendOutput", "Oops, you cannot add yourself as a friend.");
     						request.getRequestDispatcher(friendsPage).forward(request, response);
     						return;
     					}
     				}
-    				// Case where friend is not found (i.e. zero rows returned).
+    				// Case where receiver is not found (i.e. zero rows returned).
     				else {
-    					request.setAttribute("friendOutput", "Sorry, " + user_friend + " cannot be found. Try double-checking the spelling of your friend's username.");
+    					request.setAttribute("requestFriendOutput", "Sorry, " + user_friend + " cannot be found. Try double-checking the spelling of your friend's username.");
     					request.getRequestDispatcher(friendsPage).forward(request, response);
     					return;
     				}
@@ -107,16 +108,23 @@ public class RequestFriendServlet extends HttpServlet {
     			
     			checkUnique.setString(1, user);
 				checkUnique.setString(2, user_friend);
-    			// Checking condition 3.) the returned friend has already sent/received a friend-request to/by the user
-				// If this is the case [i.e. their (user, friend, status) and (friend, user, status) exists in 'friend' table],
-				// don't add friend-request to avoid duplicates.
+    			// Checking condition 3.) the returned receiver has already sent/received a friend-request to/by the sender/current user.
+				// If this is the case [i.e. their (sender, receiver, status) and (receiver, sender, status) exists in 'friend' table],
+				// don't send friend-request to avoid duplicate friend requests.
 				try (ResultSet result2 = checkUnique.executeQuery()) {
 					// Case where one row is returned
 					if (result2.next()) {
-						if (result2.getString("userA").equals(user) && result2.getString("userB").equals(user_friend)) {
-							request.setAttribute("friendOutput", "Oops, you either have already sent a friend request to " + user_friend + " or have received a friend request by " + user_friend + ".");
+						// This is the case where the sender already sent a friend request to the receiver.
+						if (result2.getString("userA").equals(user) && result2.getString("userB").equals(user_friend) && result2.getString("status").equals("Request pending")) {
+							request.setAttribute("requestFriendOutput", "Oops, you either have already sent a friend request to " + user_friend + " or have received a friend request by " + user_friend + ".");
 							request.getRequestDispatcher(friendsPage).forward(request, response);
     						return;
+						}
+						// This is the case where the sender is already friends with the receiver.
+						if (result2.getString("status").equals("Friend")) {
+							request.setAttribute("requestFriendOutput", "Oops, you already are friends with " + user_friend + ".");
+							request.getRequestDispatcher(friendsPage).forward(request, response);
+							return;
 						}
 					}
 					// Case where no rows are returned.
@@ -125,7 +133,7 @@ public class RequestFriendServlet extends HttpServlet {
 					}
 				}
 				
-				// "Sends" a friend request to the user_friend by storing their statuses in 'friends' table
+				// "Sends" a friend request to the receiver by storing their statuses in 'friends' table
 				requestFriend.setString(1, user);
 				requestFriend.setString(2, user_friend);
 				requestFriend.setString(3, "Request pending");
@@ -135,10 +143,7 @@ public class RequestFriendServlet extends HttpServlet {
 				int rowsInserted = requestFriend.executeUpdate();
 				System.out.println("Rows inserted into 'friends' table: " + rowsInserted);
 				
-				// Add the user_friend as the user's friend
-				//request.setAttribute("friendOutput", "Success!, Added " + user_friend + " as a friend!");
-				
-				request.setAttribute("friendOutput", "Friend request has been sent to " + user_friend + ".");
+				request.setAttribute("requestFriendOutput", "Friend request has been sent to " + user_friend + ".");
 				request.getRequestDispatcher(friendsPage).forward(request, response);
 				return;
     	}

@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.ResultSet;
 
 /**
  * Servlet implementation class AddFriendServlet
@@ -33,7 +34,7 @@ public class AddFriendServlet extends HttpServlet {
     	String loginPage = "login-and-signup.jsp";
     	String friendsPage = "friends.jsp";
     	String user = (String) session.getAttribute("currentUser");
-    	String friend = (String) session.getAttribute("friendToAdd");
+    	String friend = request.getParameter("friendToAdd");
     	
     	if (session == null ||
     		session.getAttribute("currentUser") == null) {
@@ -42,9 +43,30 @@ public class AddFriendServlet extends HttpServlet {
     		response.sendRedirect(loginPage);
     		return;
     	}
+    	// Prepare the SQL statement that checks if the user who sent the friend request
+    	// exists in 'users' table.
+    	String SQL_checkFriendExists = """
+    			SELECT username
+    			FROM users
+    			WHERE username = ?
+    			""";
+    	
+    	/* Prepare the SQL statement that checks if the current user is the receiver of the friend request.
+    	   The servlet should reject the acceptance of the friend request if the current user is not the
+    	   receiver of the friend request (i.e. the sender).
+    	   
+    	   Also if the sender and receiver are already friends (i.e. (sender, receiver, "Friend") exists), then
+    	   the servlet should reject acceptance of the friend request and output a failure message to the current user.
+    	   userA = receiver of friend request, userB = user who sent the friend request
+    	*/
+    	String SQL_checkReceiver = """
+    			SELECT userA, userB, status
+    			FROM friends
+    			WHERE userA = ? AND userB = ?
+    			""";
     	
     	// Prepare the two SQL statements: one that updates the status of friend's status to "Friend"
-    	// and the other that updates user's status to "Friend"
+    	// and the other that updates user's status to "Friend".
     	String SQL_updateFriendStatus = """
     			UPDATE friends
     			SET status = "Friend"
@@ -57,8 +79,56 @@ public class AddFriendServlet extends HttpServlet {
     			""";
     	
     	try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+    		 PreparedStatement checkFriendExists = connection.prepareStatement(SQL_checkFriendExists);
+    		 PreparedStatement checkReceiver = connection.prepareStatement(SQL_checkReceiver);
     		 PreparedStatement updateFriendStatus = connection.prepareStatement(SQL_updateFriendStatus);
     		 PreparedStatement updateUserStatus = connection.prepareStatement(SQL_updateUserStatus)) {
+    			
+    			checkFriendExists.setString(1, friend);
+    			try(ResultSet returnedUser = checkFriendExists.executeQuery()) {
+    				if (returnedUser.next()) {
+    					// This is the case where the sender of the friend request is found in 'users' table.
+    					// Check passes and continues to next check (checkForRequest).
+    				}
+    				// This is the case where the sender of the friend request is not found in 'users' table.
+    				// In this case, output a failure message to the user.
+    				else {
+    					request.setAttribute("acceptFriendOutput", "Oops, this " + friend + " doesn't exist in PokeTrader! Double-check the spelling and case-sensitivity of the user sending you the request.");
+    					request.getRequestDispatcher(friendsPage).forward(request, response);
+    					return;
+    				}
+    			}
+    		
+    			/*
+    			 * Check if the user who's accepting the friend request is the sender.
+    			 * If that is the case, output a failure message to tell the user that they can't accept the
+    			 * friend request on their end since they sent the friend request.
+    			 */
+    			checkReceiver.setString(1, user);
+    			checkReceiver.setString(2, friend);
+    			try(ResultSet result = checkReceiver.executeQuery()) {
+    				if (result.next()) {
+    					// Case where the user accidentally tries to accept the friend request as the sender instead of as the receiver
+    					if (result.getString("status").equals("Request pending")) {
+    						request.setAttribute("acceptFriendOutput", "Oops, you cannot accept the friend request, since you sent the friend request. " + friend + " must accept the friend request on their end.");
+    						request.getRequestDispatcher(friendsPage).forward(request, response);
+    						return;
+    					}
+    					// Case where the sender and receiver are already friends
+    					if (result.getString("status").equals("Friend")) {
+    						request.setAttribute("acceptFriendOutput", "Oops, you are already friends with " + friend + ".");
+    						request.getRequestDispatcher(friendsPage).forward(request, response);
+    						return;
+    					}
+    				}
+    				// Case where no rows are returned (i.e. friend request not found)
+    				else {
+    					request.setAttribute("acceptFriendOutput", "Sorry, " + friend + " has not sent you a friend request.");
+    					request.getRequestDispatcher(friendsPage).forward(request, response);
+    					return;
+    				}
+    			}
+    		
     			updateFriendStatus.setString(1, user);
     			updateFriendStatus.setString(2, friend);
     			updateFriendStatus.executeUpdate();
