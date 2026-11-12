@@ -80,6 +80,7 @@ CREATE TABLE ruleCardsByRarity (
     ruleSetID INT NOT NULL,
     rarityClass VARCHAR(255) NOT NULL,
     quantity INT NOT NULL DEFAULT 0,
+    upgradeRate DECIMAL(5,4) NOT NULL DEFAULT 0.0000,
 
     CONSTRAINT FK_RuleCardsByRarity_RuleSet
         FOREIGN KEY (ruleSetID)
@@ -89,5 +90,7 @@ CREATE TABLE ruleCardsByRarity (
         REFERENCES rarityClasses(rarityClass),
     CONSTRAINT CHK_RuleCardsByRarity_Quantity
         CHECK (quantity >= 0),
+	CONSTRAINT CHK_RuleCardsByRarity_UpgradeRate
+		CHECK (upgradeRate >= 0.0000 AND upgradeRate <= 1.0000),
     PRIMARY KEY (ruleSetID, rarityClass)
 );

@@ -3442,15 +3442,34 @@ VALUES
     ('30CC', 4);
 
 INSERT INTO ruleCardsByRarity
-    (ruleSetID, rarityClass, quantity)
+    (ruleSetID, rarityClass, quantity, upgradeRate)
 VALUES
-    (1, 'Common', 4),
-    (1, 'Uncommon', 3),
-    (1, 'Holo/Rare', 3),
-    (2, 'Common', 5),
-    (2, 'Uncommon', 3),
-    (2, 'Holo/Rare', 2),
-    (3, 'Holo/Rare', 4),
-    (3, 'Premium Rare', 1),
-    (4, 'Common', 3);
+    -- Modern Mega Evolution
+    (1, 'Common', 5, 0.1500),
+    (1, 'Uncommon', 4, 0.2000),
+    (1, 'Holo/Rare', 1, 0.0800),
+    (1, 'Premium Rare', 0, 0.0400),
+    (1, 'Chase Rare', 0, 0.0200),
+    (1, 'Ultra-Chase Rare', 0, 0.0000),
 
+    -- Platinum Era
+    (2, 'Common', 6, 0.1000),
+    (2, 'Uncommon', 3, 0.1500),
+    (2, 'Holo/Rare', 1, 0.0500),
+    (2, 'Premium Rare', 0, 0.0000),
+
+    -- 30th Celebration
+    (3, 'Common', 4, 0.2500),
+    (3, 'Uncommon', 0, 1.0000),
+    (3, 'Holo/Rare', 0, 0.2000),
+    (3, 'Premium Rare', 1, 0.1000),
+    (3, 'Chase Rare', 0, 0.0000),
+
+    -- Classic Collection
+    (4, 'Common', 3, 0.9000),
+    (4, 'Uncommon', 0, 0.9444),
+    (4, 'Holo/Rare', 0, 0.3529),
+    (4, 'Premium Rare', 0, 0.2222),
+    (4, 'Chase Rare', 0, 0.0000);
+    
+    

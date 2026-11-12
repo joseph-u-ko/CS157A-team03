@@ -27,23 +27,27 @@ CREATE TABLE packs(
 	setCode INT NOT NULL,
 
 	CONSTRAINT FK_Pack_From_Set
-	FOREIGN KEY(setCode) REFERENCES sets(setCode),
+		FOREIGN KEY(setCode)
+        REFERENCES sets(setCode),
 	PRIMARY KEY (packID),
 	UNIQUE(packID, setCode)
 );
 
 CREATE TABLE rarityClasses(
 	rarityClass VARCHAR(255) UNIQUE NOT NULL,
+    rarityRank INT UNIQUE,
 
+	CONSTRAINT CHK_RarityRank
+		CHECK (rarityRank >= 0),
 	PRIMARY KEY (rarityClass)
 );
-INSERT INTO rarityClasses (rarityClass) VALUES
-	('Common'),
-    ('Uncommon'),
-    ('Holo/Rare'),
-    ('Premium Rare'),
-    ('Chase Rare'),
-    ('Ultra-Chase Rare');
+INSERT INTO rarityClasses (rarityClass, rarityRank) VALUES
+	('Common', 0),
+    ('Uncommon', 1),
+    ('Holo/Rare', 2),
+    ('Premium Rare', 3),
+    ('Chase Rare', 4),
+    ('Ultra-Chase Rare', 5);
 
 CREATE TABLE rarities(
 	rarityName VARCHAR(255) UNIQUE NOT NULL,

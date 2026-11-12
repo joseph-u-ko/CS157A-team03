@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import pokemonInfo.Card;
+import pokemonInfo.PullRule;
 
 @WebServlet("/openPack")
 public class PackOpenServlet extends HttpServlet {
@@ -22,6 +23,15 @@ public class PackOpenServlet extends HttpServlet {
     private static final String DB_URL = "jdbc:mysql://localhost:3306/poketrader?useSSL=false";
     private static final String DB_USER = "root";
     private static final String DB_PASSWORD = "$apphire9Warrior";
+    
+    private static final Random r = new Random();
+
+	private List<Card> commonCards = new ArrayList<>();
+	private List<Card> uncommonCards = new ArrayList<>();
+	private List<Card> holoRareCards = new ArrayList<>();
+	private List<Card> premiumRareCards = new ArrayList<>();
+	private List<Card> chaseRareCards = new ArrayList<>();
+	private List<Card> ultraChaseRareCards = new ArrayList<>();
 
     @Override
     protected void doPost(
@@ -63,6 +73,15 @@ public class PackOpenServlet extends HttpServlet {
 //        		SELECT *
 //        		FROM rarities
 //        		""";
+        String SQL_pullRates = """
+        		SELECT rarityClass, quantity, upgradeRate
+        		FROM packs
+        		JOIN useRule USING (packID)
+        		JOIN ruleCardsByRarity USING (ruleSetID)
+        		JOIN rarityClasses USING (rarityClass)
+        		WHERE packID = ?
+        		ORDER BY rarityRank
+        		""";
         String SQL_ownsCard = """
         		SELECT quantity
         		FROM owns
@@ -86,7 +105,8 @@ public class PackOpenServlet extends HttpServlet {
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
         	 PreparedStatement statement_getCards = connection.prepareStatement(SQL_getCards);
 //           	 PreparedStatement statement_getRarities = connection.prepareStatement(SQL_getRarities);
-        	 PreparedStatement statement_consumeTicket = connection.prepareStatement(SQL_consumeTicket)) {
+        	 PreparedStatement statement_consumeTicket = connection.prepareStatement(SQL_consumeTicket);
+        	 PreparedStatement statement_pullRates = connection.prepareStatement(SQL_pullRates)) {
         	
         	//Attempted to open a pack without any tickets
         	if (!(Integer.parseInt(request.getParameter("numTickets")) > 0)) {
@@ -109,13 +129,6 @@ public class PackOpenServlet extends HttpServlet {
         	
         	//CARD DATA
         	statement_getCards.setString(1, packID);
-//    		ArrayList<Card> possibleCards = new ArrayList<>();
-    		ArrayList<Card> commonCards = new ArrayList<>();
-    		ArrayList<Card> uncommonCards = new ArrayList<>();
-    		ArrayList<Card> holoRareCards = new ArrayList<>();
-    		ArrayList<Card> premiumRareCards = new ArrayList<>();
-    		ArrayList<Card> chaseRareCards = new ArrayList<>();
-    		ArrayList<Card> ultraChaseRareCards = new ArrayList<>();
 
         	try (ResultSet cards = statement_getCards.executeQuery()) {
         		while (cards.next()) {
@@ -126,7 +139,6 @@ public class PackOpenServlet extends HttpServlet {
         			String rarity = cards.getString("rarity");
         			String imageLink = cards.getString("imageLink");
         			Card c = new Card(cardID, cardName, cardType, subType, rarity, imageLink, 0, null);
-//        			possibleCards.add(c);
         			if (Card.NAME_TO_CLASS.get(rarity).equals("Common")) commonCards.add(c);
         			else if (Card.NAME_TO_CLASS.get(rarity).equals("Uncommon")) uncommonCards.add(c);
         			else if (Card.NAME_TO_CLASS.get(rarity).equals("Holo/Rare")) holoRareCards.add(c);
@@ -136,46 +148,77 @@ public class PackOpenServlet extends HttpServlet {
         		}
         	}
         	
+        	//PULL RULES
+	       	Map<String, PullRule> rules = new LinkedHashMap<>();
+	       	statement_pullRates.setString(1, packID);
+	       	try (ResultSet pullRules = statement_pullRates.executeQuery()) {
+	       		while (pullRules.next()) {
+	       			String rarityClass = pullRules.getString("rarityClass");
+	       			int quantity = pullRules.getInt("quantity");
+	       			double upgradeRate = pullRules.getDouble("upgradeRate");
+	       			rules.put(rarityClass, new PullRule(quantity, upgradeRate));
+	       		}
+	       	}
+        	
         	//CARD PULLING
-//	       	int numCards = possibleCards.size();
         	int numCommon = commonCards.size();
         	int numUncommon = uncommonCards.size();
         	int numHoloRare = holoRareCards.size();
         	int numPremium = premiumRareCards.size();
         	int numChase = chaseRareCards.size();
         	int numUltra = ultraChaseRareCards.size();
-	       	ArrayList<Card> pulled = new ArrayList<>();
-	       	Random r = new Random();
-	       	
-	      	//pull 10 cards
-		    for (int i = 0; i < 10; i++) {
-//		    	int ind = (int) (Math.random() * numCards);
-//	       		Card c = possibleCards.get(ind);
-		     	Card c = null;
-		     	
-		     	//RARITY BASED PULLS
-		     	//4 commons
-	       		if (i < 4) c = commonCards.get(r.nextInt(numCommon));
-	       		//3 uncommons
-	       		else if (i < 7) c = uncommonCards.get(r.nextInt(numUncommon));
-	       		//2 chance holo/rares
-	       		else if (i < 9) {
-	       			if (r.nextBoolean()) {
-	       				if (r.nextBoolean()) c = commonCards.get(r.nextInt(numCommon));
-	       				else c = uncommonCards.get(r.nextInt(numUncommon));
+	       	List<Card> pulled = new ArrayList<>();
+
+	       	for (String rarityClass : rules.keySet()) {
+	       		PullRule pr = rules.get(rarityClass);
+	       		int quantity = pr.quantity();
+	       		for (int i = 0; i < quantity; i++) {
+	       			System.out.println(rarityClass);
+	       			Card c = null;
+	       			Double upgradeRate = 0.0;
+	       			switch (rarityClass) {
+	       				case "Common":
+	       					upgradeRate = rules.get("Common").upgradeRate();
+	       					if (!(upgradeRate == null || r.nextDouble() < upgradeRate)) {
+	       						c = commonCards.get(r.nextInt(numCommon));
+	       						break;
+	       					}
+	       				case "Uncommon":
+	       					upgradeRate = rules.get("Uncommon").upgradeRate();
+	       					if (!(upgradeRate == null || r.nextDouble() < upgradeRate)) {
+	       						c = uncommonCards.get(r.nextInt(numUncommon));
+	       						break;
+	       					}
+	       				case "Holo/Rare":
+	       					upgradeRate = rules.get("Holo/Rare").upgradeRate();
+	       					if (!(upgradeRate == null || r.nextDouble() < upgradeRate)) {
+	       						c = holoRareCards.get(r.nextInt(numHoloRare));
+	       						break;
+	       					}
+	       				case "Premium Rare":
+	       					upgradeRate = rules.get("Premium Rare").upgradeRate();
+	       					if (!(upgradeRate == null || r.nextDouble() < upgradeRate)) {
+	       						c = commonCards.get(r.nextInt(numPremium));
+	       						break;
+	       					}
+	       				case "Chase Rare":
+	       					upgradeRate = rules.get("Chase Rare").upgradeRate();
+	       					if (!(upgradeRate == null || r.nextDouble() < upgradeRate)) {
+	       						c = uncommonCards.get(r.nextInt(numChase));
+	       						break;
+	       					}
+	       				case "Ultra-Chase Rare":
+	       					upgradeRate = rules.get("Ultra-Chase Rare").upgradeRate();
+	       					if (!(upgradeRate == null || r.nextDouble() < upgradeRate)) {
+	       						c = holoRareCards.get(r.nextInt(numUltra));
+	       						break;
+	       					}
+	       				default:
+	       					System.out.println("ERROR! UNKNOWN RARITY CLASS!");
 	       			}
-	       			else c = holoRareCards.get(r.nextInt(numHoloRare));
+	       			if (c != null) pulled.add(c);
 	       		}
-	       		//1 guaranteed holo/rare or rarer
-	       		else {
-	       			double val = Math.random();
-	       			if (val < 0.799) c = holoRareCards.get(r.nextInt(numHoloRare));
-	       			else if (val < 0.989) c = premiumRareCards.get(r.nextInt(numPremium));
-	       			else if (val < 0.999) c = chaseRareCards.get(r.nextInt(numChase));
-	       			else c = ultraChaseRareCards.get(r.nextInt(numUltra));
-	       		}
-	       		pulled.add(c);
-		    }
+	       	}
        		
        		//SQL UPDATE
        		//for each card, update the table
@@ -200,7 +243,7 @@ public class PackOpenServlet extends HttpServlet {
 		       				statement_addUnownedCards.executeUpdate();
 		       			}
 		      		}
-		      		System.out.println("Card pulled: " + c.getCardName());
+		      		System.out.println("Card pulled: " + c.getCardName() + ", " + c.getRarity());
 		      	}
 		    }
 		    
@@ -222,4 +265,6 @@ public class PackOpenServlet extends HttpServlet {
         	return;
         }
     }
+    
+    
 }
