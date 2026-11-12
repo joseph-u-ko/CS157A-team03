@@ -22,7 +22,7 @@ public class BinderServlet extends HttpServlet {
     
     private static final String DB_URL = "jdbc:mysql://localhost:3306/poketrader?useSSL=false";
     private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "$apphire9Warrior";
+    private static final String DB_PASSWORD = "Chingloo1234$$";
     
     @Override
     protected void doPost(
@@ -34,10 +34,7 @@ public class BinderServlet extends HttpServlet {
         HttpSession session = request.getSession(false);
         String binderPage = "binder.jsp";
         String loginPage = "login-and-signup.jsp";
-
-        
-        ArrayList<Card> cardsEntries = new ArrayList<Card>();
-        
+  
         // Taken from Isaiah's code (session error) 
         if (session == null ||
                 session.getAttribute("currentUser") == null) {
@@ -51,6 +48,7 @@ public class BinderServlet extends HttpServlet {
             response.sendRedirect(loginPage);
            	return;
         }
+        ArrayList<Card> cardsEntries = new ArrayList<Card>();
         String username = (String) session.getAttribute("currentUser");
         String card = request.getParameter("cardName");
         
@@ -98,13 +96,17 @@ public class BinderServlet extends HttpServlet {
                    if (cardsFound) {
                 	   session.setAttribute("cards", cardsEntries);
                        System.out.println("Successfully retrived the cards that " + username + " owns.");
-                       session.setAttribute("cardsFound", cardsFound);
+                      
+                       /* session.setAttribute("cardsFound", cardsFound);
                 	   
                    }
                    else {
                 	   session.setAttribute("cardsFound", cardsFound);
-                   }
-               
+                	   */
+                   } 
+                   session.setAttribute("cardsFound", cardsFound);
+                   session.setAttribute("search", card);
+                   
                    rs.close();
                    statement.close();
                    connection.close();

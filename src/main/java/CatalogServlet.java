@@ -21,7 +21,7 @@ public class CatalogServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private static final String DB_URL = "jdbc:mysql://localhost:3306/poketrader?useSSL=false";
     private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "$apphire9Warrior";
+    private static final String DB_PASSWORD = "Chingloo1234$$";
     
     @Override
     protected void doPost(
@@ -33,10 +33,6 @@ public class CatalogServlet extends HttpServlet {
         HttpSession session = request.getSession(false);
         String catalogPage = "catalog.jsp";
         String loginPage = "login-and-signup.jsp";
-
-        
-        ArrayList<Card> cardsEntries = new ArrayList<Card>();
-        ArrayList<String> setNames = new ArrayList<String>();
         
         // Taken from Isaiah's code (session error) 
         if (session == null ||
@@ -51,10 +47,19 @@ public class CatalogServlet extends HttpServlet {
             response.sendRedirect(loginPage);
            	return;
         }
+        
+        ArrayList<Card> cardsEntries = new ArrayList<Card>();
+        ArrayList<String> setNames = new ArrayList<String>();
+        
         //String username = (String) session.getAttribute("currentUser"); // might not need this for catalog
         String card = request.getParameter("cardName");
-        String pack = request.getParameter("packName");
-        String set = request.getParameter("setName");
+        String pack = request.getParameter("packID");
+        String set = request.getParameter("setCode");
+        String limitString = request.getParameter("limitResults");
+        boolean limit = false;
+        if (limitString != null) {
+        	limit = true;
+        }
         
         // Prepare the SQL statement that gets all the Cards a user owns
         String SQL_cards = """
@@ -67,8 +72,8 @@ public class CatalogServlet extends HttpServlet {
                 """;
         String where = " WHERE";
         String cardFilter = " c.cardName LIKE ?";
-        String setFilter = " s.setName = ?";
-        String packFilter = " p.packName = ?";
+        String setFilter = " s.setCode = ?";
+        String packFilter = " p.packID = ?";
         String and = " AND";
         
         //NOTE FOR IMPROVEMENT - might be a better way to implement the "filtering/searching" system
@@ -93,6 +98,9 @@ public class CatalogServlet extends HttpServlet {
             if (nextCond) SQL_cards = SQL_cards + and;
         	SQL_cards = SQL_cards + packFilter;
         	nextCond = true;
+        }
+        if (limit) {
+        	SQL_cards = SQL_cards + " LIMIT 1000";
         }
         
 //        String retrieve_setNames = """
@@ -125,7 +133,7 @@ public class CatalogServlet extends HttpServlet {
         	
         	ResultSet rs = statement.executeQuery();
             boolean cardsFound = false;
-            while (rs.next() /*&& cardsEntries.size() < 1000*/) {
+            while (rs.next() /*&& cardsEntries.size() < 1000*/) { // I changed this to be at SQL statement itself
             	cardsFound = true;
                 int cardID = rs.getInt(1);
                 String cardName = rs.getString(2);
@@ -139,11 +147,15 @@ public class CatalogServlet extends HttpServlet {
             if (cardsFound) {
             	session.setAttribute("cardsCat", cardsEntries);
                 System.out.println("Successfully retrived the cards.");
-                session.setAttribute("cardsFoundCat", cardsFound);
+                /*session.setAttribute("cardsFoundCat", cardsFound);
                 }
             else {
-            	session.setAttribute("cardsFoundCat", cardsFound);
+            	session.setAttribute("cardsFoundCat", cardsFound); */
             	}
+            session.setAttribute("cardsFoundCat", cardsFound); // setting accurate values
+            session.setAttribute("selLimit", limit); // ensuring box stays checked
+            session.setAttribute("search", card); // making sure that search check in JSP works appropriately
+            
                
             rs.close();
             statement.close();
