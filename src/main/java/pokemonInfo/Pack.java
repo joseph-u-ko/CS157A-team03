@@ -2,11 +2,11 @@ package pokemonInfo;
 
 public class Pack {
 	private String packName;
-	private int packID;
+	private String packID;
 	private int available;
 	private String setCode;
 	
-	public Pack (String packName, int packID, int available, String setCode){
+	public Pack (String packName, String packID, int available, String setCode){
 		this.setPackName(packName);
 		this.setPackID(packID);
 		this.setAvailable(available);
@@ -14,14 +14,14 @@ public class Pack {
 	}
 	
 	
-	public Pack (String packName, int packID, String setCode) {
+	public Pack (String packName, String packID, String setCode) {
 		this.setPackName(packName);
 		this.setPackID(packID);
 		this.setSetCode(setCode);
 		
 	}
 	
-	public Pack (String packName, int packID) {
+	public Pack (String packName, String packID) {
 		this.setPackName(packName);
 		this.setPackID(packID);
 	}
@@ -37,12 +37,12 @@ public class Pack {
 	}
 
 
-	public int getPackID() {
+	public String getPackID() {
 		return packID;
 	}
 
 
-	public void setPackID(int packID) {
+	public void setPackID(String packID) {
 		this.packID = packID;
 	}
 

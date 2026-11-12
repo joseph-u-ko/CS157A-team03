@@ -90,7 +90,7 @@
 		}
 		try (ResultSet rs2 = statement_getPacks.executeQuery()) {
 			while (rs2.next()){
-				packNames.add(new Pack(rs2.getString("packName"), rs2.getInt("packID"), rs2.getString("setCode")));
+				packNames.add(new Pack(rs2.getString("packName"), rs2.getString("packID"), rs2.getString("setCode")));
 			}
 		}
 	}

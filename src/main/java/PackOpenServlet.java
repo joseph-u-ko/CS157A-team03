@@ -21,7 +21,7 @@ public class PackOpenServlet extends HttpServlet {
 	
     private static final String DB_URL = "jdbc:mysql://localhost:3306/poketrader?useSSL=false";
     private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "$apphire9Warrior";
+    private static final String DB_PASSWORD = "Chingloo1234$$";
 
     @Override
     protected void doPost(
@@ -54,7 +54,7 @@ public class PackOpenServlet extends HttpServlet {
         
         // Prepare the SQL statement that opens a pack
         String SQL_getCards = """
-                SELECT cardID, cardName, cardType, subType, rarity
+                SELECT *
                 FROM cards
                 WHERE cardID IN (SELECT cardID
                 				 FROM contains
@@ -95,13 +95,13 @@ public class PackOpenServlet extends HttpServlet {
                	return;
        		}
         	statement_getCards.setString(1, packID);
-//    		ArrayList<Card> possibleCards = new ArrayList<>();
-    		ArrayList<Card> commonCards = new ArrayList<>();
-    		ArrayList<Card> uncommonCards = new ArrayList<>();
-    		ArrayList<Card> holoRareCards = new ArrayList<>();
-    		ArrayList<Card> premiumRareCards = new ArrayList<>();
-    		ArrayList<Card> chaseRareCards = new ArrayList<>();
-    		ArrayList<Card> ultraChaseRareCards = new ArrayList<>();
+    		ArrayList<Card> possibleCards = new ArrayList<>();
+//    		ArrayList<Card> commonCards = new ArrayList<>();
+//    		ArrayList<Card> uncommonCards = new ArrayList<>();
+//    		ArrayList<Card> holoRareCards = new ArrayList<>();
+//    		ArrayList<Card> premiumRareCards = new ArrayList<>();
+//    		ArrayList<Card> chaseRareCards = new ArrayList<>();
+//    		ArrayList<Card> ultraChaseRareCards = new ArrayList<>();
     		//Getting the cards
         	try (ResultSet cards = statement_getCards.executeQuery()) {
         		while (cards.next()) {
@@ -112,37 +112,37 @@ public class PackOpenServlet extends HttpServlet {
         			String rarity = cards.getString("rarity");
         			String imageLink = cards.getString("imageLink");
         			Card c = new Card(cardID, cardName, cardType, subType, rarity, imageLink, 0, null);
-//        			possibleCards.add(c);
-        			if (rarity.equals("Common")) commonCards.add(c);
-        			else if (rarity.equals("Uncommon")) uncommonCards.add(c);
-        			else if (rarity.indexOf("Rare Holo") == 0 || rarity.indexOf("Holo Rare") == 0 || rarity.equals("Double Rare")) holoRareCards.add(c);
+        			possibleCards.add(c);
+//        			if (rarity.equals("Common")) commonCards.add(c);
+//        			else if (rarity.equals("Uncommon")) uncommonCards.add(c);
+//        			else if (rarity.indexOf("Rare Holo") == 0 || rarity.indexOf("Holo Rare") == 0 || rarity.equals("Double Rare")) holoRareCards.add(c);
         			//////////
         		}
         	}
-//	       	int numCards = possibleCards.size();
-        	int numCommon = commonCards.size();
-        	int numUncommon = uncommonCards.size();
-        	int numRare = holoRareCards.size();
+	       	int numCards = possibleCards.size();
+//        	int numCommon = commonCards.size();
+//        	int numUncommon = uncommonCards.size();
+//        	int numRare = holoRareCards.size();
         	/////////////
 	       	ArrayList<Card> pulled = new ArrayList<>();
 	       	Random r = new Random();
 	      	//pull 11 cards (we won't consider guaranteed energy or pull rates yet)
 		    for (int i = 0; i < 10; i++) {
-//		    	int ind = (int) (Math.random() * numCards);
-//	       		Card c = possibleCards.get(ind);
-		     	Card c = null;
-	       		if (i < 4) c = commonCards.get(r.nextInt(numCommon));
-	       		else if (i < 7) c = uncommonCards.get(r.nextInt(numUncommon));
-	       		else if (i < 9) {
-	       			if (r.nextBoolean()) {
-	       				if (r.nextBoolean()) c = commonCards.get(r.nextInt(numCommon));
-	       				else c = uncommonCards.get(r.nextInt(numUncommon));
-	       			}
-	       			else c = holoRareCards.get(r.nextInt(numRare));
-	       		}
-	       		else {
-	       			///////////
-	       		}
+		    	int ind = (int) (Math.random() * numCards);
+	       		Card c = possibleCards.get(ind);
+//		     	Card c = null;
+//	       		if (i < 4) c = commonCards.get(r.nextInt(numCommon));
+//	       		else if (i < 7) c = uncommonCards.get(r.nextInt(numUncommon));
+//	       		else if (i < 9) {
+//	       			if (r.nextBoolean()) {
+//	       				if (r.nextBoolean()) c = commonCards.get(r.nextInt(numCommon));
+//	       				else c = uncommonCards.get(r.nextInt(numUncommon));
+//	       			}
+//	       			else c = holoRareCards.get(r.nextInt(numRare));
+//	       		}
+//	       		else {
+//	       			///////////
+//	       		}
 	       		pulled.add(c);
 	       		//for each card, update the table
 		      	try (PreparedStatement statement_ownsCard = connection.prepareStatement(SQL_ownsCard);
