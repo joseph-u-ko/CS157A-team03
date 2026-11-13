@@ -1,6 +1,38 @@
 package pokemonInfo;
 
+import java.util.Map;
+
 public class Card {
+	//Default for now
+	public static Map<String, String> NAME_TO_CLASS = Map.ofEntries(
+	        Map.entry("Common", "Common"),
+	        Map.entry("Uncommon", "Uncommon"),
+
+	        Map.entry("Rare", "Holo/Rare"),
+	        Map.entry("Rare Holo", "Holo/Rare"),
+	        Map.entry("Rare Holo EX", "Holo/Rare"),
+	        Map.entry("Rare Holo GX", "Holo/Rare"),
+	        Map.entry("Rare Holo LV.X", "Holo/Rare"),
+	        Map.entry("Holo Rare V", "Holo/Rare"),
+	        Map.entry("Holo Rare VMAX", "Holo/Rare"),
+	        Map.entry("Holo Rare VSTAR", "Holo/Rare"),
+	        Map.entry("Double Rare", "Holo/Rare"),
+
+	        Map.entry("Amazing Rare", "Premium Rare"),
+	        Map.entry("Futuristic Rare", "Premium Rare"),
+	        Map.entry("Illustration Rare", "Premium Rare"),
+	        Map.entry("MEGA_ATTACK_RARE", "Premium Rare"),
+	        Map.entry("Pikachu Rare", "Premium Rare"),
+	        Map.entry("Rare BREAK", "Premium Rare"),
+	        Map.entry("Rare Prime", "Premium Rare"),
+	        Map.entry("Rare Secret", "Premium Rare"),
+	        Map.entry("Rare Ultra", "Premium Rare"),
+	        Map.entry("Ultra Rare", "Premium Rare"),
+
+	        Map.entry("LEGEND", "Chase Rare"),
+	        Map.entry("Special Illustration Rare", "Chase Rare"),
+	        Map.entry("Mega Hyper Rare", "Ultra-Chase Rare")
+	        );
 	private int cardID;
 	private String cardName;
 	private String cardType;

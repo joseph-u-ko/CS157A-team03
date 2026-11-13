@@ -138,7 +138,7 @@
 
 <%
     String SQL_getSets = """
-        SELECT setCode, setName
+        SELECT setCode, setName, available
         FROM sets
         ORDER BY setName
     """;
@@ -156,6 +156,8 @@
         while (result.next()) {
             String setCode = result.getString("setCode");
             String setName = result.getString("setName");
+            boolean available = result.getInt("available") == 1;
+            if (available) {
 %>
 
                         <option value="<%= setCode %>">
@@ -163,6 +165,7 @@
                         </option>
 
 <%
+            }
         }
     }
 %>
