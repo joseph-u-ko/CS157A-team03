@@ -39,14 +39,19 @@
 			<p>Welcome to PokéTrader!</p>
 		</div>
 		
+		
 		<%-- Container for navigator-div and image-div --%>
 		<div style="display: flex;">
 			<div style="width: 150px; height: 500px; background-color: white; border-radius: 5px; border: 2px solid #333; margin-top: 25px; margin-left: 25px;">
 				<div style="width: 100px; height: 75px; border-radius: 5px; border: 2px solid #333; margin: auto; margin-top: 60px;">
-					<%-- TODO: Add 'action="Home" method="post"' to <form>--%>
-					<form>
-						<button type="button" style="width: 100px; height: 75px;">Home</button>
+					<form action="friends" method="post">
+						<button type="submit" style="width: 100px; height: 75px;">Friends</button>
 					</form>
+				</div>
+				<div style="width: 100px; height: 75px; border-radius: 5px; border: 2px solid #333; margin: auto; margin-top: 10px;">
+					<form action="catalog" method="post">
+						<button type="submit" style="width: 100px; height: 75px;">Catalog</button>
+					</form>	
 				</div>
 				<div style="width: 100px; height: 75px; border-radius: 5px; border: 2px solid #333; margin: auto; margin-top: 10px;">
 					<form action="binder" method="post">
@@ -71,9 +76,11 @@
 				height = "500"
 				class="inline-title-img">
 			</div>
+			
+			<%-- Div with nothing --%>
 			<div style="width: 350px; height: 500px; background-color: white; border-radius: 5px; border: 2px solid #333; margin-top: 25px; margin-left: 25px; text-align: center;">
-				<p>Bulletin board updates go here (nextTicketTime, new Trade statuses)</p>
 			</div>
+			
 		</div>
 	</body>
 </html>

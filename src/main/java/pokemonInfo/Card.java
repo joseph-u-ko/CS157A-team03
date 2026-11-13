@@ -53,6 +53,16 @@ public class Card {
 	this.setQuantity(quantity);
 	this.setSetName(setName);
 }
+	// ran into image link error when opening pack, temporarily added this for now
+	public Card(int cardID, String cardName, String cardType, String subType, String rarity, int quantity, String setName) {
+		this.setCardID(cardID);
+		this.setCardName(cardName);
+		this.setCardType(cardType);
+		this.setSubType(subType);
+		this.setRarity(rarity);
+		this.setQuantity(quantity);
+		this.setSetName(setName);
+	}
 	
 	// Catalog
 	public Card(int cardID, String cardName, String cardType, String subType, String rarity, String imageLink, String setName) {

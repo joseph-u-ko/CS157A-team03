@@ -30,22 +30,20 @@
 			}
 		</style>
 	</head>
-<<<<<<< Updated upstream
 <body>
 		<div style="position: fixed; bottom: 20px; right: 20px; width: 100px; height: 50px; border-radius: 5px; border: 2px solid #333;">
 			<button type="button" onclick="window.location.href='home.jsp';">Back</button>
 		</div>
-=======
+
 <body style="background-color: lightblue;">
 	<div style="position: fixed; bottom: 20px; right: 20px; width: 100px; height: 50px; border-radius: 5px; border: 2px solid #333; background-color: white; overflow: hidden;">
 		<button type="button" class="nav-btn" onclick="window.location.href='home.jsp';">&#8592; Back</button>
 	</div>
->>>>>>> Stashed changes
 <%
 	ArrayList<Card> cards = (ArrayList<Card>) session.getAttribute("cards");
 	String search = (String) session.getAttribute("search");
 	Boolean found = (Boolean) session.getAttribute("cardsFound");
-	session.removeAttribute("found"); // have to remove this attribute in JSP, as it will affect later searches if not removed
+	session.removeAttribute("cardsFound"); // have to remove this attribute in JSP, as it will affect later searches if not removed
 	
 	if (search == null) search = "";
 %>
@@ -55,7 +53,7 @@
 			<button type="submit">Search</button>
 		</form>
 	</div>
-	<% if ((found != null) && (!found)) { // Since Boolean not boolean, it can be null and need to check for that %> 
+	<% if ((found != null) && (!found) && !search.isEmpty()) {  // Since Boolean not boolean, it can be null and need to check for that %> 
 	<div style="width: 400px; background-color: white; border-radius: 5px; border: 2px solid #333; padding: 10px; margin: 15px auto 0 auto; text-align: center; color: darkred;">
 		Card not found
 		
