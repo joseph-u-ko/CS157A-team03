@@ -60,7 +60,7 @@ CREATE TABLE involves(
 	CONSTRAINT FK_Card_Requested
 		FOREIGN KEY(cardID)
         REFERENCES cards(cardID),
-	PRIMARY KEY (tradeID, requester, cardID)
+	PRIMARY KEY (tradeID, requester)
 );
 
 CREATE TABLE useRule (
