@@ -21,7 +21,7 @@ public class CatalogServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private static final String DB_URL = "jdbc:mysql://localhost:3306/poketrader?useSSL=false";
     private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "Chingloo1234$$";
+    private static final String DB_PASSWORD = "$apphire9Warrior";
     
     @Override
     protected void doPost(
@@ -100,7 +100,7 @@ public class CatalogServlet extends HttpServlet {
         	nextCond = true;
         }
         if (limit) {
-        	SQL_cards = SQL_cards + " LIMIT 1000";
+        	SQL_cards = SQL_cards + " LIMIT 300";
         }
         
 //        String retrieve_setNames = """

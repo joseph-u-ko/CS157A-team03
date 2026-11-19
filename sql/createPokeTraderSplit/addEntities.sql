@@ -119,16 +119,10 @@ CREATE TABLE trades(
 	PRIMARY KEY (tradeID)
 );
 
-CREATE TABLE tradeMessages(
-	tradeID INT NOT NULL,
-	messageNum INT NOT NULL,
-	timestamp DATETIME,
-	message TEXT,
-	sender VARCHAR(255) NOT NULL,
-
-	CONSTRAINT FK_Trade_Ref
-	FOREIGN KEY(tradeID) REFERENCES trades(tradeID),
-	CONSTRAINT FK_Sender
-	FOREIGN KEY(sender) REFERENCES users(username),
-	PRIMARY KEY (tradeID, messageNum)
+CREATE TABLE friendMessages (
+    messageID INT AUTO_INCREMENT,
+    sentAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    message TEXT NOT NULL,
+    
+    PRIMARY KEY (messageID)
 );

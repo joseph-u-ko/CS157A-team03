@@ -21,7 +21,6 @@ CREATE TABLE owns(
 	username VARCHAR(255) NOT NULL,
 	cardID INT NOT NULL,
 	quantity INT NOT NULL DEFAULT 0,
-	numberOffered INT NOT NULL DEFAULT 0,
 
 	CONSTRAINT FK_User_To_Card
 		FOREIGN KEY(username)
@@ -29,6 +28,8 @@ CREATE TABLE owns(
 	CONSTRAINT FK_Card_To_User
 		FOREIGN KEY(cardID)
         REFERENCES cards(cardID),
+	CONSTRAINT CHK_Quantity
+		CHECK (quantity >= 0),
 	PRIMARY KEY (username, cardID)
 );
 
@@ -49,7 +50,6 @@ CREATE TABLE involves(
 	tradeID INT NOT NULL,
 	requester VARCHAR(255) NOT NULL,
 	cardID INT NOT NULL,
-	quantity INT NOT NULL DEFAULT 0,
 
 	CONSTRAINT FK_Trade_Involved
 		FOREIGN KEY(tradeID)
@@ -93,4 +93,24 @@ CREATE TABLE ruleCardsByRarity (
 	CONSTRAINT CHK_RuleCardsByRarity_UpgradeRate
 		CHECK (upgradeRate >= 0.0000 AND upgradeRate <= 1.0000),
     PRIMARY KEY (ruleSetID, rarityClass)
+);
+
+CREATE TABLE writes (
+	sender VARCHAR(255) NOT NULL,
+    recipient VARCHAR(255) NOT NULL,
+    messageID INT,
+    
+    CONSTRAINT FK_MessageID
+		FOREIGN KEY (messageID)
+		REFERENCES friendMessages(messageID)
+		ON DELETE CASCADE,
+    CONSTRAINT FK_Sender
+		FOREIGN KEY (sender)
+        REFERENCES users(username),
+	CONSTRAINT FK_Recipient
+		FOREIGN KEY (recipient)
+        REFERENCES users(username),
+	CONSTRAINT CHK_Not_Self
+		CHECK (sender <> recipient),
+	PRIMARY KEY (sender, recipient, messageID)
 );
