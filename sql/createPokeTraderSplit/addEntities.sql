@@ -116,6 +116,7 @@ CREATE TABLE cards(
 CREATE TABLE trades(
 	tradeID INT NOT NULL,
 	status VARCHAR(255) NOT NULL DEFAULT 'UNKNOWN',
+    
 	PRIMARY KEY (tradeID)
 );
 
@@ -123,6 +124,16 @@ CREATE TABLE friendMessages (
     messageID INT AUTO_INCREMENT,
     sentAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     message TEXT NOT NULL,
+    sender VARCHAR(255) NOT NULL,
+    recipient VARCHAR(255) NOT NULL,
     
+    CONSTRAINT FK_Sender
+		FOREIGN KEY(sender)
+        REFERENCES users(username),
+	CONSTRAINT FK_Recipient
+		FOREIGN KEY(recipient)
+        REFERENCES users(username),
+	CONSTRAINT CHK_Not_Same
+		CHECK (sender <> recipient),
     PRIMARY KEY (messageID)
 );
