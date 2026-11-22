@@ -51,7 +51,7 @@
                             Class.forName("com.mysql.cj.jdbc.Driver");
                             String url = "jdbc:mysql://localhost:3306/poketrader?autoReconnect=true&useSSL=false";
                             String user = "root";
-                            String password = "$apphire9Warrior";
+                            String password = "o{%}*pEhL@uIRUW]ZbmJ5V[2";
                             String currentUser = (String) session.getAttribute("currentUser");
 
                             String query = "SELECT * FROM friends WHERE userA = ?";
@@ -78,7 +78,7 @@
                         </td>
                         <td>
                             <%-- A pending request can be cancelled by the sender. --%>
-                            <% if ("pending".equalsIgnoreCase(status)) { %>
+                            <% if ("request pending".equalsIgnoreCase(status)) { %>
                                 <form action="removeFriend" method="post" style="display:inline;">
                                     <input type="hidden" name="friendToRemove" value="<%=otherUser%>">
                                     <button type="submit">Cancel request</button>
