@@ -206,7 +206,7 @@
 
 
             <p class="placeholder">
-                Cards will automatically added to your binder. Pack opening results to be implemented later.
+                Cards will automatically added to your binder. You will be shown pack results.
             </p>
 
         </section>
