@@ -1,0 +1,64 @@
+-- MySQL dump 10.13  Distrib 8.0.46, for Win64 (x86_64)
+--
+-- Host: localhost    Database: poketrader
+-- ------------------------------------------------------
+-- Server version	26.7.0
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!50503 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+SET @MYSQLDUMP_TEMP_LOG_BIN = @@SESSION.SQL_LOG_BIN;
+SET @@SESSION.SQL_LOG_BIN= 0;
+
+--
+-- GTID state at the beginning of the backup 
+--
+
+SET @@GLOBAL.GTID_PURGED=/*!80000 '+'*/ '72d3b320-a296-11f1-8118-14ac60eadace:1-246,
+886cc565-a65f-11f1-921a-00155d460e24:1-2398';
+
+--
+-- Table structure for table `userule`
+--
+
+DROP TABLE IF EXISTS `userule`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `userule` (
+  `packID` varchar(255) NOT NULL,
+  `ruleSetID` int NOT NULL,
+  PRIMARY KEY (`packID`),
+  KEY `FK_UseRule_RuleSet` (`ruleSetID`),
+  CONSTRAINT `FK_UseRule_Pack` FOREIGN KEY (`packID`) REFERENCES `packs` (`packID`),
+  CONSTRAINT `FK_UseRule_RuleSet` FOREIGN KEY (`ruleSetID`) REFERENCES `rulesets` (`ruleSetID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `userule`
+--
+
+LOCK TABLES `userule` WRITE;
+/*!40000 ALTER TABLE `userule` DISABLE KEYS */;
+INSERT INTO `userule` VALUES ('ASC',1),('CRI',1),('MEG',1),('PBL',1),('PFL',1),('POR',1),('ARC',2),('PLT',2),('RRL',2),('SUV',2),('30C',3),('30CC',4),('ASR',5),('BRS',5),('BST',5),('CPA',5),('CRE',5),('DAA',5),('EVS',5),('FST',5),('LOR',5),('RCL',5),('SIT',5),('SSH',5),('VIV',5),('SHF',6),('CEL-CC',7),('PGO',8),('CRZ',9),('DRI',10),('JTG',10),('MEW',10),('OBF',10),('PAL',10),('PAR',10),('SCR',10),('SSP',10),('SVI',10),('TEF',10),('TWM',10),('PAF',11),('SFA',12),('PRE',13),('BLK',14),('WHT',14),('BUS',15),('CEC',15),('CES',15),('CIN',15),('DRM',15),('FLI',15),('GRI',15),('HIF',15),('LOT',15),('SLG',15),('SUM',15),('TEU',15),('UNB',15),('UNM',15),('UPR',15),('AOR',16),('BKP',16),('BKT',16),('EVO',16),('FCO',16),('FFI',16),('FLF',16),('PHF',16),('PRC',16),('ROS',16),('STS',16),('XY',16),('DCR',17),('GEN',18),('BCR',19),('BLW',19),('DEX',19),('DRX',19),('EPO',19),('LTR',19),('NVI',19),('NXD',19),('PLB',19),('PLF',19),('PLS',19),('HS',20),('TM',20),('UD',20),('UL',20),('CL',21),('DP',22),('GE',22),('LA',22),('MD',22),('MT',22),('SF',22),('SW',22),('CG',23),('DF',23),('DR',23),('DS',23),('DX',23),('EM',23),('HL',23),('HP',23),('LM',23),('MA',23),('PK',23),('RG',23),('RS',23),('SS',23),('TRR',23),('UF',23),('B2',24),('BS',24),('FO',24),('JU',24),('TR',25),('A1-CHARIZARD',26),('A1-MEWTWO',26),('A1-PIKACHU',26),('A1A-MEW',26),('A2-DIALGA',26),('A2-PALKIA',26),('A2A-ARCEUS',26),('A2B-SHINING',27),('A3-LUNALA',27),('A3-SOLGALEO',27),('A3A-EXTRADIMENSIONAL',27),('A3B-EEVEE',27),('A4-HO-OH',27),('A4-LUGIA',27),('A4A-SECLUDED',27),('B1-MEGA-ALTARIA',28),('B1-MEGA-BLAZIKEN',28),('B1-MEGA-GYARADOS',28),('B1A-CRIMSON-BLAZE',28),('B2-GARDEVOIR',28),('B2A-PALDEAN',28),('B2B-MEGA-SHINE',28),('B3-PULSING-AURA',28),('B3A-PARADOX-DRIVE',28),('B3B-EVERYDAY-WONDERS',28),('B4-RULER-OF-THE-SKIES',28),('B4A-TEAM-ROCKET',28);
+/*!40000 ALTER TABLE `userule` ENABLE KEYS */;
+UNLOCK TABLES;
+SET @@SESSION.SQL_LOG_BIN = @MYSQLDUMP_TEMP_LOG_BIN;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2026-11-22 18:35:45

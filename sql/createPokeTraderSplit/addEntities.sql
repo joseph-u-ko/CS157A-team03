@@ -11,7 +11,7 @@ CREATE TABLE users(
 );
 
 CREATE TABLE sets(
-	setCode INT NOT NULL,
+	setCode INT UNIQUE AUTO_INCREMENT,
 	setName VARCHAR(255) UNIQUE NOT NULL DEFAULT 'UNDEFINED',
 	description VARCHAR(1024),
 	available TINYINT(1) NOT NULL DEFAULT 0,
@@ -81,14 +81,36 @@ INSERT INTO rarities (rarityName, rarityClass) VALUES
     ('Rare Secret', 'Premium Rare'),
     ('Rare Ultra', 'Premium Rare'),
     ('Ultra Rare', 'Premium Rare'),
+    ('ACE SPEC Rare', 'Premium Rare'),
+    ('Black White Rare', 'Premium Rare'),
+    ('Classic Collection', 'Premium Rare'),
+    ('Radiant Rare', 'Premium Rare'),
+    ('Rare Rainbow', 'Premium Rare'),
+    ('Rare Shiny', 'Premium Rare'),
+    ('Shiny Rare', 'Premium Rare'),
+    ('Trainer Gallery Rare Holo', 'Premium Rare'),
+    ('Rare Prism Star', 'Premium Rare'),
+    ('Rare Shining', 'Premium Rare'),
+    ('Rare Shiny GX', 'Premium Rare'),
+    ('Rare ACE', 'Premium Rare'),
+    ('Rare Holo Star', 'Premium Rare'),
+    ('Art Rare', 'Premium Rare'),
+    ('Super Rare', 'Premium Rare'),
+    ('Shiny', 'Premium Rare'),
 
+	('Shiny Ultra Rare', 'Chase Rare'),
     ('LEGEND', 'Chase Rare'),
     ('Special Illustration Rare', 'Chase Rare'),
+    ('Special Art Rare', 'Chase Rare'),
+    ('Immersive Rare', 'Chase Rare'),
+    ('Shiny Super Rare', 'Chase Rare'),
 
-    ('Mega Hyper Rare', 'Ultra-Chase Rare');
+	('Hyper Rare', 'Ultra-Chase Rare'),
+    ('Mega Hyper Rare', 'Ultra-Chase Rare'),
+    ('Crown Rare', 'Ultra-Chase Rare');
     
 CREATE TABLE ruleSets (
-    ruleSetID INT NOT NULL,
+    ruleSetID INT UNIQUE AUTO_INCREMENT,
     ruleName VARCHAR(255) UNIQUE NOT NULL,
 
     PRIMARY KEY (ruleSetID)

@@ -26,18 +26,18 @@ public class PackOpenServlet extends HttpServlet {
     
     private static final Random r = new Random();
 
-	private List<Card> commonCards = new ArrayList<>();
-	private List<Card> uncommonCards = new ArrayList<>();
-	private List<Card> holoRareCards = new ArrayList<>();
-	private List<Card> premiumRareCards = new ArrayList<>();
-	private List<Card> chaseRareCards = new ArrayList<>();
-	private List<Card> ultraChaseRareCards = new ArrayList<>();
-
     @Override
     protected void doPost(
     		HttpServletRequest request,
             HttpServletResponse response)
             throws ServletException, IOException {
+
+    	List<Card> commonCards = new ArrayList<>();
+    	List<Card> uncommonCards = new ArrayList<>();
+    	List<Card> holoRareCards = new ArrayList<>();
+    	List<Card> premiumRareCards = new ArrayList<>();
+    	List<Card> chaseRareCards = new ArrayList<>();
+    	List<Card> ultraChaseRareCards = new ArrayList<>();
     	
     	// Get the current session and current user's name
         HttpSession session = request.getSession(false);
@@ -69,10 +69,10 @@ public class PackOpenServlet extends HttpServlet {
                 				 FROM contains
                 				 WHERE packID = ?)
                 """;
-//        String SQL_getRarities = """
-//        		SELECT *
-//        		FROM rarities
-//        		""";
+        String SQL_getRarities = """
+        		SELECT *
+        		FROM rarities
+        		""";
         String SQL_pullRates = """
         		SELECT rarityClass, quantity, upgradeRate
         		FROM packs
@@ -104,7 +104,7 @@ public class PackOpenServlet extends HttpServlet {
 
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
         	 PreparedStatement statement_getCards = connection.prepareStatement(SQL_getCards);
-//           	 PreparedStatement statement_getRarities = connection.prepareStatement(SQL_getRarities);
+           	 PreparedStatement statement_getRarities = connection.prepareStatement(SQL_getRarities);
         	 PreparedStatement statement_consumeTicket = connection.prepareStatement(SQL_consumeTicket);
         	 PreparedStatement statement_pullRates = connection.prepareStatement(SQL_pullRates)) {
         	
@@ -117,15 +117,15 @@ public class PackOpenServlet extends HttpServlet {
        		}
         	
         	//RARITY MAPPING
-//    		try (ResultSet rarities = statement_getRarities.executeQuery()) {
-//    			Map<String, String> nameToClass = new HashMap<>();
-//    			while (rarities.next()) {
-//    				String rarityName = rarities.getString("rarityName");
-//    				String rarityClass = rarities.getString("rarityClass");
-//    				nameToClass.put(rarityName, rarityClass);
-//    			}
-//    			Card.NAME_TO_CLASS = nameToClass;
-//    		}
+    		try (ResultSet rarities = statement_getRarities.executeQuery()) {
+    			Map<String, String> nameToClass = new HashMap<>();
+    			while (rarities.next()) {
+    				String rarityName = rarities.getString("rarityName");
+    				String rarityClass = rarities.getString("rarityClass");
+    				nameToClass.put(rarityName, rarityClass);
+    			}
+    			Card.NAME_TO_CLASS = nameToClass;
+    		}
         	
         	//CARD DATA
         	statement_getCards.setString(1, packID);
@@ -171,46 +171,81 @@ public class PackOpenServlet extends HttpServlet {
 
 	       	for (String rarityClass : rules.keySet()) {
 	       		PullRule pr = rules.get(rarityClass);
+	       		if (pr == null) {
+	       			System.out.println("Error. No pull rule for rarityClass: " + rarityClass);
+	       			response.sendRedirect(packShop);
+	       		}
 	       		int quantity = pr.quantity();
 	       		for (int i = 0; i < quantity; i++) {
 	       			System.out.println(rarityClass);
+	       			PullRule cur = null;
 	       			Card c = null;
 	       			Double upgradeRate = 0.0;
 	       			switch (rarityClass) {
 	       				case "Common":
-	       					upgradeRate = rules.get("Common").upgradeRate();
+	       					cur = rules.get("Common");
+	       					if (cur == null) {
+	       		       			System.out.println("Error. No pull rule for rarityClass: Common");
+	       		       			response.sendRedirect(packShop);
+	       		       		}
+	       					upgradeRate = cur.upgradeRate();
 	       					if (!(upgradeRate == null || r.nextDouble() < upgradeRate)) {
 	       						c = commonCards.get(r.nextInt(numCommon));
 	       						break;
 	       					}
 	       				case "Uncommon":
-	       					upgradeRate = rules.get("Uncommon").upgradeRate();
+	       					cur = rules.get("Uncommon");
+	       					if (cur == null) {
+	       		       			System.out.println("Error. No pull rule for rarityClass: Uncommon");
+	       		       			response.sendRedirect(packShop);
+	       		       		}
+	       					upgradeRate = cur.upgradeRate();
 	       					if (!(upgradeRate == null || r.nextDouble() < upgradeRate)) {
 	       						c = uncommonCards.get(r.nextInt(numUncommon));
 	       						break;
 	       					}
 	       				case "Holo/Rare":
-	       					upgradeRate = rules.get("Holo/Rare").upgradeRate();
+	       					cur = rules.get("Holo/Rare");
+	       					if (cur == null) {
+	       		       			System.out.println("Error. No pull rule for rarityClass: Holo/Rare");
+	       		       			response.sendRedirect(packShop);
+	       		       		}
+	       					upgradeRate = cur.upgradeRate();
 	       					if (!(upgradeRate == null || r.nextDouble() < upgradeRate)) {
 	       						c = holoRareCards.get(r.nextInt(numHoloRare));
 	       						break;
 	       					}
 	       				case "Premium Rare":
-	       					upgradeRate = rules.get("Premium Rare").upgradeRate();
+	       					cur = rules.get("Premium Rare");
+	       					if (cur == null) {
+	       		       			System.out.println("Error. No pull rule for rarityClass: Premium Rare");
+	       		       			response.sendRedirect(packShop);
+	       		       		}
+	       					upgradeRate = cur.upgradeRate();
 	       					if (!(upgradeRate == null || r.nextDouble() < upgradeRate)) {
-	       						c = commonCards.get(r.nextInt(numPremium));
+	       						c = premiumRareCards.get(r.nextInt(numPremium));
 	       						break;
 	       					}
 	       				case "Chase Rare":
-	       					upgradeRate = rules.get("Chase Rare").upgradeRate();
+	       					cur = rules.get("Chase Rare");
+	       					if (cur == null) {
+	       		       			System.out.println("Error. No pull rule for rarityClass: Chase Rare");
+	       		       			response.sendRedirect(packShop);
+	       		       		}
+	       					upgradeRate = cur.upgradeRate();
 	       					if (!(upgradeRate == null || r.nextDouble() < upgradeRate)) {
-	       						c = uncommonCards.get(r.nextInt(numChase));
+	       						c = chaseRareCards.get(r.nextInt(numChase));
 	       						break;
 	       					}
 	       				case "Ultra-Chase Rare":
-	       					upgradeRate = rules.get("Ultra-Chase Rare").upgradeRate();
+	       					cur = rules.get("Ultra-Chase Rare");
+	       					if (cur == null) {
+	       		       			System.out.println("Error. No pull rule for rarityClass: Ultra-Chase Rare");
+	       		       			response.sendRedirect(packShop);
+	       		       		}
+	       					upgradeRate = cur.upgradeRate();
 	       					if (!(upgradeRate == null || r.nextDouble() < upgradeRate)) {
-	       						c = holoRareCards.get(r.nextInt(numUltra));
+	       						c = ultraChaseRareCards.get(r.nextInt(numUltra));
 	       						break;
 	       					}
 	       				default:
