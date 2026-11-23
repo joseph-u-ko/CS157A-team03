@@ -175,14 +175,13 @@
 
                         String url = "jdbc:mysql://localhost:3306/poketrader?autoReconnect=true&useSSL=false";
                         String user = "root";
-                        String password = "$apphire9Warrior";
+                        String password = "Chingloo1234$$";
 
                         String SQL_getMessages = """
                                 SELECT sender, recipient, message
                                 FROM (
                                     SELECT sender, recipient, message, messageID
                                     FROM friendMessages
-                                    JOIN writes USING (messageID)
                                     WHERE (sender = ? AND recipient = ?)
                                        OR (sender = ? AND recipient = ?)
                                     ORDER BY messageID DESC
@@ -236,10 +235,10 @@
             </div>
 
             <%-- PLACEHOLDER SERVLET: replace sendMessage when the messaging servlet is implemented. --%>
-            <form class="message-controls" action="SEND_MESSAGE_NOT_IMPLEMENTED" method="post">
-                <input type="hidden" name="userB" value="<%=userB%>">
-                <input type="text" name="message" placeholder="Type a message..." required>
-                <button type="submit">Send</button>
+            <form class="message-controls" action="addMessage" method="post">
+            	<input type="hidden" name="userB" value="<%=userB%>">
+            	<input type="text" name="message" placeholder="Type a message..." required>
+            	<button type="submit">Send</button>
             </form>
         </main>
     </body>
