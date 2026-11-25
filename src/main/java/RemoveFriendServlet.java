@@ -21,7 +21,7 @@ public class RemoveFriendServlet extends HttpServlet {
        
 	private static final String DB_URL = "jdbc:mysql://localhost:3306/poketrader?autoReconnect=true&useSSL=false";
     private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "$apphire9Warrior";
+    private static final String DB_PASSWORD = "o{%}*pEhL@uIRUW]ZbmJ5V[2";
     
     @Override
 	protected void doPost(
@@ -65,10 +65,17 @@ public class RemoveFriendServlet extends HttpServlet {
     			WHERE (userA = ? AND userB = ?) OR (userA = ? AND userB = ?)
     			""";
     	
+    	// Prepare the SQL statement that deletes the trade logs of user and friend
+    	String SQL_deleteTradeLogs = """
+    			DELETE FROM trades
+    			WHERE (userA = ? AND userB = ?) OR (userA = ? AND userB = ?)
+    			""";
+    	
     	try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
     		 PreparedStatement checkFriendExists = connection.prepareStatement(SQL_checkFriendExists);
     		 PreparedStatement checkIsFriend = connection.prepareStatement(SQL_checkIsFriend);
-    		 PreparedStatement deleteFriends = connection.prepareStatement(SQL_deleteFriends)) {
+    		 PreparedStatement deleteFriends = connection.prepareStatement(SQL_deleteFriends);
+    		 PreparedStatement deleteTradeLogs = connection.prepareStatement(SQL_deleteTradeLogs)) {
     			
     			checkFriendExists.setString(1, friend);
     			try(ResultSet returnedUser = checkFriendExists.executeQuery()) {
@@ -104,14 +111,20 @@ public class RemoveFriendServlet extends HttpServlet {
     				}
     			}
     			
+    			// Delete user-friend pair in 'friends' table and 'trades' table
     			deleteFriends.setString(1, user);
     			deleteFriends.setString(2, friend);
     			deleteFriends.setString(3, friend);
     			deleteFriends.setString(4, user);
     			deleteFriends.executeUpdate();
     			
-				// Output success message for deletion
-    			request.setAttribute("removeFriendOutput", "Success: " + friend + " has been removed from your friends list.");
+    			deleteTradeLogs.setString(1, user);
+    			deleteTradeLogs.setString(2, friend);
+    			deleteTradeLogs.setString(3, friend);
+    			deleteTradeLogs.setString(4, user);
+    			deleteTradeLogs.executeUpdate();
+    			System.out.println("Success: " + friend + " has been removed from your friends list and trades.");
+    			
 				request.getRequestDispatcher(friendsPage).forward(request, response);
 				return;
     	}
