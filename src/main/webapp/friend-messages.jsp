@@ -175,7 +175,7 @@
 
                         String url = "jdbc:mysql://localhost:3306/poketrader?autoReconnect=true&useSSL=false";
                         String user = "root";
-                        String password = "Chingloo1234$$";
+                        String password = "$apphire9Warrior";
 
                         String SQL_getMessages = """
                                 SELECT sender, recipient, message

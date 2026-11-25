@@ -52,22 +52,23 @@
                             Class.forName("com.mysql.cj.jdbc.Driver");
                             String url = "jdbc:mysql://localhost:3306/poketrader?autoReconnect=true&useSSL=false";
                             String user = "root";
-                            String password = "o{%}*pEhL@uIRUW]ZbmJ5V[2";
+                            String password = "$apphire9Warrior";
                             String currentUser = (String) session.getAttribute("currentUser");
 
-                            String query = "SELECT * FROM friends f LEFT JOIN trades t ON f.userA = t.userA AND f.userB = t.userB WHERE f.userA = ?";
+                            // This will query all the friends
+                            String friendQuery = "SELECT * FROM friends f WHERE f.userA = ?";
+                            // This will query who the current user is trading with
+                            String tradeQuery = "SELECT * FROM trades t WHERE t.username = ?";
                             Connection con = DriverManager.getConnection(url, user, password);
-                            PreparedStatement selectFriends = con.prepareStatement(query);
+                            PreparedStatement selectFriends = con.prepareStatement(friendQuery);
+                            PreparedStatement getTrader = con.prepareStatement(tradeQuery);
                             selectFriends.setString(1, currentUser);
+                            getTrader.setString(1, currentUser);
                             ResultSet rs = selectFriends.executeQuery();
                             while (rs.next()) {
                                 String userB = rs.getString("userB");
                                 String otherUser = userB;
                                 String status = rs.getString("status");
-                                String tradeStatus = rs.getString("tradeStatus");
-                                String tradeRequestStatus = rs.getString("requestStatus");
-                                boolean isRecipientPending = "accept pending".equalsIgnoreCase(status)
-                                        || "accept_pending".equalsIgnoreCase(status);
                     %>
                     <tr>
                         <td><%=otherUser %></td>

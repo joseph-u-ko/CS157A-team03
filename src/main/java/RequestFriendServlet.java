@@ -116,7 +116,13 @@ public class RequestFriendServlet extends HttpServlet {
 					if (result2.next()) {
 						// This is the case where the sender already sent a friend request to the receiver.
 						if (result2.getString("userA").equals(user) && result2.getString("userB").equals(user_friend) && result2.getString("status").equals("Request pending")) {
-							request.setAttribute("requestFriendOutput", "Oops, you either have already sent a friend request to " + user_friend + " or have received a friend request by " + user_friend + ".");
+							request.setAttribute("requestFriendOutput", "Oops, you have already sent a friend request to " + user_friend + ".");
+							request.getRequestDispatcher(friendsPage).forward(request, response);
+    						return;
+						}
+						// This is the case where the receiver already sent a friend request to the sender.
+						if (result2.getString("userA").equals(user) && result2.getString("userB").equals(user_friend) && result2.getString("status").equals("Accept pending")) {
+							request.setAttribute("requestFriendOutput", "Oops, you have received a friend request by " + user_friend + ".");
 							request.getRequestDispatcher(friendsPage).forward(request, response);
     						return;
 						}
