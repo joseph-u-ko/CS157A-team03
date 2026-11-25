@@ -25,9 +25,8 @@ Open MySQL Workbench to import the database schema and system data. Data entries
 You may also use the manual creation through `/sql/createPokeTraderSplit` and `/sql/addData`, which will generate a fresh database. This means that there will be no entries in user-dependent tables such as users, owned cards, and friends. If you choose to start a fresh database this way, please follow the instructions exactly in order.
 1. Create the schema: The following can be done manually, but `createPokeTraderSplit/createEmptySchema.sql` will generate the schema into MySQL.
 2. Add entity sets: Run `/createPokeTraderSplit/addEntities.sql`. This will add the necessary entity sets for the database. This includes rarity classes and rarity mapping.
-3. Add friend entity set: Run `/createPokeTraderSplit/addFriends.sql`. Added as a later feature, this is simply a separate file from the other entity sets.
-4. Add relation sets: Run `/createPokeTraderSplit/addRelations.sql`. This will add the relations between two or more entity sets in the database.
-5. Finally, you may add the datasets in `/sql/addData`. Batches of cards are spread across several files.
+3. Add relation sets: Run `/createPokeTraderSplit/addRelations.sql`. This will add the relations between two or more entity sets in the database.
+4. Finally, you may add the datasets in `/sql/addData`. Batches of cards are spread across several files.
 
 # Eclipse Project (`/src`)
 1. Create a Dynamic Web Project in Eclipse.<br>
