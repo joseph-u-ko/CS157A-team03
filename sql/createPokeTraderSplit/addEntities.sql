@@ -158,7 +158,7 @@ CREATE TABLE trades(
 		FOREIGN KEY(cardIDProposed)
         REFERENCES cards(cardID),
 	
-    PRIMARY KEY (username, otherUser)
+    PRIMARY KEY (username)
 );
 
 CREATE TABLE friends (
