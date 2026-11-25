@@ -63,11 +63,6 @@
 						<button type="button" style="width: 100px; height: 75px;" onclick="window.location.href='pack-open-menu.jsp';">Shop</button>
 					</form>	
 				</div>
-				<div style="width: 100px; height: 75px; border-radius: 5px; border: 2px solid #333; margin: auto; margin-top: 10px;">
-					<form>
-						<button type="button" style="width: 100px; height: 75px;">Trade</button>
-					</form>	
-				</div>
 			</div>
 			<div style="width: 900px; height: 500px; border-radius: 5px; border: 2px solid #333; margin-top: 25px; margin-left: 25px;">
 				<img src="https://corporate.bestbuy.com/wp-content/uploads/2026/02/Pokemon-TCG-30th-Celebration-Facebook_EN-thegem-blog-default.jpg"

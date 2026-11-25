@@ -140,8 +140,8 @@ CREATE TABLE trades(
     otherUser VARCHAR(255),
     requestStatus VARCHAR(255) NOT NULL DEFAULT 'None',
     tradeStatus VARCHAR(255) NOT NULL DEFAULT 'Pending',
-    cardIDOffered INT NOT NULL,
-    cardIDProposed INT NOT NULL,
+    cardIDOffered INT,
+    cardIDProposed INT,
     
     CONSTRAINT FK_Trade_User
 		FOREIGN KEY(username)
