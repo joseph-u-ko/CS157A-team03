@@ -44,6 +44,7 @@
                     <tr>
                         <th>Friend</th>
                         <th>Status</th>
+                        <th>Trade Request Status</th>
                         <th>Actions</th>
                     </tr>
                     <%
@@ -54,16 +55,17 @@
                             String password = "o{%}*pEhL@uIRUW]ZbmJ5V[2";
                             String currentUser = (String) session.getAttribute("currentUser");
 
-                            String query = "SELECT * FROM friends WHERE userA = ?";
+                            String query = "SELECT * FROM friends f LEFT JOIN trades t ON f.userA = t.userA AND f.userB = t.userB WHERE f.userA = ?";
                             Connection con = DriverManager.getConnection(url, user, password);
                             PreparedStatement selectFriends = con.prepareStatement(query);
                             selectFriends.setString(1, currentUser);
                             ResultSet rs = selectFriends.executeQuery();
-
                             while (rs.next()) {
                                 String userB = rs.getString("userB");
                                 String otherUser = userB;
                                 String status = rs.getString("status");
+                                String tradeStatus = rs.getString("tradeStatus");
+                                String tradeRequestStatus = rs.getString("requestStatus");
                                 boolean isRecipientPending = "accept pending".equalsIgnoreCase(status)
                                         || "accept_pending".equalsIgnoreCase(status);
                     %>
@@ -75,6 +77,13 @@
                             <% } else { %>
                                 <%=status %>
                             <% } %>
+                        </td>
+                        <td>
+                        	<% if (tradeRequestStatus != null) { %>
+                        		<%=tradeRequestStatus%>
+                        	<% } else { %>
+                        		None
+                        	<% } %>
                         </td>
                         <td>
                             <%-- A pending request can be cancelled by the sender. --%>
@@ -108,6 +117,24 @@
     								<input type="hidden" name="userB" value="<%=otherUser%>">
     								<button type="submit">Message</button>
 								</form>
+								<% if (tradeRequestStatus == null) { %>
+									<form action="handleTradeRequest" method="post">
+										<input type="hidden" name="userB" value="<%=otherUser%>">
+										<input type='hidden' name="task" value="addTradeRequest">
+										<button type="submit">Request Trade</button>
+									</form>
+								<% } else if (tradeRequestStatus.equals("Responding to trade request")) { %>
+									<form action="handleTradeRequest" method="post">
+										<input type="hidden" name="userB" value="<%=otherUser %>">
+										<input type='hidden' name="task" value="acceptTradeRequest">
+										<button type="submit">Accept Trade Request</button>
+									</form>
+								<% } else if (tradeRequestStatus.equals("Accepted") && tradeStatus.equals("Trade In Process")) { %>				
+                            		<form action="trades.jsp" method="get">
+                            			<input type="hidden" name="userB" value="<%=otherUser %>">
+                            			<button type="submit">Go To Trade</button>
+                            		</form>
+                            	<% } %>
                             <% } %>
                         </td>
                     </tr>
