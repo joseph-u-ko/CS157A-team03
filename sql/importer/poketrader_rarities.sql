@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `poketrader` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `poketrader`;
 -- MySQL dump 10.13  Distrib 8.0.46, for Win64 (x86_64)
 --
 -- Host: localhost    Database: poketrader
@@ -24,7 +22,7 @@ SET @@SESSION.SQL_LOG_BIN= 0;
 --
 
 SET @@GLOBAL.GTID_PURGED=/*!80000 '+'*/ '72d3b320-a296-11f1-8118-14ac60eadace:1-246,
-886cc565-a65f-11f1-921a-00155d460e24:1-1887';
+886cc565-a65f-11f1-921a-00155d460e24:1-2479';
 
 --
 -- Table structure for table `rarities`
@@ -49,7 +47,7 @@ CREATE TABLE `rarities` (
 
 LOCK TABLES `rarities` WRITE;
 /*!40000 ALTER TABLE `rarities` DISABLE KEYS */;
-INSERT INTO `rarities` VALUES ('LEGEND','Chase Rare'),('Special Illustration Rare','Chase Rare'),('Common','Common'),('Double Rare','Holo/Rare'),('Holo Rare V','Holo/Rare'),('Holo Rare VMAX','Holo/Rare'),('Holo Rare VSTAR','Holo/Rare'),('Rare','Holo/Rare'),('Rare Holo','Holo/Rare'),('Rare Holo EX','Holo/Rare'),('Rare Holo GX','Holo/Rare'),('Rare Holo LV.X','Holo/Rare'),('Amazing Rare','Premium Rare'),('Futuristic Rare','Premium Rare'),('Illustration Rare','Premium Rare'),('MEGA_ATTACK_RARE','Premium Rare'),('Pikachu Rare','Premium Rare'),('Rare BREAK','Premium Rare'),('Rare Prime','Premium Rare'),('Rare Secret','Premium Rare'),('Rare Ultra','Premium Rare'),('Ultra Rare','Premium Rare'),('Mega Hyper Rare','Ultra-Chase Rare'),('Uncommon','Uncommon');
+INSERT INTO `rarities` VALUES ('Immersive Rare','Chase Rare'),('LEGEND','Chase Rare'),('Shiny Super Rare','Chase Rare'),('Shiny Ultra Rare','Chase Rare'),('Special Art Rare','Chase Rare'),('Special Illustration Rare','Chase Rare'),('Common','Common'),('Double Rare','Holo/Rare'),('Holo Rare V','Holo/Rare'),('Holo Rare VMAX','Holo/Rare'),('Holo Rare VSTAR','Holo/Rare'),('Rare','Holo/Rare'),('Rare Holo','Holo/Rare'),('Rare Holo EX','Holo/Rare'),('Rare Holo GX','Holo/Rare'),('Rare Holo LV.X','Holo/Rare'),('ACE SPEC Rare','Premium Rare'),('Amazing Rare','Premium Rare'),('Art Rare','Premium Rare'),('Black White Rare','Premium Rare'),('Classic Collection','Premium Rare'),('Futuristic Rare','Premium Rare'),('Illustration Rare','Premium Rare'),('MEGA_ATTACK_RARE','Premium Rare'),('Pikachu Rare','Premium Rare'),('Radiant Rare','Premium Rare'),('Rare ACE','Premium Rare'),('Rare BREAK','Premium Rare'),('Rare Holo Star','Premium Rare'),('Rare Prime','Premium Rare'),('Rare Prism Star','Premium Rare'),('Rare Rainbow','Premium Rare'),('Rare Secret','Premium Rare'),('Rare Shining','Premium Rare'),('Rare Shiny','Premium Rare'),('Rare Shiny GX','Premium Rare'),('Rare Ultra','Premium Rare'),('Shiny','Premium Rare'),('Shiny Rare','Premium Rare'),('Super Rare','Premium Rare'),('Trainer Gallery Rare Holo','Premium Rare'),('Ultra Rare','Premium Rare'),('Crown Rare','Ultra-Chase Rare'),('Hyper Rare','Ultra-Chase Rare'),('Mega Hyper Rare','Ultra-Chase Rare'),('Uncommon','Uncommon');
 /*!40000 ALTER TABLE `rarities` ENABLE KEYS */;
 UNLOCK TABLES;
 SET @@SESSION.SQL_LOG_BIN = @MYSQLDUMP_TEMP_LOG_BIN;
@@ -63,4 +61,4 @@ SET @@SESSION.SQL_LOG_BIN = @MYSQLDUMP_TEMP_LOG_BIN;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-11-20 10:14:07
+-- Dump completed on 2026-11-24 22:57:15

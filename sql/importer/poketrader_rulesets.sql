@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `poketrader` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `poketrader`;
 -- MySQL dump 10.13  Distrib 8.0.46, for Win64 (x86_64)
 --
 -- Host: localhost    Database: poketrader
@@ -24,7 +22,7 @@ SET @@SESSION.SQL_LOG_BIN= 0;
 --
 
 SET @@GLOBAL.GTID_PURGED=/*!80000 '+'*/ '72d3b320-a296-11f1-8118-14ac60eadace:1-246,
-886cc565-a65f-11f1-921a-00155d460e24:1-1887';
+886cc565-a65f-11f1-921a-00155d460e24:1-2479';
 
 --
 -- Table structure for table `rulesets`
@@ -34,11 +32,12 @@ DROP TABLE IF EXISTS `rulesets`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `rulesets` (
-  `ruleSetID` int NOT NULL,
+  `ruleSetID` int NOT NULL AUTO_INCREMENT,
   `ruleName` varchar(255) NOT NULL,
   PRIMARY KEY (`ruleSetID`),
+  UNIQUE KEY `ruleSetID` (`ruleSetID`),
   UNIQUE KEY `ruleName` (`ruleName`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -47,7 +46,7 @@ CREATE TABLE `rulesets` (
 
 LOCK TABLES `rulesets` WRITE;
 /*!40000 ALTER TABLE `rulesets` DISABLE KEYS */;
-INSERT INTO `rulesets` VALUES (3,'30th Celebration'),(4,'Classic Collection'),(1,'Modern Mega Evolution'),(2,'Platinum Era');
+INSERT INTO `rulesets` VALUES (3,'30th Celebration'),(24,'Base / Jungle / Fossil / Base Set 2 Standard'),(19,'Black & White Standard'),(14,'Black Bolt / White Flare'),(21,'Call of Legends'),(7,'Celebrations Classic Collection'),(4,'Classic Collection'),(9,'Crown Zenith'),(22,'Diamond & Pearl Standard'),(17,'Double Crisis'),(23,'EX Ruby & Sapphire Standard'),(18,'Generations'),(20,'HeartGold & SoulSilver Standard'),(1,'Modern Mega Evolution'),(11,'Paldean Fates'),(2,'Platinum Era'),(8,'Pokémon GO'),(13,'Prismatic Evolutions'),(10,'Scarlet & Violet Standard'),(6,'Shining Fates'),(12,'Shrouded Fable'),(15,'Sun & Moon Standard'),(5,'SWSH Standard'),(27,'TCG Pocket A Series Shiny'),(26,'TCG Pocket A Series Standard'),(28,'TCG Pocket B Series Shiny'),(25,'Team Rocket Standard'),(16,'XY Standard');
 /*!40000 ALTER TABLE `rulesets` ENABLE KEYS */;
 UNLOCK TABLES;
 SET @@SESSION.SQL_LOG_BIN = @MYSQLDUMP_TEMP_LOG_BIN;
@@ -61,4 +60,4 @@ SET @@SESSION.SQL_LOG_BIN = @MYSQLDUMP_TEMP_LOG_BIN;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-11-20 10:14:08
+-- Dump completed on 2026-11-24 22:57:15

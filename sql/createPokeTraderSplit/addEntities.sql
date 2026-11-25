@@ -136,10 +136,45 @@ CREATE TABLE cards(
 );
 
 CREATE TABLE trades(
-	tradeID INT NOT NULL,
-	status VARCHAR(255) NOT NULL DEFAULT 'UNKNOWN',
+	username VARCHAR(255) NOT NULL,
+    otherUser VARCHAR(255) NOT NULL,
+    requestStatus VARCHAR(255) NOT NULL DEFAULT 'None',
+    tradeStatus VARCHAR(255) NOT NULL DEFAULT 'Pending',
+    cardIDOffered INT NOT NULL,
+    cardIDProposed INT NOT NULL,
     
-	PRIMARY KEY (tradeID)
+    CONSTRAINT FK_Trade_User
+		FOREIGN KEY(username)
+        REFERENCES users(username),
+	CONSTRAINT FK_Other_User
+		FOREIGN KEY(otherUser)
+        REFERENCES users(username),
+	CONSTRAINT CHK_Not_Self_Trades
+		CHECK(username <> otherUser),
+	CONSTRAINT FK_Card_Offered
+		FOREIGN KEY(cardIDOffered)
+        REFERENCES cards(cardID),
+	CONSTRAINT FK_Card_Proposed
+		FOREIGN KEY(cardIDProposed)
+        REFERENCES cards(cardID),
+	
+    PRIMARY KEY (username, otherUser)
+);
+
+CREATE TABLE friends (
+	userA VARCHAR(255) NOT NULL,
+	userB VARCHAR(255) NOT NULL,
+	status VARCHAR(255) NULL,
+  
+	CONSTRAINT FK_UserA
+		FOREIGN KEY (userA)
+        REFERENCES users(username),
+	CONSTRAINT FK_UserB
+		FOREIGN KEY (userB)
+        REFERENCES users(username),
+	CONSTRAINT FK_Not_Self
+		CHECK (userA <> userB),
+	PRIMARY KEY (userA, userB)
 );
 
 CREATE TABLE friendMessages (
@@ -155,7 +190,7 @@ CREATE TABLE friendMessages (
 	CONSTRAINT FK_Recipient
 		FOREIGN KEY(recipient)
         REFERENCES users(username),
-	CONSTRAINT CHK_Not_Same
+	CONSTRAINT CHK_Not_Self_Messages
 		CHECK (sender <> recipient),
     PRIMARY KEY (messageID)
 );

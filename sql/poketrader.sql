@@ -104,7 +104,7 @@ CREATE TABLE `friendmessages` (
   KEY `FK_Recipient` (`recipient`),
   CONSTRAINT `FK_Recipient` FOREIGN KEY (`recipient`) REFERENCES `users` (`username`),
   CONSTRAINT `FK_Sender` FOREIGN KEY (`sender`) REFERENCES `users` (`username`),
-  CONSTRAINT `CHK_Not_Same` CHECK ((`sender` <> `recipient`))
+  CONSTRAINT `CHK_Not_Self_Messages` CHECK ((`sender` <> `recipient`))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -146,35 +146,6 @@ LOCK TABLES `friends` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `involves`
---
-
-DROP TABLE IF EXISTS `involves`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `involves` (
-  `tradeID` int NOT NULL,
-  `requester` varchar(255) NOT NULL,
-  `cardID` int NOT NULL,
-  PRIMARY KEY (`tradeID`,`requester`),
-  KEY `FK_User_Request` (`requester`),
-  KEY `FK_Card_Requested` (`cardID`),
-  CONSTRAINT `FK_Card_Requested` FOREIGN KEY (`cardID`) REFERENCES `cards` (`cardID`),
-  CONSTRAINT `FK_Trade_Involved` FOREIGN KEY (`tradeID`) REFERENCES `trades` (`tradeID`),
-  CONSTRAINT `FK_User_Request` FOREIGN KEY (`requester`) REFERENCES `users` (`username`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `involves`
---
-
-LOCK TABLES `involves` WRITE;
-/*!40000 ALTER TABLE `involves` DISABLE KEYS */;
-/*!40000 ALTER TABLE `involves` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `owns`
 --
 
@@ -199,7 +170,6 @@ CREATE TABLE `owns` (
 
 LOCK TABLES `owns` WRITE;
 /*!40000 ALTER TABLE `owns` DISABLE KEYS */;
-INSERT INTO `owns` VALUES ('a',700019,1),('a',700191,1),('a',700198,2),('a',700255,1);
 /*!40000 ALTER TABLE `owns` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -230,32 +200,6 @@ LOCK TABLES `packs` WRITE;
 /*!40000 ALTER TABLE `packs` DISABLE KEYS */;
 INSERT INTO `packs` VALUES ('30C','30th Celebration',1,1),('30CC','30th Classic Collection',1,1),('A1-CHARIZARD','Genetic Apex — Charizard',1,12),('A1-MEWTWO','Genetic Apex — Mewtwo',1,12),('A1-PIKACHU','Genetic Apex — Pikachu',1,12),('A1A-MEW','Mythical Island — Mew',1,13),('A2-DIALGA','Space-Time Smackdown — Dialga',1,14),('A2-PALKIA','Space-Time Smackdown — Palkia',1,14),('A2A-ARCEUS','Triumphant Light — Arceus',1,15),('A2B-SHINING','Shining Revelry — Shining',1,16),('A3-LUNALA','Celestial Guardians — Lunala',1,17),('A3-SOLGALEO','Celestial Guardians — Solgaleo',1,17),('A3A-EXTRADIMENSIONAL','Extradimensional Crisis — Extradimensional',1,18),('A3B-EEVEE','Eevee Grove — Eevee',1,19),('A4-HO-OH','Wisdom of Sea and Sky — Ho-Oh',1,20),('A4-LUGIA','Wisdom of Sea and Sky — Lugia',1,20),('A4A-SECLUDED','Secluded Springs — Secluded',1,21),('AOR','Ancient Origins',1,6),('ARC','Arceus',1,2),('ASC','Ascended Heroes',1,1),('ASR','Astral Radiance',1,4),('ASR-TG','Astral Radiance Trainer Gallery',1,4),('B1-MEGA-ALTARIA','Mega Rising — Mega Altaria',1,22),('B1-MEGA-BLAZIKEN','Mega Rising — Mega Blaziken',1,22),('B1-MEGA-GYARADOS','Mega Rising — Mega Gyarados',1,22),('B1A-CRIMSON-BLAZE','Crimson Blaze — Crimson Blaze',1,23),('B2','Base Set 2',1,11),('B2-GARDEVOIR','Fantastical Parade — Gardevoir',1,24),('B2A-PALDEAN','Paldean Wonders — Paldean',1,25),('B2B-MEGA-SHINE','Mega Shine — Mega Shine',1,26),('B3-PULSING-AURA','Pulsing Aura — Pulsing Aura',1,27),('B3A-PARADOX-DRIVE','Paradox Drive — Paradox Drive',1,28),('B3B-EVERYDAY-WONDERS','Everyday Wonders — Everyday Wonders',1,29),('B4-RULER-OF-THE-SKIES','Ruler of the Skies — Ruler of the Skies',1,30),('B4A-TEAM-ROCKET','Team Rocket’s Ambition — Team Rocket',1,31),('BCR','Boundaries Crossed',1,7),('BKP','BREAKpoint',1,6),('BKT','BREAKthrough',1,6),('BLK','Black Bolt',1,3),('BLW','Black & White',1,7),('BRS','Brilliant Stars',1,4),('BRS-TG','Brilliant Stars Trainer Gallery',1,4),('BS','Base',1,11),('BST','Battle Styles',1,4),('BUS','Burning Shadows',1,5),('CEC','Cosmic Eclipse',1,5),('CEL','Celebrations',1,4),('CEL-CC','Celebrations: Classic Collection',1,4),('CES','Celestial Storm',1,5),('CG','Crystal Guardians',1,10),('CIN','Crimson Invasion',1,5),('CL','Call of Legends',1,8),('CPA','Champion\'s Path',1,4),('CRE','Chilling Reign',1,4),('CRI','Chaos Rising',1,1),('CRZ','Crown Zenith',1,4),('CRZ-GG','Crown Zenith Galarian Gallery',1,4),('DAA','Darkness Ablaze',1,4),('DCR','Double Crisis',1,6),('DET','Detective Pikachu',1,5),('DEX','Dark Explorers',1,7),('DF','Dragon Frontiers',1,10),('DP','Diamond & Pearl',1,9),('DR','Dragon',1,10),('DRI','Destined Rivals',1,3),('DRM','Dragon Majesty',1,5),('DRV','Dragon Vault',1,7),('DRX','Dragons Exalted',1,7),('DS','Delta Species',1,10),('DX','Deoxys',1,10),('EM','Emerald',1,10),('EPO','Emerging Powers',1,7),('EVO','Evolutions',1,6),('EVS','Evolving Skies',1,4),('FCO','Fates Collide',1,6),('FFI','Furious Fists',1,6),('FLF','Flashfire',1,6),('FLI','Forbidden Light',1,5),('FO','Fossil',1,11),('FST','Fusion Strike',1,4),('GE','Great Encounters',1,9),('GEN','Generations',1,6),('GRI','Guardians Rising',1,5),('HIF','Hidden Fates',1,5),('HIF-SV','Hidden Fates Shiny Vault',1,5),('HL','Hidden Legends',1,10),('HP','Holon Phantoms',1,10),('HS','HeartGold & SoulSilver',1,8),('JTG','Journey Together',1,3),('JU','Jungle',1,11),('LA','Legends Awakened',1,9),('LM','Legend Maker',1,10),('LOR','Lost Origin',1,4),('LOR-TG','Lost Origin Trainer Gallery',1,4),('LOT','Lost Thunder',1,5),('LTR','Legendary Treasures',1,7),('MA','Team Magma vs Team Aqua',1,10),('MD','Majestic Dawn',1,9),('MEG','Mega Evolution',1,1),('MEW','151',1,3),('MT','Mysterious Treasures',1,9),('NVI','Noble Victories',1,7),('NXD','Next Destinies',1,7),('OBF','Obsidian Flames',1,3),('PAF','Paldean Fates',1,3),('PAL','Paldea Evolved',1,3),('PAR','Paradox Rift',1,3),('PBL','Pitch Black',1,1),('PFL','Phantasmal Flames',1,1),('PGO','Pokémon GO',1,4),('PHF','Phantom Forces',1,6),('PK','Power Keepers',1,10),('PLB','Plasma Blast',1,7),('PLF','Plasma Freeze',1,7),('PLS','Plasma Storm',1,7),('PLT','Platinum',1,2),('POR','Perfect Order',1,1),('PRC','Primal Clash',1,6),('PRE','Prismatic Evolutions',1,3),('RCL','Rebel Clash',1,4),('RG','FireRed & LeafGreen',1,10),('ROS','Roaring Skies',1,6),('RRL','Rising Rivals',1,2),('RS','Ruby & Sapphire',1,10),('SCR','Stellar Crown',1,3),('SF','Stormfront',1,9),('SFA','Shrouded Fable',1,3),('SHF','Shining Fates',1,4),('SHF-SV','Shining Fates Shiny Vault',1,4),('SIT','Silver Tempest',1,4),('SIT-TG','Silver Tempest Trainer Gallery',1,4),('SLG','Shining Legends',1,5),('SS','Sandstorm',1,10),('SSH','Sword & Shield',1,4),('SSP','Surging Sparks',1,3),('STS','Steam Siege',1,6),('SUM','Sun & Moon',1,5),('SUV','Supreme Victors',1,2),('SVI','Scarlet & Violet',1,3),('SW','Secret Wonders',1,9),('TEF','Temporal Forces',1,3),('TEU','Team Up',1,5),('TM','HS—Triumphant',1,8),('TR','Team Rocket',1,11),('TRR','Team Rocket Returns',1,10),('TWM','Twilight Masquerade',1,3),('UD','HS—Undaunted',1,8),('UF','Unseen Forces',1,10),('UL','HS—Unleashed',1,8),('UNB','Unbroken Bonds',1,5),('UNM','Unified Minds',1,5),('UPR','Ultra Prism',1,5),('VIV','Vivid Voltage',1,4),('WHT','White Flare',1,3),('XY','XY',1,6);
 /*!40000 ALTER TABLE `packs` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `performs`
---
-
-DROP TABLE IF EXISTS `performs`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `performs` (
-  `username` varchar(255) NOT NULL,
-  `tradeID` int NOT NULL,
-  PRIMARY KEY (`username`,`tradeID`),
-  KEY `FK_Trade_To_User` (`tradeID`),
-  CONSTRAINT `FK_Trade_To_User` FOREIGN KEY (`tradeID`) REFERENCES `trades` (`tradeID`),
-  CONSTRAINT `FK_User_To_Trade` FOREIGN KEY (`username`) REFERENCES `users` (`username`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `performs`
---
-
-LOCK TABLES `performs` WRITE;
-/*!40000 ALTER TABLE `performs` DISABLE KEYS */;
-/*!40000 ALTER TABLE `performs` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -406,9 +350,21 @@ DROP TABLE IF EXISTS `trades`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `trades` (
-  `tradeID` int NOT NULL,
-  `status` varchar(255) NOT NULL DEFAULT 'UNKNOWN',
-  PRIMARY KEY (`tradeID`)
+  `username` varchar(255) NOT NULL,
+  `otherUser` varchar(255) NOT NULL,
+  `requestStatus` varchar(255) NOT NULL DEFAULT 'None',
+  `tradeStatus` varchar(255) NOT NULL DEFAULT 'Pending',
+  `cardIDOffered` int NOT NULL,
+  `cardIDProposed` int NOT NULL,
+  PRIMARY KEY (`username`,`otherUser`),
+  KEY `FK_Other_User` (`otherUser`),
+  KEY `FK_Card_Offered` (`cardIDOffered`),
+  KEY `FK_Card_Proposed` (`cardIDProposed`),
+  CONSTRAINT `FK_Card_Offered` FOREIGN KEY (`cardIDOffered`) REFERENCES `cards` (`cardID`),
+  CONSTRAINT `FK_Card_Proposed` FOREIGN KEY (`cardIDProposed`) REFERENCES `cards` (`cardID`),
+  CONSTRAINT `FK_Other_User` FOREIGN KEY (`otherUser`) REFERENCES `users` (`username`),
+  CONSTRAINT `FK_Trade_User` FOREIGN KEY (`username`) REFERENCES `users` (`username`),
+  CONSTRAINT `CHK_Not_Self_Trades` CHECK ((`username` <> `otherUser`))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -445,7 +401,6 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES ('a','$2a$10$9Bhw9J95/.RWM9qW.8U55eAxeyBKtOm5sy.v8iYL5YZcyHky7K8la',0,0,'18:34:02');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -486,4 +441,4 @@ SET @@SESSION.SQL_LOG_BIN = @MYSQLDUMP_TEMP_LOG_BIN;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-11-22 18:36:44
+-- Dump completed on 2026-11-24 22:57:37

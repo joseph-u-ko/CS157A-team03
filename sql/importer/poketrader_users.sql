@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `poketrader` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `poketrader`;
 -- MySQL dump 10.13  Distrib 8.0.46, for Win64 (x86_64)
 --
 -- Host: localhost    Database: poketrader
@@ -24,7 +22,7 @@ SET @@SESSION.SQL_LOG_BIN= 0;
 --
 
 SET @@GLOBAL.GTID_PURGED=/*!80000 '+'*/ '72d3b320-a296-11f1-8118-14ac60eadace:1-246,
-886cc565-a65f-11f1-921a-00155d460e24:1-1887';
+886cc565-a65f-11f1-921a-00155d460e24:1-2479';
 
 --
 -- Table structure for table `users`
@@ -50,7 +48,6 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES ('a','$2a$10$8d/lRO2EHXdB9ndjO4aSzOeT1uX1Q81tI3h09ZhwzGaRmWkmirzU.',0,0,'19:56:13'),('b','$2a$10$1umb0e2ztyZCwEPI53dxjewap/GljgXGsJx7KYQL/sSRp/4cDACou',0,0,'19:56:31');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 SET @@SESSION.SQL_LOG_BIN = @MYSQLDUMP_TEMP_LOG_BIN;
@@ -64,4 +61,4 @@ SET @@SESSION.SQL_LOG_BIN = @MYSQLDUMP_TEMP_LOG_BIN;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-11-20 10:14:08
+-- Dump completed on 2026-11-24 22:57:15

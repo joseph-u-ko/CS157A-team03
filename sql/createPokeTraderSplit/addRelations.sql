@@ -33,36 +33,6 @@ CREATE TABLE owns(
 	PRIMARY KEY (username, cardID)
 );
 
-CREATE TABLE performs(
-	username VARCHAR(255) NOT NULL,
-	tradeID INT NOT NULL,
-
-	CONSTRAINT FK_User_To_Trade
-		FOREIGN KEY(username)
-        REFERENCES users(username),
-	CONSTRAINT FK_Trade_To_User
-		FOREIGN KEY(tradeID)
-        REFERENCES trades(tradeID),
-	PRIMARY KEY (username, tradeID)
-);
-
-CREATE TABLE involves(
-	tradeID INT NOT NULL,
-	requester VARCHAR(255) NOT NULL,
-	cardID INT NOT NULL,
-
-	CONSTRAINT FK_Trade_Involved
-		FOREIGN KEY(tradeID)
-        REFERENCES trades(tradeID),
-	CONSTRAINT FK_User_Request
-		FOREIGN KEY(requester)
-        REFERENCES users(username),
-	CONSTRAINT FK_Card_Requested
-		FOREIGN KEY(cardID)
-        REFERENCES cards(cardID),
-	PRIMARY KEY (tradeID, requester)
-);
-
 CREATE TABLE useRule (
     packID VARCHAR(255) NOT NULL,
     ruleSetID INT NOT NULL,
