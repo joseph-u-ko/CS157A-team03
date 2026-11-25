@@ -137,7 +137,7 @@ CREATE TABLE cards(
 
 CREATE TABLE trades(
 	username VARCHAR(255) NOT NULL,
-    otherUser VARCHAR(255) NOT NULL,
+    otherUser VARCHAR(255),
     requestStatus VARCHAR(255) NOT NULL DEFAULT 'None',
     tradeStatus VARCHAR(255) NOT NULL DEFAULT 'Pending',
     cardIDOffered INT NOT NULL,
