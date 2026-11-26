@@ -19,7 +19,7 @@ import java.sql.ResultSet;
  * Servlet implementation class RequestTrade
  */
 @WebServlet("/handleTradeRequest")
-public class RequestTradeServlet extends HttpServlet {
+public class RequestTradeARCHIVE extends HttpServlet {
 	private static final long serialVersionUID = 1L;
      
 	private static final String DB_URL = "jdbc:mysql://localhost:3306/poketrader?autoReconnect=true&useSSL=false";

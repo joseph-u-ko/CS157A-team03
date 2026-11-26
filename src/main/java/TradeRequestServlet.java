@@ -90,8 +90,8 @@ public class TradeRequestServlet extends HttpServlet {
     					// The error attribute is "tradeRequestError"
     			}
     			
-				// Add the user_friend as the user's friend
-				System.out.println("Success!, Added " + friend + " as a friend!");
+				// Success
+				System.out.println("Trade Request action success");
 				request.getRequestDispatcher(friendsPage).forward(request, response);
 				return;
     	}
