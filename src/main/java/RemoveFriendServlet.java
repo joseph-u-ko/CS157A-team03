@@ -65,17 +65,18 @@ public class RemoveFriendServlet extends HttpServlet {
     			WHERE (userA = ? AND userB = ?) OR (userA = ? AND userB = ?)
     			""";
     	
-    	// Prepare the SQL statement that deletes the trade logs of user and friend
-    	String SQL_deleteTradeLogs = """
-    			DELETE FROM trades
-    			WHERE (userA = ? AND userB = ?) OR (userA = ? AND userB = ?)
+    	// Prepare the SQL statement that reset the trade logs of user and friend
+    	String SQL_resetTradeLogs = """
+    			UPDATE trades
+    			SET otherUser = NULL, status = NULL, tradeStatus = NULL, cardIDOffered = NULL
+    			WHERE (username = ? AND otherUser = ?) OR (username = ? AND otherUser = ?)
     			""";
     	
     	try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
     		 PreparedStatement checkFriendExists = connection.prepareStatement(SQL_checkFriendExists);
     		 PreparedStatement checkIsFriend = connection.prepareStatement(SQL_checkIsFriend);
     		 PreparedStatement deleteFriends = connection.prepareStatement(SQL_deleteFriends);
-    		 PreparedStatement deleteTradeLogs = connection.prepareStatement(SQL_deleteTradeLogs)) {
+    		 PreparedStatement deleteTradeLogs = connection.prepareStatement(SQL_resetTradeLogs)) {
     			
     			checkFriendExists.setString(1, friend);
     			try(ResultSet returnedUser = checkFriendExists.executeQuery()) {
@@ -111,7 +112,7 @@ public class RemoveFriendServlet extends HttpServlet {
     				}
     			}
     			
-    			// Delete user-friend pair in 'friends' table and 'trades' table
+    			// Reset trades table if the players were in a trade when removing friends
     			deleteFriends.setString(1, user);
     			deleteFriends.setString(2, friend);
     			deleteFriends.setString(3, friend);

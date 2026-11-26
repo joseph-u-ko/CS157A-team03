@@ -138,9 +138,9 @@ CREATE TABLE cards(
 CREATE TABLE trades(
 	username VARCHAR(255) NOT NULL,
     otherUser VARCHAR(255),
-    status VARCHAR(255) NOT NULL DEFAULT 'None',
+    status VARCHAR(255),
+    tradeStatus TINYINT(1) NOT NULL DEFAULT 0,
     cardIDOffered INT,
-    cardIDProposed INT,
     
     CONSTRAINT FK_Trade_User
 		FOREIGN KEY(username)
@@ -152,9 +152,6 @@ CREATE TABLE trades(
 		CHECK(username <> otherUser),
 	CONSTRAINT FK_Card_Offered
 		FOREIGN KEY(cardIDOffered)
-        REFERENCES cards(cardID),
-	CONSTRAINT FK_Card_Proposed
-		FOREIGN KEY(cardIDProposed)
         REFERENCES cards(cardID),
 	
     PRIMARY KEY (username)

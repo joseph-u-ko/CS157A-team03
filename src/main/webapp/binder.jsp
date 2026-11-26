@@ -1,6 +1,13 @@
 <%@ page contentType="text/html; charset=UTF-8" language = "java"%>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="pokemonInfo.Card" %>
+<%
+    // Check if session exists and if the specific attribute is null
+    if (session == null || session.getAttribute("currentUser") == null) {
+        response.sendRedirect("login-and-signup.jsp");
+        return; // Stop further execution of the JSP
+    }
+%>
 <!DOCTYPE html>
 <html>
 	<head>

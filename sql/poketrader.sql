@@ -19,7 +19,6 @@ USE `poketrader`;
 SET @MYSQLDUMP_TEMP_LOG_BIN = @@SESSION.SQL_LOG_BIN;
 SET @@SESSION.SQL_LOG_BIN= 0;
 
-
 --
 -- Table structure for table `cards`
 --
@@ -345,15 +344,13 @@ DROP TABLE IF EXISTS `trades`;
 CREATE TABLE `trades` (
   `username` varchar(255) NOT NULL,
   `otherUser` varchar(255) DEFAULT NULL,
-  `status` varchar(255) NOT NULL DEFAULT 'None',
+  `status` varchar(255) DEFAULT NULL,
+  `tradeStatus` tinyint(1) NOT NULL DEFAULT '0',
   `cardIDOffered` int DEFAULT NULL,
-  `cardIDProposed` int DEFAULT NULL,
   PRIMARY KEY (`username`),
   KEY `FK_Other_User` (`otherUser`),
   KEY `FK_Card_Offered` (`cardIDOffered`),
-  KEY `FK_Card_Proposed` (`cardIDProposed`),
   CONSTRAINT `FK_Card_Offered` FOREIGN KEY (`cardIDOffered`) REFERENCES `cards` (`cardID`),
-  CONSTRAINT `FK_Card_Proposed` FOREIGN KEY (`cardIDProposed`) REFERENCES `cards` (`cardID`),
   CONSTRAINT `FK_Other_User` FOREIGN KEY (`otherUser`) REFERENCES `users` (`username`),
   CONSTRAINT `FK_Trade_User` FOREIGN KEY (`username`) REFERENCES `users` (`username`),
   CONSTRAINT `CHK_Not_Self_Trades` CHECK ((`username` <> `otherUser`))
@@ -432,4 +429,4 @@ SET @@SESSION.SQL_LOG_BIN = @MYSQLDUMP_TEMP_LOG_BIN;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-11-25 17:12:29
+-- Dump completed on 2026-11-25 22:02:01

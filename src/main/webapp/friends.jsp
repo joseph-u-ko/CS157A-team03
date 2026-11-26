@@ -6,6 +6,13 @@
 <%@ page import="java.sql.PreparedStatement" %>
 <%@ page import="java.util.HashMap" %>
 <%@ page import="java.util.Map" %>
+<%
+    // Check if session exists and if the specific attribute is null
+    if (session == null || session.getAttribute("currentUser") == null) {
+        response.sendRedirect("login-and-signup.jsp");
+        return; // Stop further execution of the JSP
+    }
+%>
 <!DOCTYPE html>
 
 <html>
@@ -122,24 +129,24 @@
     								<button type="submit">Message</button>
 								</form>
 								<% if ("None".equalsIgnoreCase(tradeStatus)) { %>
-									<form action="handleTradeRequest" method="post">
+									<form action="tradeRequest" method="post">
 										<input type="hidden" name="userB" value="<%=otherUser%>">
 										<input type='hidden' name="task" value="addTradeRequest">
 										<button type="submit">Request Trade</button>
 									</form>
 								<% } else if ("Request Pending".equalsIgnoreCase(tradeStatus)) { %>
-									<form action="handleTradeRequest" method="post">
+									<form action="tradeRequest" method="post">
 										<input type="hidden" name="userB" value="<%=otherUser %>">
 										<input type='hidden' name="task" value="acceptTradeRequest">
 										<button type="submit">Accept Trade Request</button>
 									</form>
-									<form action="handleTradeRequest" method="post">
+									<form action="tradeRequest" method="post">
 										<input type="hidden" name="userB" value="<%=otherUser %>">
 										<input type='hidden' name="task" value="declineTradeRequest">
 										<button type="submit">Decline Trade Request</button>
 									</form>
 								<% } else if ("Accept Pending".equalsIgnoreCase(tradeStatus)) { %>
-									<form action="handleTradeRequest" method="post">
+									<form action="tradeRequest" method="post">
 										<input type="hidden" name="userB" value="<%=otherUser%>">
 										<input type='hidden' name="task" value="cancelTradeRequest">
 										<button type="submit">Cancel Trade Request</button>

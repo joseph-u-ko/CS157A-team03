@@ -34,8 +34,8 @@ public class TradeRequestServlet extends HttpServlet {
     	String loginPage = "login-and-signup.jsp";
     	String friendsPage = "friends.jsp";
     	String user = (String) session.getAttribute("currentUser");
-    	String friend = request.getParameter(""); // TODO
-    	String action = request.getParameter(""); // TODO what action to perform
+    	String friend = request.getParameter("userB");
+    	String action = request.getParameter("task");
     	
     	if (session == null ||
     		session.getAttribute("currentUser") == null) {
@@ -58,7 +58,7 @@ public class TradeRequestServlet extends HttpServlet {
     	
     	try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
     			switch (action) {
-    				case "Start Request":
+    				case "addTradeRequest":
     		    		PreparedStatement otherRequest = connection.prepareStatement(SQL_getUserRequest);
     		        	otherRequest.setString(1, friend);
     	    			ResultSet result = otherRequest.executeQuery();
@@ -74,12 +74,12 @@ public class TradeRequestServlet extends HttpServlet {
     						// Request can go through
     					}
     					break;
-    				case "Accept Request":
+    				case "acceptTradeRequest":
     					// TODO
     					// Update the status for both users to "In Progress"
     					break;
-    				case "Decline Request":
-    				case "Cancel Request":
+    				case "declineTradeRequest":
+    				case "cancelTradeRequest":
     					// TODO
     					// Update the status for both users to null (NULL)
     					break;

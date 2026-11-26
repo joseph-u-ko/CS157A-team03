@@ -7,8 +7,15 @@ import jakarta.servlet.http.HttpSession;
 
 // List the exact relative URLs of the specific JSPs you want to protect
 @WebFilter(urlPatterns = {
+    "/binder.jsp",
+    "/cardSelect.jsp",
+    "/catalog.jsp",
+    "/friend-messages.jsp",
+    "/friends.jsp",
     "/home.jsp",
-    "/pack-open-dropdowns.jsp" 
+    "/pack-open-menu.jsp",
+    "/pack-open-results.jsp",
+    "/trades.jsp"
 }) 
 public class AuthenticationFilter implements Filter {
     
