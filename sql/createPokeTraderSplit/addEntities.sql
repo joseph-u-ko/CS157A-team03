@@ -138,8 +138,7 @@ CREATE TABLE cards(
 CREATE TABLE trades(
 	username VARCHAR(255) NOT NULL,
     otherUser VARCHAR(255),
-    requestStatus VARCHAR(255) NOT NULL DEFAULT 'None',
-    tradeStatus VARCHAR(255) NOT NULL DEFAULT 'Pending',
+    status VARCHAR(255) NOT NULL DEFAULT 'None',
     cardIDOffered INT,
     cardIDProposed INT,
     
@@ -164,7 +163,7 @@ CREATE TABLE trades(
 CREATE TABLE friends (
 	userA VARCHAR(255) NOT NULL,
 	userB VARCHAR(255) NOT NULL,
-	status VARCHAR(255) NULL,
+	status VARCHAR(255) NOT NULL,
   
 	CONSTRAINT FK_UserA
 		FOREIGN KEY (userA)

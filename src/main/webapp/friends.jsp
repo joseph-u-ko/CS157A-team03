@@ -4,6 +4,8 @@
 <%@ page import="java.sql.Connection" %>
 <%@ page import="java.sql.DriverManager" %>
 <%@ page import="java.sql.PreparedStatement" %>
+<%@ page import="java.util.HashMap" %>
+<%@ page import="java.util.Map" %>
 <!DOCTYPE html>
 
 <html>
@@ -42,9 +44,9 @@
             <div style="width: 750px; height: 900px; border-radius: 2px; border: 2px solid #333; text-align: center; display: flex; justify-content: flex-start; align-items: flex-start;">
                 <table class="friend-table" style="border-collapse: separate; border-spacing: 8px 8px;">
                     <tr>
-                        <th>Friend</th>
-                        <th>Status</th>
-                        <th>Trade Request Status</th>
+                        <th>Username</th>
+                        <th>Friend Status</th>
+                        <th>Trade Status</th>
                         <th>Actions</th>
                     </tr>
                     <%
@@ -55,61 +57,62 @@
                             String password = "$apphire9Warrior";
                             String currentUser = (String) session.getAttribute("currentUser");
 
-                            // This will query all the friends
-                            String friendQuery = "SELECT * FROM friends f WHERE f.userA = ?";
-                            // This will query who the current user is trading with
-                            String tradeQuery = "SELECT * FROM trades t WHERE t.username = ?";
-                            Connection con = DriverManager.getConnection(url, user, password);
-                            PreparedStatement selectFriends = con.prepareStatement(friendQuery);
-                            PreparedStatement getTrader = con.prepareStatement(tradeQuery);
-                            selectFriends.setString(1, currentUser);
-                            getTrader.setString(1, currentUser);
-                            ResultSet rs = selectFriends.executeQuery();
-                            while (rs.next()) {
-                                String userB = rs.getString("userB");
-                                String otherUser = userB;
-                                String status = rs.getString("status");
+                            String friendQuery =
+                                "SELECT userA, userB, status " +
+                                "FROM friends WHERE userA = ? ORDER BY userB ASC";
+                            String tradeQuery =
+                                "SELECT username, otherUser, status " +
+                                "FROM trades WHERE username = ?";
+
+                            Map<String, String> tradeStatuses = new HashMap<>();
+                            
+                            // The following will track the status of the player's trade if there is one (either 0 or 1)
+                            try (Connection con = DriverManager.getConnection(url, user, password);
+                                 PreparedStatement getTrader = con.prepareStatement(tradeQuery)) {
+                                getTrader.setString(1, currentUser);
+                                try (ResultSet tradeRs = getTrader.executeQuery()) {
+                                    while (tradeRs.next()) {
+                                        String otherUser = tradeRs.getString("otherUser");
+                                        if (otherUser != null) {
+                                            tradeStatuses.put(otherUser, tradeRs.getString("status"));
+                                        }
+                                    }
+                                }
+                            }
+                            
+                            // The following will track every friend that the user has
+                            try (Connection con = DriverManager.getConnection(url, user, password);
+                                 PreparedStatement selectFriends = con.prepareStatement(friendQuery)) {
+                                selectFriends.setString(1, currentUser);
+                                try (ResultSet rs = selectFriends.executeQuery()) {
+                                    while (rs.next()) {
+                                        String otherUser = rs.getString("userB");
+                                        String friendStatus = rs.getString("status");
+                                        String tradeStatus = tradeStatuses.get(otherUser);
+                                        if (tradeStatus == null || tradeStatus.trim().isEmpty()) {
+                                            tradeStatus = "None"; // Not trading with this friend
+                                        }
                     %>
                     <tr>
                         <td><%=otherUser %></td>
+                        <td><%=friendStatus %></td>
+                        <td><%=tradeStatus %></td>
                         <td>
-                            <% if ("pending".equalsIgnoreCase(status) || isRecipientPending) { %>
-                                Pending request
-                            <% } else { %>
-                                <%=status %>
-                            <% } %>
-                        </td>
-                        <td>
-                        	<% if (tradeRequestStatus != null) { %>
-                        		<%=tradeRequestStatus%>
-                        	<% } else { %>
-                        		None
-                        	<% } %>
-                        </td>
-                        <td>
-                            <%-- A pending request can be cancelled by the sender. --%>
-                            <% if ("request pending".equalsIgnoreCase(status)) { %>
-                                <form action="removeFriend" method="post" style="display:inline;">
-                                    <input type="hidden" name="friendToRemove" value="<%=otherUser%>">
-                                    <button type="submit">Cancel request</button>
-                                </form>
-                            <% } %>
-
-                            <%-- The mirrored recipient status is Accept pending. --%>
-                            <% if (isRecipientPending) { %>
-                                <form action="addFriend" method="post" style="display:inline;">
-                                    <%-- addFriend already expects friendToAdd; this replaces the old text box. --%>
-                                    <input type="hidden" name="friendToAdd" value="<%=otherUser%>">
-                                    <button type="submit">Accept</button>
-                                </form>
+                            <% if ("Accept Pending".equalsIgnoreCase(friendStatus)) { %>
                                 <form action="removeFriend" method="post" style="display:inline;">
                                     <input type="hidden" name="friendToRemove" value="<%=otherUser%>">
                                     <button type="submit">Decline</button>
                                 </form>
-                            <% } %>
-
-                            <%-- Accepted friends can be removed or messaged. --%>
-                            <% if ("accepted".equalsIgnoreCase(status) || "friend".equalsIgnoreCase(status)) { %>
+                                <form action="addFriend" method="post" style="display:inline;">
+                                    <input type="hidden" name="friendToAdd" value="<%=otherUser%>">
+                                    <button type="submit">Accept</button>
+                                </form>
+                            <% } else if ("Request Pending".equalsIgnoreCase(friendStatus)) { %>
+                                <form action="removeFriend" method="post" style="display:inline;">
+                                    <input type="hidden" name="friendToRemove" value="<%=otherUser%>">
+                                    <button type="submit">Cancel request</button>
+                                </form>
+                            <% } else if ("Friend".equalsIgnoreCase(friendStatus)) { %>
                                 <form action="removeFriend" method="post" style="display:inline;">
                                     <input type="hidden" name="friendToRemove" value="<%=otherUser%>">
                                     <button type="submit">Remove friend</button>
@@ -118,32 +121,42 @@
     								<input type="hidden" name="userB" value="<%=otherUser%>">
     								<button type="submit">Message</button>
 								</form>
-								<% if (tradeRequestStatus == null) { %>
+								<% if ("None".equalsIgnoreCase(tradeStatus)) { %>
 									<form action="handleTradeRequest" method="post">
 										<input type="hidden" name="userB" value="<%=otherUser%>">
 										<input type='hidden' name="task" value="addTradeRequest">
 										<button type="submit">Request Trade</button>
 									</form>
-								<% } else if (tradeRequestStatus.equals("Responding to trade request")) { %>
+								<% } else if ("Request Pending".equalsIgnoreCase(tradeStatus)) { %>
 									<form action="handleTradeRequest" method="post">
 										<input type="hidden" name="userB" value="<%=otherUser %>">
 										<input type='hidden' name="task" value="acceptTradeRequest">
 										<button type="submit">Accept Trade Request</button>
 									</form>
-								<% } else if (tradeRequestStatus.equals("Accepted") && tradeStatus.equals("Trade In Process")) { %>				
-                            		<form action="trades.jsp" method="get">
-                            			<input type="hidden" name="userB" value="<%=otherUser %>">
-                            			<button type="submit">Go To Trade</button>
-                            		</form>
-                            	<% } %>
+									<form action="handleTradeRequest" method="post">
+										<input type="hidden" name="userB" value="<%=otherUser %>">
+										<input type='hidden' name="task" value="declineTradeRequest">
+										<button type="submit">Decline Trade Request</button>
+									</form>
+								<% } else if ("Accept Pending".equalsIgnoreCase(tradeStatus)) { %>
+									<form action="handleTradeRequest" method="post">
+										<input type="hidden" name="userB" value="<%=otherUser%>">
+										<input type='hidden' name="task" value="cancelTradeRequest">
+										<button type="submit">Cancel Trade Request</button>
+									</form>
+								<% } else if ("In Progress".equalsIgnoreCase(tradeStatus)) { %>
+									<form action="trade.jsp" method="get">
+										<input type="hidden" name="userB" value="<%=otherUser%>">
+										<button type="submit">Go To Trade</button>
+									</form>
+								<% } %>
                             <% } %>
                         </td>
                     </tr>
                     <%
+                                    }
+                                }
                             }
-                            rs.close();
-                            selectFriends.close();
-                            con.close();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -151,8 +164,9 @@
                 </table>
             </div>
 
-            <%-- Sending a new request remains the only username text box. --%>
-            <div style="width: 250px; height: 295px; border-radius: 2px; border: 2px solid #333; text-align: center;">
+            <div style="width: 250px; display: flex; flex-direction: column; align-items: center;">
+                <%-- Sending a new request remains the only username text box. --%>
+                <div style="width: 250px; height: 295px; border-radius: 2px; border: 2px solid #333; text-align: center;">
                     <form action="requestFriend" method="post" style="margin-top: 80px;">
                         <label>Friend's Username</label>
                         <br>
@@ -168,6 +182,23 @@
                     <%
                         }
                     %>
+                </div>
+
+                <%
+                    String tradeRequestError =
+                        (String) request.getAttribute("tradeRequestError");
+                %>
+
+                <%-- This box is empty unless a trade error is provided. --%>
+                <div style="width: 250px; height: 295px; margin-top: 25px;
+                            border: 2px solid #333; border-radius: 2px;
+                            background-color: #fff; text-align: center;">
+                    <% if (tradeRequestError != null) { %>
+                        <p style="color: red; margin: 10px 0;">
+                            <%=tradeRequestError %>
+                        </p>
+                    <% } %>
+                </div>
             </div>
         </div>
     </body>

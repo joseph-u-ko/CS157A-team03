@@ -115,13 +115,13 @@ public class RequestFriendServlet extends HttpServlet {
 					// Case where one row is returned
 					if (result2.next()) {
 						// This is the case where the sender already sent a friend request to the receiver.
-						if (result2.getString("userA").equals(user) && result2.getString("userB").equals(user_friend) && result2.getString("status").equals("Request pending")) {
+						if (result2.getString("userA").equals(user) && result2.getString("userB").equals(user_friend) && result2.getString("status").equals("Request Pending")) {
 							request.setAttribute("requestFriendOutput", "Oops, you have already sent a friend request to " + user_friend + ".");
 							request.getRequestDispatcher(friendsPage).forward(request, response);
     						return;
 						}
 						// This is the case where the receiver already sent a friend request to the sender.
-						if (result2.getString("userA").equals(user) && result2.getString("userB").equals(user_friend) && result2.getString("status").equals("Accept pending")) {
+						if (result2.getString("userA").equals(user) && result2.getString("userB").equals(user_friend) && result2.getString("status").equals("Accept Pending")) {
 							request.setAttribute("requestFriendOutput", "Oops, you have received a friend request by " + user_friend + ".");
 							request.getRequestDispatcher(friendsPage).forward(request, response);
     						return;
@@ -142,10 +142,10 @@ public class RequestFriendServlet extends HttpServlet {
 				// "Sends" a friend request to the receiver by storing their statuses in 'friends' table
 				requestFriend.setString(1, user);
 				requestFriend.setString(2, user_friend);
-				requestFriend.setString(3, "Request pending");
+				requestFriend.setString(3, "Request Pending");
 				requestFriend.setString(4, user_friend);
 				requestFriend.setString(5, user);
-				requestFriend.setString(6, "Accept pending");
+				requestFriend.setString(6, "Accept Pending");
 				int rowsInserted = requestFriend.executeUpdate();
 				System.out.println("Rows inserted into 'friends' table: " + rowsInserted);
 				

@@ -45,8 +45,10 @@ public class TradeRequestServlet extends HttpServlet {
     		return;
     	}
     	
+    	// TODO
+    	// Add SQL queries as needed and add PreparedStatements to the try parameters accordingly
     	String SQL_getUserRequest = """
-    			SELECT username, otherUser, requestStatus
+    			SELECT username, otherUser, status
     			FROM trades
     			WHERE username = ?
     			""";
@@ -54,31 +56,38 @@ public class TradeRequestServlet extends HttpServlet {
     			UPDATE
     			""";
     	
-    	try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-    		 PreparedStatement otherRequest = connection.prepareStatement(SQL_getUserRequest)) {
-    			
-    			otherRequest.setString(1, friend);
-    			
-    			ResultSet result = otherRequest.executeQuery();
-    			
+    	try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
     			switch (action) {
     				case "Start Request":
+    		    		PreparedStatement otherRequest = connection.prepareStatement(SQL_getUserRequest);
+    		        	otherRequest.setString(1, friend);
+    	    			ResultSet result = otherRequest.executeQuery();
+    	    			
     					// Check that other user is not already in a trade
     					while (result.next()) { //there should only be one
     						if (result.getString("otherUser") != null) {
     							// TODO
     							// Error, the otherUser is already in a trade
+    							// The error attribute is "tradeRequestError"
     						}
     						// TODO
     						// Request can go through
     					}
     					break;
     				case "Accept Request":
-    					
+    					// TODO
+    					// Update the status for both users to "In Progress"
     					break;
     				case "Decline Request":
     				case "Cancel Request":
+    					// TODO
+    					// Update the status for both users to null (NULL)
     					break;
+    				default:
+    					// TODO
+    					// Error, just in case
+    					// Can just redirect with an error message
+    					// The error attribute is "tradeRequestError"
     			}
     			
 				// Add the user_friend as the user's friend
