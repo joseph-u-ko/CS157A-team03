@@ -1,15 +1,5 @@
 USE poketrader;
 
-CREATE TABLE users(
-	username VARCHAR(255) NOT NULL,
-	passwordHashed VARCHAR(255) UNIQUE NOT NULL,
-	loggedIn TINYINT(1) NOT NULL DEFAULT 0,
-	tickets INT NOT NULL DEFAULT 0,
-	nextTicketTime TIME NOT NULL DEFAULT '00:00:00',
-
-	PRIMARY KEY (username)
-);
-
 CREATE TABLE sets(
 	setCode INT UNIQUE AUTO_INCREMENT,
 	setName VARCHAR(255) UNIQUE NOT NULL DEFAULT 'UNDEFINED',
@@ -135,26 +125,29 @@ CREATE TABLE cards(
     UNIQUE (cardID, setCode)
 );
 
-CREATE TABLE trades(
+CREATE TABLE users(
 	username VARCHAR(255) NOT NULL,
+	passwordHashed VARCHAR(255) UNIQUE NOT NULL,
+	loggedIn TINYINT(1) NOT NULL DEFAULT 0,
+	tickets INT NOT NULL DEFAULT 0,
+	nextTicketTime TIME NOT NULL DEFAULT '00:00:00',
     otherUser VARCHAR(255),
     status VARCHAR(255),
     tradeStatus TINYINT(1) NOT NULL DEFAULT 0,
     cardIDOffered INT,
     
-    CONSTRAINT FK_Trade_User
-		FOREIGN KEY(username)
+    CONSTRAINT CHK_Ticket_Count
+		CHECK (tickets >= 0),
+	CONSTRAINT FK_OtherUser
+		FOREIGN KEY (otherUser)
         REFERENCES users(username),
-	CONSTRAINT FK_Other_User
-		FOREIGN KEY(otherUser)
-        REFERENCES users(username),
-	CONSTRAINT CHK_Not_Self_Trades
-		CHECK(username <> otherUser),
+	CONSTRAINT CHK_OtherUser_Unique
+		CHECK (otherUser <> username),
 	CONSTRAINT FK_Card_Offered
-		FOREIGN KEY(cardIDOffered)
+		FOREIGN KEY (cardIDOffered)
         REFERENCES cards(cardID),
-	
-    PRIMARY KEY (username)
+
+	PRIMARY KEY (username)
 );
 
 CREATE TABLE friends (
