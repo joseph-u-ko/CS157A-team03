@@ -21,7 +21,7 @@ public class TradeRequestServlet extends HttpServlet {
        
 	private static final String DB_URL = "jdbc:mysql://localhost:3306/poketrader?autoReconnect=true&useSSL=false";
     private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "$apphire9Warrior";
+    private static final String DB_PASSWORD = "Chingloo1234$$";
     
     @Override
 	protected void doPost(
@@ -45,39 +45,93 @@ public class TradeRequestServlet extends HttpServlet {
     		return;
     	}
     	
-    	// TODO
-    	// Add SQL queries as needed and add PreparedStatements to the try parameters accordingly
     	String SQL_getUserRequest = """
     			SELECT username, otherUser, status
     			FROM trades
     			WHERE username = ?
     			""";
-    	String SQL_updateRow = """
-    			UPDATE
+    	
+    	String SQL_updateRequestingUser = """
+    			UPDATE trades
+				SET otherUser = ?, status = "Accept Pending"
+				WHERE username = ?
     			""";
+    	String SQL_updateAcceptingUser = """
+    			UPDATE trades
+				SET otherUser = ?, status = "Request Pending"
+				WHERE username = ?
+    			""";
+    	
+    	String SQL_updateInProgress = """
+    			UPDATE trades
+				SET otherUser = ?, status = "In Progress"
+				WHERE username = ?
+    			""";
+    	
     	
     	try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
     			switch (action) {
     				case "addTradeRequest":
+    					
+    					// For null check
     		    		PreparedStatement otherRequest = connection.prepareStatement(SQL_getUserRequest);
-    		        	otherRequest.setString(1, friend);
+    		    		PreparedStatement requestingUser = connection.prepareStatement(SQL_updateRequestingUser);
+    		    		PreparedStatement acceptingUser = connection.prepareStatement(SQL_updateAcceptingUser);
+    		        	otherRequest.setString(1, friend); 
     	    			ResultSet result = otherRequest.executeQuery();
     	    			
-    					// Check that other user is not already in a trade
-    					while (result.next()) { //there should only be one
-    						if (result.getString("otherUser") != null) {
-    							// TODO
-    							// Error, the otherUser is already in a trade
-    							// The error attribute is "tradeRequestError"
+    					
+    					if (result.next()) { // there should only be one
+    						
+    						if (result.getString("otherUser") != null) { // Check that other user is not already in a trade
+    							// can also check if status is not null
+    							request.setAttribute("tradeRequestError", "Sorry, " + result.getString("username") + " is currently in a trade.");
+    	    					request.getRequestDispatcher(friendsPage).forward(request, response);
+    	    					return;
     						}
-    						// TODO
-    						// Request can go through
+    						
+    						// requesting user
+        	    			
+        	    			requestingUser.setString(1, friend);
+        	    			requestingUser.setString(2, user);
+        	    			int rowsUpdatedForTrades = requestingUser.executeUpdate();
+        	    			System.out.println("Rows updated in 'trades' table: " + rowsUpdatedForTrades);
+        	    			
+        	    			// accepting user
+        	    			
+        	    			acceptingUser.setString(1, user);
+        	    			acceptingUser.setString(2, friend);
+        	    			rowsUpdatedForTrades = acceptingUser.executeUpdate();
+        	    			System.out.println("Rows updated in 'trades' table: " + rowsUpdatedForTrades);
+        	    			
+        	    			request.getRequestDispatcher(friendsPage).forward(request, response);
+        					return;
+    						
     					}
+    					
     					break;
     				case "acceptTradeRequest":
     					// TODO
     					// Update the status for both users to "In Progress"
+    					PreparedStatement requestingUserInProgress = connection.prepareStatement(SQL_updateInProgress);
+    					PreparedStatement acceptingUserInProgress = connection.prepareStatement(SQL_updateInProgress);
+    					
+						// requesting user
+    	    			requestingUserInProgress.setString(1, friend);
+    	    			requestingUserInProgress.setString(2, user);
+    	    			int rowsUpdatedForTrades = requestingUserInProgress.executeUpdate();
+    	    			System.out.println("Rows updated in 'trades' table: " + rowsUpdatedForTrades);
+    	    			
+    	    			// accepting user
+    	    			acceptingUserInProgress.setString(1, user);
+    	    			acceptingUserInProgress.setString(2, friend);
+    	    			rowsUpdatedForTrades = acceptingUserInProgress.executeUpdate();
+    	    			System.out.println("Rows updated in 'trades' table: " + rowsUpdatedForTrades);
+    	    			
+    	    			//request.getRequestDispatcher(friendsPage).forward(request, response);
     					break;
+    					
+    					
     				case "declineTradeRequest":
     				case "cancelTradeRequest":
     					// TODO
@@ -88,6 +142,9 @@ public class TradeRequestServlet extends HttpServlet {
     					// Error, just in case
     					// Can just redirect with an error message
     					// The error attribute is "tradeRequestError"
+    					request.setAttribute("tradeRequestError", "Sorry, there was an error with making this trade.");
+    					request.getRequestDispatcher(friendsPage).forward(request, response);
+    					break;
     			}
     			
 				// Success
