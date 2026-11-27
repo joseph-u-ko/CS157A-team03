@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import pokemonInfo.Card;
+import pokemonInfo.DBPassword;
 
 
 @WebServlet("/catalog")
@@ -21,7 +22,7 @@ public class CatalogServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private static final String DB_URL = "jdbc:mysql://localhost:3306/poketrader?useSSL=false";
     private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "$apphire9Warrior";
+    private static final String DB_PASSWORD = DBPassword.YOUR_PASSWORD;
     
     @Override
     protected void doPost(

@@ -6,6 +6,7 @@
 <%@ page import="java.sql.PreparedStatement" %>
 <%@ page import="java.util.HashMap" %>
 <%@ page import="java.util.Map" %>
+<%@ page import="pokemonInfo.DBPassword" %>
 <%
     // Check if session exists and if the specific attribute is null
     if (session == null || session.getAttribute("currentUser") == null) {
@@ -61,7 +62,7 @@
                             Class.forName("com.mysql.cj.jdbc.Driver");
                             String url = "jdbc:mysql://localhost:3306/poketrader?autoReconnect=true&useSSL=false";
                             String user = "root";
-                            String password = "$apphire9Warrior";
+                            String password = DBPassword.YOUR_PASSWORD;
                             String currentUser = (String) session.getAttribute("currentUser");
 
                             String friendQuery =
@@ -138,18 +139,18 @@
 									<form action="tradeRequest" method="post">
 										<input type="hidden" name="userB" value="<%=otherUser %>">
 										<input type='hidden' name="task" value="acceptTradeRequest">
-										<button type="submit">Accept Trade Request</button>
+										<button type="submit">Accept Trade</button>
 									</form>
 									<form action="tradeRequest" method="post">
 										<input type="hidden" name="userB" value="<%=otherUser %>">
 										<input type='hidden' name="task" value="declineTradeRequest">
-										<button type="submit">Decline Trade Request</button>
+										<button type="submit">Decline Trade</button>
 									</form>
 								<% } else if ("Accept Pending".equalsIgnoreCase(tradeStatus)) { %>
 									<form action="tradeRequest" method="post">
 										<input type="hidden" name="userB" value="<%=otherUser%>">
 										<input type='hidden' name="task" value="cancelTradeRequest">
-										<button type="submit">Cancel Trade Request</button>
+										<button type="submit">Cancel Trade</button>
 									</form>
 								<% } else if ("In Progress".equalsIgnoreCase(tradeStatus)) { %>
 									<form action="trade.jsp" method="get">

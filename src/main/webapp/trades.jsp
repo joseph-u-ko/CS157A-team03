@@ -4,6 +4,7 @@
 <%@ page import="java.sql.DriverManager" %>
 <%@ page import="java.sql.PreparedStatement" %>
 <%@ page import="java.sql.ResultSet" %>
+<%@ page import="pokemonInfo.DBPassword" %>
 <!DOCTYPE html>
 
 <%
@@ -24,7 +25,7 @@
         Class.forName("com.mysql.cj.jdbc.Driver");
         String url = "jdbc:mysql://localhost:3306/poketrader?autoReconnect=true&useSSL=false";
         String user = "root";
-        String password = "$apphire9Warrior";
+        String password = DBPassword.YOUR_PASSWORD;
 
         String tradeQuery =
             "SELECT status, tradeStatus, cardIDOffered " +

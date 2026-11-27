@@ -42,7 +42,7 @@
 	String db = "jdbc:mysql://localhost:3306/poketrader?useSSL=false";
 	String user;
 	user = "root";
-	String password = "$apphire9Warrior";
+	String password = DBPassword.YOUR_PASSWORD;
 
 	try {
 		java.sql.Connection con;

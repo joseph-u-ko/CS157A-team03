@@ -4,6 +4,7 @@
 <%@ page import="java.sql.DriverManager" %>
 <%@ page import="java.sql.PreparedStatement" %>
 <%@ page import="java.sql.ResultSet" %>
+<%@ page import="pokemonInfo.DBPassword" %>
 <%
     // Check if session exists and if the specific attribute is null
     if (session == null || session.getAttribute("currentUser") == null) {
@@ -165,7 +166,7 @@
                     Class.forName("com.mysql.cj.jdbc.Driver");
                     String url = "jdbc:mysql://localhost:3306/poketrader?autoReconnect=true&useSSL=false";
                     String dbUser = "root";
-                    String password = "$apphire9Warrior";
+                    String password = DBPassword.YOUR_PASSWORD;
 
                     try (Connection con = DriverManager.getConnection(url, dbUser, password);
                          PreparedStatement statement = con.prepareStatement(query)) {

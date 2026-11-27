@@ -1,5 +1,3 @@
-
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -14,6 +12,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 
+import pokemonInfo.DBPassword;
+
 /**
  * Servlet implementation class RequestFriendServlet
  */
@@ -23,7 +23,7 @@ public class RequestFriendServlet extends HttpServlet {
        
 	private static final String DB_URL = "jdbc:mysql://localhost:3306/poketrader?autoReconnect=true&useSSL=false";
     private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "$apphire9Warrior";
+    private static final String DB_PASSWORD = DBPassword.YOUR_PASSWORD;
     
     @Override
 	protected void doPost(

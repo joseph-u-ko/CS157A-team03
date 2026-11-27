@@ -10,7 +10,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.ResultSet;
+
+import pokemonInfo.DBPassword;
 
 
 @WebServlet("/addMessage")
@@ -18,7 +19,7 @@ public class AddMessageServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final String DB_URL = "jdbc:mysql://localhost:3306/poketrader?autoReconnect=true&useSSL=false";
 	private static final String DB_USER = "root";
-	private static final String DB_PASSWORD = "Chingloo1234$$";
+	private static final String DB_PASSWORD = DBPassword.YOUR_PASSWORD;
 		    
 	@Override
 	protected void doPost(

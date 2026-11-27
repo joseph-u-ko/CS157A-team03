@@ -4,6 +4,7 @@
 <%@ page import="java.sql.Connection" %>
 <%@ page import="java.sql.DriverManager" %>
 <%@ page import="java.sql.PreparedStatement" %>
+<%@ page import="pokemonInfo.DBPassword" %>
 <%
     // Check if session exists and if the specific attribute is null
     if (session == null || session.getAttribute("currentUser") == null) {
@@ -182,7 +183,7 @@
 
                         String url = "jdbc:mysql://localhost:3306/poketrader?autoReconnect=true&useSSL=false";
                         String user = "root";
-                        String password = "$apphire9Warrior";
+                        String password = DBPassword.YOUR_PASSWORD;
 
                         String SQL_getMessages = """
                                 SELECT sender, recipient, message

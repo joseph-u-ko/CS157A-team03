@@ -12,6 +12,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 
+import pokemonInfo.DBPassword;
+
 /**
  * Servlet implementation class AddFriendServlet
  */
@@ -21,7 +23,7 @@ public class TradeRequestServlet extends HttpServlet {
        
 	private static final String DB_URL = "jdbc:mysql://localhost:3306/poketrader?autoReconnect=true&useSSL=false";
     private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "Chingloo1234$$";
+    private static final String DB_PASSWORD = DBPassword.YOUR_PASSWORD;
     
     @Override
 	protected void doPost(
@@ -61,15 +63,20 @@ public class TradeRequestServlet extends HttpServlet {
 				SET otherUser = ?, status = "Request Pending"
 				WHERE username = ?
     			""";
-    	
     	String SQL_updateInProgress = """
     			UPDATE trades
 				SET otherUser = ?, status = "In Progress"
 				WHERE username = ?
     			""";
+    	String SQL_removeRequest = """
+    			UPDATE trades
+    			SET otherUser = NULL, status = NULL
+    			WHERE username = ?
+    			""";
     	
     	
     	try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)) {
+    		int rowsUpdatedForTrades;
     			switch (action) {
     				case "addTradeRequest":
     					
@@ -94,7 +101,7 @@ public class TradeRequestServlet extends HttpServlet {
         	    			
         	    			requestingUser.setString(1, friend);
         	    			requestingUser.setString(2, user);
-        	    			int rowsUpdatedForTrades = requestingUser.executeUpdate();
+        	    			rowsUpdatedForTrades = requestingUser.executeUpdate();
         	    			System.out.println("Rows updated in 'trades' table: " + rowsUpdatedForTrades);
         	    			
         	    			// accepting user
@@ -111,7 +118,6 @@ public class TradeRequestServlet extends HttpServlet {
     					
     					break;
     				case "acceptTradeRequest":
-    					// TODO
     					// Update the status for both users to "In Progress"
     					PreparedStatement requestingUserInProgress = connection.prepareStatement(SQL_updateInProgress);
     					PreparedStatement acceptingUserInProgress = connection.prepareStatement(SQL_updateInProgress);
@@ -119,7 +125,7 @@ public class TradeRequestServlet extends HttpServlet {
 						// requesting user
     	    			requestingUserInProgress.setString(1, friend);
     	    			requestingUserInProgress.setString(2, user);
-    	    			int rowsUpdatedForTrades = requestingUserInProgress.executeUpdate();
+    	    			rowsUpdatedForTrades = requestingUserInProgress.executeUpdate();
     	    			System.out.println("Rows updated in 'trades' table: " + rowsUpdatedForTrades);
     	    			
     	    			// accepting user
@@ -131,17 +137,23 @@ public class TradeRequestServlet extends HttpServlet {
     	    			//request.getRequestDispatcher(friendsPage).forward(request, response);
     					break;
     					
-    					
     				case "declineTradeRequest":
     				case "cancelTradeRequest":
-    					// TODO
-    					// Update the status for both users to null (NULL)
+    					PreparedStatement resetUser = connection.prepareStatement(SQL_removeRequest);
+    					PreparedStatement resetOther = connection.prepareStatement(SQL_removeRequest);
+    					
+    					// current user
+    					resetUser.setString(1, user);
+    					rowsUpdatedForTrades = resetUser.executeUpdate();
+    					System.out.println("Rows updated in 'trades' table: " + rowsUpdatedForTrades);
+    					
+    					// other user
+    					resetOther.setString(1, friend);
+    					rowsUpdatedForTrades = resetOther.executeUpdate();
+    					System.out.println("Rows updated in 'trades' table: " + rowsUpdatedForTrades);
+    					
     					break;
     				default:
-    					// TODO
-    					// Error, just in case
-    					// Can just redirect with an error message
-    					// The error attribute is "tradeRequestError"
     					request.setAttribute("tradeRequestError", "Sorry, there was an error with making this trade.");
     					request.getRequestDispatcher(friendsPage).forward(request, response);
     					break;

@@ -1,5 +1,6 @@
 <%@ page import="java.sql.*"%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page import="pokemonInfo.DBPassword" %>
 <%
     // Check if session exists and if the specific attribute is null
     if (session == null || session.getAttribute("currentUser") == null) {
@@ -28,7 +29,7 @@
 		 	String db = "jdbc:mysql://localhost:3306/poketrader?useSSL=false";
 		    String user; // assumes database name is the same as username
 		      user = "root";
-		    String password = "$apphire9Warrior";
+		    String password = DBPassword.YOUR_PASSWORD;
 		    
 		    try {
 		        java.sql.Connection con;
