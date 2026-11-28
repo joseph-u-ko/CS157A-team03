@@ -2,6 +2,13 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java"%>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="pokemonInfo.*" %>
+<%
+    // Check if session exists and if the specific attribute is null
+    if (session == null || session.getAttribute("currentUser") == null) {
+        response.sendRedirect("login-and-signup.jsp");
+        return; // Stop further execution of the JSP
+    }
+%>
 <%!
 	
 	private static String h(String s) {
@@ -35,7 +42,7 @@
 	String db = "jdbc:mysql://localhost:3306/poketrader?useSSL=false";
 	String user;
 	user = "root";
-	String password = "Chingloo1234$$";
+	String password = DBPassword.YOUR_PASSWORD;
 
 	try {
 		java.sql.Connection con;
@@ -90,7 +97,7 @@
 		}
 		try (ResultSet rs2 = statement_getPacks.executeQuery()) {
 			while (rs2.next()){
-				packNames.add(new Pack(rs2.getString("packName"), rs2.getString("packID"), rs2.getString("setCode")));
+				packNames.add(new Pack(rs2.getString("packName"), rs2.getString("packID"), 0, rs2.getString("setCode")));
 			}
 		}
 	}
@@ -109,9 +116,9 @@
 				<option value="">All sets</option>
 <%
 	for (Set s : setNames) {
-		String code = String.valueOf(s.getSetCode());
+		String code = String.valueOf(s.setCode());
 %>
-				<option value="<%= code %>"><%= h(s.getSetName()) %> - <%= code %></option>
+				<option value="<%= code %>"><%= h(s.setName()) %> - <%= code %></option>
 <%
 	}
 %>
@@ -127,7 +134,7 @@
 			<div style="margin-top: 8px;">
 				<label>
 					<input type="checkbox" name="limitResults" value="true"<%= limitChecked ? " checked" : "" %>>
-					Display top 1000 results
+					Display top 300 results
 				</label>
 			</div>
 		</form>
@@ -138,7 +145,7 @@
 <%
 	for (Pack p : packNames) {
 %>
-		<div data-set="<%= p.getSetCode() %>" data-id="<%= p.getPackID() %>" data-name="<%= h(p.getPackName()) %>"></div>
+		<div data-set="<%= p.setCode() %>" data-id="<%= p.packID() %>" data-name="<%= h(p.packName()) %>"></div>
 <%
 	}
 %>

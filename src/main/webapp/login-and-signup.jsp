@@ -1,7 +1,6 @@
 <%@ page import="java.sql.*"%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
-
 <html>
 	<head>
 	    <meta charset="UTF-8">
@@ -9,25 +8,7 @@
 	    <title>PokeTrader Login</title>
 	    <link rel="stylesheet" href="login-and-signup.css">
 	</head>
-	<body>
-		<%-- Database connection --%>
-		<%
-		 	String db = "poketrader";
-		    String user; // assumes database name is the same as username
-		      user = "root";
-		    String password = "$apphire9Warrior";
-		    
-		    try {
-		        java.sql.Connection con;
-		        Class.forName("com.mysql.cj.jdbc.Driver");
-		        con = DriverManager.getConnection("jdbc:mysql://localhost:3306/poketrader?autoReconnect=true&useSSL=false", user, password); 
-		        con.close();
-		    } 
-		    catch(SQLException e) {
-		        out.println("SQLException caught: " + e.getMessage());
-		    } 
-		%>
-		
+	<body>		
 		<%-- Title bar --%>
 		<h1>
 			<img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Pok%C3%A9_Ball_icon.svg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original"

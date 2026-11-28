@@ -1,5 +1,13 @@
 <%@ page import="java.sql.*"%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page import="pokemonInfo.DBPassword" %>
+<%
+    // Check if session exists and if the specific attribute is null
+    if (session == null || session.getAttribute("currentUser") == null) {
+        response.sendRedirect("login-and-signup.jsp");
+        return; // Stop further execution of the JSP
+    }
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,7 +29,7 @@
 		 	String db = "jdbc:mysql://localhost:3306/poketrader?useSSL=false";
 		    String user; // assumes database name is the same as username
 		      user = "root";
-		    String password = "$apphire9Warrior";
+		    String password = DBPassword.YOUR_PASSWORD;
 		    
 		    try {
 		        java.sql.Connection con;
@@ -206,7 +214,7 @@
 
 
             <p class="placeholder">
-                Cards will automatically added to your binder. Pack opening results to be implemented later.
+                Cards will automatically added to your binder. You will be shown pack results.
             </p>
 
         </section>

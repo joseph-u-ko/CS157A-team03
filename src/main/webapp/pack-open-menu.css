@@ -183,9 +183,13 @@ h1 {
 /* Three-column layout for the dropdown version. */
 .controls {
     display: grid;
-    grid-template-columns: 1fr 1fr auto;
+    grid-template-columns: minmax(0, 240px) minmax(0, 280px) auto;
+    justify-content: center;
     gap: 16px;
     align-items: end;
+}
+.controls > div {
+    min-width: 0;
 }
 
 /* Dropdown labels and sizing. */
@@ -198,6 +202,17 @@ label {
 
 select {
     width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#set-select {
+    max-width: 240px;
+}
+
+#pack-select {
+    max-width: 280px;
 }
 
 select:disabled {
@@ -225,10 +240,12 @@ button:disabled {
 @media (max-width: 700px) {
     .controls {
         grid-template-columns: 1fr;
+        justify-content: stretch;
     }
 
-    .topbar {
-        flex-wrap: wrap;
+    #set-select,
+    #pack-select {
+        max-width: 100%;
     }
 }
 

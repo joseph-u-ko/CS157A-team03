@@ -1,4 +1,3 @@
-// Libraries
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.IOException;
@@ -17,6 +16,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
+import pokemonInfo.DBPassword;
+
 @WebServlet("/signup")
 public class SignupServlet extends HttpServlet {
 
@@ -24,7 +25,7 @@ public class SignupServlet extends HttpServlet {
 	
     private static final String DB_URL = "jdbc:mysql://localhost:3306/poketrader?autoReconnect=true&useSSL=false";
     private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "$apphire9Warrior";
+    private static final String DB_PASSWORD = DBPassword.YOUR_PASSWORD;
 	
     @Override
     protected void doPost(
@@ -56,30 +57,30 @@ public class SignupServlet extends HttpServlet {
         	return;
         }
         
-        String sql = """
+        String SQL_newUser = """
         		INSERT INTO users (username, passwordHashed, loggedIn, nextTicketTime, tickets)
                 VALUES (?, ?, ?, ?, ?)
         		""";
 
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-                statement.setString(1, username);
+             PreparedStatement statement_newUser = connection.prepareStatement(SQL_newUser)) {
+                statement_newUser.setString(1, username);
                 
                 // generates and stores the hashed password
                 String passwordHashed = BCrypt.hashpw(
                         password,
                         BCrypt.gensalt()
                 );
-                statement.setString(2, passwordHashed);
-                statement.setBoolean(3, true); // loggedIn is defaulted to true (user will automatically be logged-in after successfully signing-up)
+                statement_newUser.setString(2, passwordHashed);
+                statement_newUser.setBoolean(3, true); // loggedIn is defaulted to true (user will automatically be logged-in after successfully signing-up)
                 
                 LocalTime now = LocalTime.now();
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
                 String time = now.format(formatter);
-                statement.setString(4, time); //current timestamp for now
+                statement_newUser.setString(4, time); //current timestamp for now
                 
-                statement.setInt(5, 1); // a new user has 1 ticket
-                int rowsInserted = statement.executeUpdate(); // Inserts new user data into 'users' table (throws error if username already exists)
+                statement_newUser.setInt(5, 1); // a new user has 1 ticket
+                int rowsInserted = statement_newUser.executeUpdate(); // Inserts new user data into 'users' table (throws error if username already exists)
                 System.out.println("Rows inserted: " + rowsInserted);
   
                 // If the user successfully signs-up, the current session's user will be set to the new user.

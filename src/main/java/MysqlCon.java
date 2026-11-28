@@ -1,12 +1,13 @@
 // Code template was used from 3-tier-demo.jsp
 import java.sql.*;
+import pokemonInfo.DBPassword;
 
 public class MysqlCon {
     public static void main(String[] args) {
         String db = "poketrader";
         String user; // assumes database name is the same as user-name
         user = "root";
-        String password = "$apphire9Warrior"; // password for database
+        String password = DBPassword.YOUR_PASSWORD; // password for database
 
         try {
             java.sql.Connection con;

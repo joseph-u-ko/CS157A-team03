@@ -1,5 +1,3 @@
-
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -14,6 +12,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 
+import pokemonInfo.DBPassword;
+
 /**
  * Servlet implementation class RequestFriendServlet
  */
@@ -23,7 +23,7 @@ public class RequestFriendServlet extends HttpServlet {
        
 	private static final String DB_URL = "jdbc:mysql://localhost:3306/poketrader?autoReconnect=true&useSSL=false";
     private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "o{%}*pEhL@uIRUW]ZbmJ5V[2";
+    private static final String DB_PASSWORD = DBPassword.YOUR_PASSWORD;
     
     @Override
 	protected void doPost(
@@ -115,8 +115,14 @@ public class RequestFriendServlet extends HttpServlet {
 					// Case where one row is returned
 					if (result2.next()) {
 						// This is the case where the sender already sent a friend request to the receiver.
-						if (result2.getString("userA").equals(user) && result2.getString("userB").equals(user_friend) && result2.getString("status").equals("Request pending")) {
-							request.setAttribute("requestFriendOutput", "Oops, you either have already sent a friend request to " + user_friend + " or have received a friend request by " + user_friend + ".");
+						if (result2.getString("userA").equals(user) && result2.getString("userB").equals(user_friend) && result2.getString("status").equals("Request Pending")) {
+							request.setAttribute("requestFriendOutput", "Oops, you have already sent a friend request to " + user_friend + ".");
+							request.getRequestDispatcher(friendsPage).forward(request, response);
+    						return;
+						}
+						// This is the case where the receiver already sent a friend request to the sender.
+						if (result2.getString("userA").equals(user) && result2.getString("userB").equals(user_friend) && result2.getString("status").equals("Accept Pending")) {
+							request.setAttribute("requestFriendOutput", "Oops, you have received a friend request by " + user_friend + ".");
 							request.getRequestDispatcher(friendsPage).forward(request, response);
     						return;
 						}
@@ -136,10 +142,10 @@ public class RequestFriendServlet extends HttpServlet {
 				// "Sends" a friend request to the receiver by storing their statuses in 'friends' table
 				requestFriend.setString(1, user);
 				requestFriend.setString(2, user_friend);
-				requestFriend.setString(3, "Request pending");
+				requestFriend.setString(3, "Request Pending");
 				requestFriend.setString(4, user_friend);
 				requestFriend.setString(5, user);
-				requestFriend.setString(6, "Accept pending");
+				requestFriend.setString(6, "Accept Pending");
 				int rowsInserted = requestFriend.executeUpdate();
 				System.out.println("Rows inserted into 'friends' table: " + rowsInserted);
 				
