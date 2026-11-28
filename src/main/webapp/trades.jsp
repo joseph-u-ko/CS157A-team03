@@ -20,6 +20,7 @@
     String currentTradeStatus = null;
     String currentCardImageLink = null;
     String otherCardImageLink = null;
+    String otherCardID = null;
 
     try {
         Class.forName("com.mysql.cj.jdbc.Driver");
@@ -64,7 +65,6 @@
                 }
             }
 
-            String otherCardID = null;
             try (PreparedStatement getOtherTrade =
                      con.prepareStatement(otherTradeQuery)) {
                 getOtherTrade.setString(1, userB);
@@ -98,6 +98,9 @@
         "Accepted".equalsIgnoreCase(currentTradeStatus);
     boolean tradeDeclined =
         "Declined".equalsIgnoreCase(currentTradeStatus);
+    boolean bothCardsSelected =
+        cardIDOffered != null && !cardIDOffered.trim().isEmpty()
+        && otherCardID != null && !otherCardID.trim().isEmpty();
 %>
 
 <html>
@@ -248,22 +251,24 @@
 			</div>
 			
 				<% if (tradeInProgress && !tradeAccepted && !tradeDeclined) { %>
-					<div class="trade-buttons-container">
-						<form action="<%=request.getContextPath()%>/tradeAction" method="post">
-							<input type="hidden" name="action" value="accept">
-							<input type="hidden" name="userB" value="<%=userB%>">
-							<button type="submit" class="trade-button">
-								Accept Trade
-							</button>
-						</form>
-						<form action="<%=request.getContextPath()%>/tradeAction" method="post">
-							<input type="hidden" name="action" value="decline">
-							<input type="hidden" name="userB" value="<%=userB%>">
-							<button type="submit" class="trade-button">
-								Decline Trade
-							</button>
-						</form>
-					</div>
+    				<div class="trade-buttons-container">
+        				<% if (bothCardsSelected) { %>
+            				<form action="<%=request.getContextPath()%>/tradeAction" method="post">
+                				<input type="hidden" name="action" value="accept">
+                				<input type="hidden" name="userB" value="<%=userB%>">
+                				<button type="submit" class="trade-button">
+                    				Accept Trade
+                				</button>
+            				</form>
+        				<% } %>
+        				<form action="<%=request.getContextPath()%>/tradeAction" method="post">
+            				<input type="hidden" name="action" value="decline">
+            				<input type="hidden" name="userB" value="<%=userB%>">
+            				<button type="submit" class="trade-button">
+                				Decline Trade
+            				</button>
+        				</form>
+    				</div>
 				<% } %>
 		</div>
 		
