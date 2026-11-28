@@ -73,6 +73,7 @@
                                 "FROM users WHERE username = ?";
 
                             Map<String, String> tradeStatuses = new HashMap<>();
+                            boolean tradeable = true;
                             
                             // The following will track the status of the player's trade if there is one (either 0 or 1)
                             try (Connection con = DriverManager.getConnection(url, user, password);
@@ -82,6 +83,7 @@
                                     while (tradeRs.next()) {
                                         String otherUser = tradeRs.getString("otherUser");
                                         if (otherUser != null) {
+                                        	tradeable = false;
                                             tradeStatuses.put(otherUser, tradeRs.getString("status"));
                                         }
                                     }
@@ -97,6 +99,9 @@
                                         String otherUser = rs.getString("userB");
                                         String friendStatus = rs.getString("status");
                                         String tradeStatus = tradeStatuses.get(otherUser);
+                                        if (tradeStatus == null || tradeStatus.trim().isEmpty()) {
+                                            tradeStatus = "None"; // Not trading with this friend
+                                        }
                     %>
                     <tr>
                         <td><%=otherUser %></td>
@@ -104,13 +109,13 @@
                         <td><%=tradeStatus %></td>
                         <td>
                             <% if ("Accept Pending".equalsIgnoreCase(friendStatus)) { %>
-                                <form action="removeFriend" method="post" style="display:inline;">
-                                    <input type="hidden" name="friendToRemove" value="<%=otherUser%>">
-                                    <button type="submit">Decline</button>
-                                </form>
                                 <form action="addFriend" method="post" style="display:inline;">
                                     <input type="hidden" name="friendToAdd" value="<%=otherUser%>">
                                     <button type="submit">Accept</button>
+                                </form>
+                                <form action="removeFriend" method="post" style="display:inline;">
+                                    <input type="hidden" name="friendToRemove" value="<%=otherUser%>">
+                                    <button type="submit">Decline</button>
                                 </form>
                             <% } else if ("Request Pending".equalsIgnoreCase(friendStatus)) { %>
                                 <form action="removeFriend" method="post" style="display:inline;">
@@ -126,7 +131,7 @@
     								<input type="hidden" name="userB" value="<%=otherUser%>">
     								<button type="submit">Message</button>
 								</form>
-								<% if (tradeStatus == null) { %>
+								<% if (tradeable) { %>
 									<form action="tradeRequest" method="post">
 										<input type="hidden" name="userB" value="<%=otherUser%>">
 										<input type='hidden' name="task" value="addTradeRequest">
@@ -150,7 +155,7 @@
 										<button type="submit">Cancel Trade</button>
 									</form>
 								<% } else if ("In Progress".equalsIgnoreCase(tradeStatus)) { %>
-									<form action="trade.jsp" method="get">
+									<form action="trades.jsp" method="get">
 										<input type="hidden" name="userB" value="<%=otherUser%>">
 										<button type="submit">Go To Trade</button>
 									</form>
