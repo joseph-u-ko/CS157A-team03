@@ -55,13 +55,21 @@ public class TradeActionServlet extends HttpServlet {
     			FROM users
     			WHERE username = ?
     			""";
-    	String SQL_updateRow = """
-    			UPDATE
+    	String SQL_declineTrade = """
+    			UPDATE users
+    			SET otherUser = NULL, status = NULL, tradeStatus = NULL, cardIDOffered = NULL
+    			WHERE username = ?
+    			""";
+    	String SQL_updateToDeclined = """
+    			UPDATE users
+    			SET tradeStatus = Declined
+    			WHERE username = ?
     			""";
     	
     	try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
     		 PreparedStatement statement_getUserTrade = connection.prepareStatement(SQL_getUserTrade);
     		 PreparedStatement statement_getOtherTrade = connection.prepareStatement(SQL_getUserTrade)) {
+    		int rowsUpdated;
     			switch (action) {
     				case "accept":
     					// TODO
@@ -81,12 +89,19 @@ public class TradeActionServlet extends HttpServlet {
     						// Set tradeStatus to "Confirmed" for current user
     					break;
     				case "decline":
-    					// TODO
-    					// Set tradeStatus to "Declined" for otherUser
-    					// Set tradeStatus to null (NULL) for current user ONLY
-    					// Reset status to null (NULL) for current user ONLY
-    					// Reset cardIDOffered to null (NULL) for current user ONLY
-    					// Reset otherUser to null (NULL) for current user ONLY
+    					// Reset current user without card changes
+    					PreparedStatement statement_declineTrade = connection.prepareStatement(SQL_declineTrade);
+    					statement_declineTrade.setString(1, user);
+    					
+    					// Status the other user to let them know the update
+    					PreparedStatement statement_updateToDeclined = connection.prepareStatement(SQL_updateToDeclined);
+    					statement_updateToDeclined.setString(1, friend);
+    					
+    					rowsUpdated = statement_declineTrade.executeUpdate();
+    	    			System.out.println("Rows updated in 'users' table: " + rowsUpdated);
+    					rowsUpdated = statement_updateToDeclined.executeUpdate();
+    	    			System.out.println("Rows updated in 'users' table: " + rowsUpdated);
+    	    			
     					break;
     				default:
     					// TODO

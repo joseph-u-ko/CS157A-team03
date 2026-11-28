@@ -110,10 +110,6 @@ public class TradeRequestServlet extends HttpServlet {
         	    			acceptingUser.setString(2, friend);
         	    			rowsUpdatedForTrades = acceptingUser.executeUpdate();
         	    			System.out.println("Rows updated in 'trades' table: " + rowsUpdatedForTrades);
-        	    			
-        	    			request.getRequestDispatcher(friendsPage).forward(request, response);
-        					return;
-    						
     					}
     					
     					break;
@@ -133,8 +129,6 @@ public class TradeRequestServlet extends HttpServlet {
     	    			acceptingUserInProgress.setString(2, friend);
     	    			rowsUpdatedForTrades = acceptingUserInProgress.executeUpdate();
     	    			System.out.println("Rows updated in 'trades' table: " + rowsUpdatedForTrades);
-    	    			
-    	    			//request.getRequestDispatcher(friendsPage).forward(request, response);
     					break;
     					
     				case "declineTradeRequest":

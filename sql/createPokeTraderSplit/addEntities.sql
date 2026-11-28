@@ -133,7 +133,7 @@ CREATE TABLE users(
 	nextTicketTime TIME NOT NULL DEFAULT '00:00:00',
     otherUser VARCHAR(255),
     status VARCHAR(255),
-    tradeStatus TINYINT(1) NOT NULL DEFAULT 0,
+    tradeStatus VARCHAR(255),
     cardIDOffered INT,
     
     CONSTRAINT CHK_Ticket_Count
