@@ -49,27 +49,27 @@ public class TradeRequestServlet extends HttpServlet {
     	
     	String SQL_getUserRequest = """
     			SELECT username, otherUser, status
-    			FROM trades
+    			FROM users
     			WHERE username = ?
     			""";
     	
     	String SQL_updateRequestingUser = """
-    			UPDATE trades
+    			UPDATE users
 				SET otherUser = ?, status = "Accept Pending"
 				WHERE username = ?
     			""";
     	String SQL_updateAcceptingUser = """
-    			UPDATE trades
+    			UPDATE users
 				SET otherUser = ?, status = "Request Pending"
 				WHERE username = ?
     			""";
     	String SQL_updateInProgress = """
-    			UPDATE trades
+    			UPDATE users
 				SET otherUser = ?, status = "In Progress"
 				WHERE username = ?
     			""";
     	String SQL_removeRequest = """
-    			UPDATE trades
+    			UPDATE users
     			SET otherUser = NULL, status = NULL
     			WHERE username = ?
     			""";

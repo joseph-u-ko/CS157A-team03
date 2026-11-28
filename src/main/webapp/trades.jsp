@@ -29,10 +29,10 @@
 
         String tradeQuery =
             "SELECT status, tradeStatus, cardIDOffered " +
-            "FROM trades WHERE username = ? AND otherUser = ?";
+            "FROM users WHERE username = ? AND otherUser = ?";
         String otherTradeQuery =
             "SELECT cardIDOffered " +
-            "FROM trades WHERE username = ? AND otherUser = ?";
+            "FROM users WHERE username = ? AND otherUser = ?";
         String cardImageQuery =
             "SELECT imageLink FROM cards WHERE cardID = ?";
 

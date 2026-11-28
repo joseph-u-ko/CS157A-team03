@@ -61,16 +61,9 @@ public class SignupServlet extends HttpServlet {
         		INSERT INTO users (username, passwordHashed, loggedIn, nextTicketTime, tickets)
                 VALUES (?, ?, ?, ?, ?)
         		""";
-        
-        // Add an entry to trades table for "locking"
-        String SQL_tradeTableEntry = """
-        		INSERT INTO trades (username)
-        		VALUES (?)
-        		""";
 
         try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-             PreparedStatement statement_newUser = connection.prepareStatement(SQL_newUser);
-        	 PreparedStatement statement_tradeTableEntry = connection.prepareStatement(SQL_tradeTableEntry)) {
+             PreparedStatement statement_newUser = connection.prepareStatement(SQL_newUser)) {
                 statement_newUser.setString(1, username);
                 
                 // generates and stores the hashed password
@@ -89,10 +82,6 @@ public class SignupServlet extends HttpServlet {
                 statement_newUser.setInt(5, 1); // a new user has 1 ticket
                 int rowsInserted = statement_newUser.executeUpdate(); // Inserts new user data into 'users' table (throws error if username already exists)
                 System.out.println("Rows inserted: " + rowsInserted);
-                
-                // A user can only trade with one other user at a time, so they will only have one entry in the table.
-                statement_tradeTableEntry.setString(1, username);
-                statement_tradeTableEntry.executeUpdate();
   
                 // If the user successfully signs-up, the current session's user will be set to the new user.
                 // Afterwards, the user will be redirected to the main page.

@@ -70,7 +70,7 @@
                                 "FROM friends WHERE userA = ? ORDER BY userB ASC";
                             String tradeQuery =
                                 "SELECT username, otherUser, status " +
-                                "FROM trades WHERE username = ?";
+                                "FROM users WHERE username = ?";
 
                             Map<String, String> tradeStatuses = new HashMap<>();
                             
@@ -97,9 +97,6 @@
                                         String otherUser = rs.getString("userB");
                                         String friendStatus = rs.getString("status");
                                         String tradeStatus = tradeStatuses.get(otherUser);
-                                        if (tradeStatus == null || tradeStatus.trim().isEmpty()) {
-                                            tradeStatus = "None"; // Not trading with this friend
-                                        }
                     %>
                     <tr>
                         <td><%=otherUser %></td>
@@ -129,7 +126,7 @@
     								<input type="hidden" name="userB" value="<%=otherUser%>">
     								<button type="submit">Message</button>
 								</form>
-								<% if ("None".equalsIgnoreCase(tradeStatus)) { %>
+								<% if (tradeStatus == null) { %>
 									<form action="tradeRequest" method="post">
 										<input type="hidden" name="userB" value="<%=otherUser%>">
 										<input type='hidden' name="task" value="addTradeRequest">

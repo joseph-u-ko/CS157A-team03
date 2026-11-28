@@ -38,7 +38,7 @@ public class TradeActionServlet extends HttpServlet {
     	String tradesPage = "trades.jsp";
     	String user = (String) session.getAttribute("currentUser");
     	String friend = request.getParameter("userB");
-    	String action = request.getParameter("action"); // TODO what action to perform
+    	String action = request.getParameter("action");
     	
     	if (session == null ||
     		session.getAttribute("currentUser") == null) {
@@ -52,7 +52,7 @@ public class TradeActionServlet extends HttpServlet {
     	// Add SQL queries as needed and add PreparedStatements to the try parameters accordingly
     	String SQL_getUserTrade = """
     			SELECT username, otherUser, tradeStatus, cardIDOffered
-    			FROM trades
+    			FROM users
     			WHERE username = ?
     			""";
     	String SQL_updateRow = """
